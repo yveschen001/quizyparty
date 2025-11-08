@@ -9,9 +9,11 @@ const title = serverT('profile.title')
 const desc = serverT('profile.desc')
 
 export const prerender = false
-const siteOrigin = (Astro.site && Astro.site.origin) || import.meta.env.SITE || 'https://quizyparty.com'
+const siteOrigin =
+  (Astro.site && Astro.site.origin) || import.meta.env.SITE || 'https://quizyparty.com'
 const path = Astro.url.pathname
 ---
+
 <html lang={lang}>
   <head>
     <meta charset="utf-8" />
@@ -21,36 +23,84 @@ const path = Astro.url.pathname
   <body>
     <a href="#main" class="sr-only">{serverT('a11y.skipToContent')}</a>
     <AppHeader lang={lang} serverT={serverT} />
-    <main id="main" class="container" style="display:grid;gap:32px;padding-top:32px;padding-bottom:64px">
+    <main
+      id="main"
+      class="container"
+      style="display:grid;gap:32px;padding-top:32px;padding-bottom:64px"
+    >
       <section style="display:grid;gap:16px">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <div
+          style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px"
+        >
           <div>
             <h1 class="h1" style="margin:0">{title}</h1>
             <p style="margin:4px 0 0;font-size:0.95rem;opacity:0.7">{serverT('profile.desc')}</p>
           </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center" role="group" aria-label={serverT('profile.stats.scopeLabel')}>
-            <button id="scope-all" class="btn btn-primary" type="button" data-scope="all" aria-pressed="true">{serverT('profile.scope.all')}</button>
-            <button id="scope-30d" class="btn" type="button" data-scope="30d" aria-pressed="false">{serverT('profile.scope.30d')}</button>
-            <button id="open-settings" class="btn" type="button" aria-label="Settings" title="Settings" style="display:inline-flex;align-items:center;gap:6px">
-              <span aria-hidden="true">⚙️</span><span class="sr-only">Settings</span>
+          <div
+            style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"
+            role="group"
+            aria-label={serverT('profile.stats.scopeLabel')}
+          >
+            <button
+              id="scope-all"
+              class="btn btn-primary"
+              type="button"
+              data-scope="all"
+              aria-pressed="true">{serverT('profile.scope.all')}</button
+            >
+            <button id="scope-30d" class="btn" type="button" data-scope="30d" aria-pressed="false"
+              >{serverT('profile.scope.30d')}</button
+            >
+            <button
+              id="open-settings"
+              class="btn"
+              type="button"
+              aria-label={serverT('profile.settings.open')}
+              title={serverT('profile.settings.open')}
+              aria-controls="settings-modal"
+              style="display:inline-flex;align-items:center;gap:6px"
+            >
+              <span aria-hidden="true">⚙️</span><span class="sr-only">{serverT('profile.settings.open')}</span>
             </button>
           </div>
         </div>
         <div id="stats-message" style="min-height:1.2em;font-size:0.9rem"></div>
-        <div id="stats-panel" class="stats-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px">
-          <article class="card" style="padding:20px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;display:grid;gap:8px">
-            <h2 style="margin:0;font-size:0.95rem;opacity:0.65">{serverT('profile.stats.totalAnswers')}</h2>
+        <div
+          id="stats-panel"
+          class="stats-grid"
+          style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px"
+        >
+          <article
+            class="card"
+            style="padding:20px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;display:grid;gap:8px"
+          >
+            <h2 style="margin:0;font-size:0.95rem;opacity:0.65">
+              {serverT('profile.stats.totalAnswers')}
+            </h2>
             <p id="stats-total" style="margin:0;font-size:1.8rem;font-weight:600">0</p>
           </article>
-          <article class="card" style="padding:20px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;display:grid;gap:8px">
-            <h2 style="margin:0;font-size:0.95rem;opacity:0.65">{serverT('profile.stats.accuracy')}</h2>
+          <article
+            class="card"
+            style="padding:20px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;display:grid;gap:8px"
+          >
+            <h2 style="margin:0;font-size:0.95rem;opacity:0.65">
+              {serverT('profile.stats.accuracy')}
+            </h2>
             <p id="stats-accuracy" style="margin:0;font-size:1.8rem;font-weight:600">0%</p>
           </article>
-          <article class="card" style="padding:20px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;display:grid;gap:8px">
-            <h2 style="margin:0;font-size:0.95rem;opacity:0.65">{serverT('profile.stats.points')}</h2>
+          <article
+            class="card"
+            style="padding:20px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;display:grid;gap:8px"
+          >
+            <h2 style="margin:0;font-size:0.95rem;opacity:0.65">
+              {serverT('profile.stats.points')}
+            </h2>
             <p id="stats-points" style="margin:0;font-size:1.8rem;font-weight:600">0</p>
           </article>
-          <article class="card" style="padding:20px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;display:grid;gap:8px">
+          <article
+            class="card"
+            style="padding:20px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;display:grid;gap:8px"
+          >
             <h2 style="margin:0;font-size:0.95rem;opacity:0.65">{serverT('profile.stats.rank')}</h2>
             <p id="stats-rank" style="margin:0;font-size:1.8rem;font-weight:600">—</p>
             <span id="stats-percentile" style="font-size:0.85rem;opacity:0.7"></span>
@@ -59,47 +109,90 @@ const path = Astro.url.pathname
       </section>
 
       <section id="v2-cards" style="display:none;gap:16px">
-        <div class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:8px">
+        <div
+          class="grid"
+          style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:8px"
+        >
           <article class="card" style="display:grid;gap:8px">
             <h3 class="h3" style="margin:0">{serverT('profile.cards.created.title')}</h3>
             <p class="p" style="margin:0;opacity:0.8">{serverT('profile.cards.created.desc')}</p>
-            <div><a class="btn btn-primary" href={`/${lang}/rooms/created`}>{serverT('common.viewAll')}</a></div>
+            <div>
+              <a class="btn btn-primary" href={`/${lang}/rooms/created`}
+                >{serverT('common.viewAll')}</a>
+            </div>
           </article>
           <article class="card" style="display:grid;gap:8px">
             <h3 class="h3" style="margin:0">{serverT('profile.cards.joined.title')}</h3>
             <p class="p" style="margin:0;opacity:0.8">{serverT('profile.cards.joined.desc')}</p>
-            <div><a class="btn btn-primary" href={`/${lang}/rooms/joined`}>{serverT('common.viewAll')}</a></div>
+            <div>
+              <a class="btn btn-primary" href={`/${lang}/rooms/joined`}
+                >{serverT('common.viewAll')}</a>
+            </div>
           </article>
         </div>
       </section>
 
       <section id="v1-created" style="display:grid;gap:16px">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <div
+          style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px"
+        >
           <h2 class="h2" style="margin:0">{serverT('profile.sections.myRooms')}</h2>
-          <a class="btn" href={`/${lang}/create-room`} style="font-size:0.9rem">{serverT('profile.sections.createRoom')}</a>
+          <a class="btn" href={`/${lang}/create-room`} style="font-size:0.9rem"
+            >{serverT('profile.sections.createRoom')}</a
+          >
         </div>
-        <div id="created-tabs" role="tablist" aria-label={serverT('profile.sections.myRooms')} style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn btn-primary" data-status="published" type="button" aria-pressed="true">{serverT('myRooms.published')}</button>
-          <button class="btn" data-status="draft" type="button" aria-pressed="false">{serverT('myRooms.drafts')}</button>
+        <div
+          id="created-tabs"
+          role="tablist"
+          aria-label={serverT('profile.sections.myRooms')}
+          style="display:flex;gap:8px;flex-wrap:wrap"
+        >
+          <button class="btn btn-primary" data-status="published" type="button" aria-pressed="true"
+            >{serverT('myRooms.published')}</button
+          >
+          <button class="btn" data-status="draft" type="button" aria-pressed="false"
+            >{serverT('myRooms.drafts')}</button
+          >
         </div>
         <div id="created-message" style="min-height:1.1em;font-size:0.9rem"></div>
         <div id="created-list" style="display:grid;gap:12px"></div>
-        <div id="created-pagination" style="display:none;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px"></div>
+        <div
+          id="created-pagination"
+          style="display:none;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px"
+        >
+        </div>
       </section>
 
       <section id="v1-joined" style="display:grid;gap:16px">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <div
+          style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px"
+        >
           <h2 class="h2" style="margin:0">{serverT('profile.sections.participations')}</h2>
-      </div>
+        </div>
         <div id="participations-message" style="min-height:1.1em;font-size:0.9rem"></div>
         <div id="participations-list" style="display:grid;gap:12px"></div>
       </section>
     </main>
-    <div id="settings-modal" style="display:none;position:fixed;inset:0;z-index:60;background:rgba(15,23,42,0.45);align-items:center;justify-content:center;padding:24px">
-      <div role="dialog" aria-modal="true" aria-labelledby="settings-title" style="width:min(560px,100%);background:#fff;border-radius:16px;padding:20px;display:grid;gap:16px">
+    <div
+      id="settings-modal"
+      style="display:none;position:fixed;inset:0;z-index:60;background:rgba(15,23,42,0.45);align-items:center;justify-content:center;padding:24px"
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="settings-title"
+        style="width:min(560px,100%);background:#fff;border-radius:16px;padding:20px;display:grid;gap:16px"
+      >
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-          <h3 id="settings-title" class="h3" style="margin:0">{serverT('profile.settings.title')}</h3>
-          <button id="close-settings" class="btn" type="button" aria-label="{serverT('profile.settings.close')}">✕</button>
+          <h3 id="settings-title" class="h3" style="margin:0">
+            {serverT('profile.settings.title')}
+          </h3>
+          <button
+            id="close-settings"
+            class="btn"
+            type="button"
+            aria-label="{serverT('profile.settings.close')}">✕</button
+          >
         </div>
         <div style="display:grid;gap:12px">
           <label for="settings-lang" style="font-weight:600">{serverT('languages.label')}</label>
@@ -108,25 +201,28 @@ const path = Astro.url.pathname
             <option value="zh-hant">{serverT('languages.zhHant')}</option>
             <option value="zh-hans">{serverT('languages.zhHans')}</option>
             <option value="ja">{serverT('languages.ja')}</option>
-            <option value="ko">{serverT('languages.ko')}</option>
-            <option value="de">{serverT('languages.de')}</option>
-            <option value="fr">{serverT('languages.fr')}</option>
           </select>
         </div>
         <div style="display:flex;gap:10px;justify-content:flex-end">
           <button id="settings-cancel" class="btn" type="button">{serverT('common.cancel')}</button>
-          <button id="settings-save" class="btn btn-primary" type="button">{serverT('common.save')}</button>
+          <button id="settings-save" class="btn btn-primary" type="button"
+            >{serverT('common.save')}</button
+          >
         </div>
       </div>
     </div>
     <script type="module" src="/js/i18n.js"></script>
     <script src="/js/room-templates.js" is:inline></script>
     <script type="module">
-      (async function() {
+      ;(async function () {
         await import('/js/i18n.js')
         const { setupRoomsManager } = await import('/js/rooms-manager.js')
         const lang = document.documentElement.getAttribute('lang') || 'en'
-        const featureV2 = (import.meta.env && import.meta.env.PUBLIC_FEATURE_PROFILE_V2 !== 'false')
+        const featureV2 = import.meta.env && import.meta.env.PUBLIC_FEATURE_UI_V2 !== 'false'
+        let fmt = null
+        try {
+          fmt = await import('/src/utils/format.ts')
+        } catch (e) {}
         const profileStatsV1 = true
 
         const openSettingsBtn = document.getElementById('open-settings')
@@ -195,6 +291,11 @@ const path = Astro.url.pathname
         function toggleSettings(open) {
           if (!settingsModal) return
           settingsModal.style.display = open ? 'flex' : 'none'
+          if (open) {
+            setTimeout(function () {
+              if (settingsLang) settingsLang.focus()
+            }, 0)
+          }
         }
         function computeRedirectPath(targetLang) {
           const url = new URL(window.location.href)
@@ -204,39 +305,71 @@ const path = Astro.url.pathname
           return '/' + segments.join('/') + url.search + url.hash
         }
         if (openSettingsBtn) {
-          openSettingsBtn.addEventListener('click', function() {
+          openSettingsBtn.addEventListener('click', function () {
             if (settingsLang) settingsLang.value = lang
             toggleSettings(true)
           })
         }
-        if (settingsCancel) settingsCancel.addEventListener('click', function(){ toggleSettings(false) })
-        if (settingsClose) settingsClose.addEventListener('click', function(){ toggleSettings(false) })
+        if (settingsCancel)
+          settingsCancel.addEventListener('click', function () {
+            toggleSettings(false)
+          })
+        if (settingsClose)
+          settingsClose.addEventListener('click', function () {
+            toggleSettings(false)
+          })
         if (settingsSave) {
-          settingsSave.addEventListener('click', function() {
+          settingsSave.addEventListener('click', function () {
             if (!settingsLang) return
             const target = settingsLang.value || lang
-            try { window.localStorage.setItem('lang', target) } catch {}
-            try { window.localStorage.setItem('qp_interface_lang', target) } catch {}
+            try {
+              window.localStorage.setItem('lang', target)
+            } catch {}
+            try {
+              window.localStorage.setItem('qp_interface_lang', target)
+            } catch {}
+            try {
+              if (window.i18next && typeof window.i18next.changeLanguage === 'function') {
+                window.i18next.changeLanguage(target)
+              }
+            } catch {}
             window.location.href = computeRedirectPath(target)
+          })
+        }
+        // Allow closing modal via Escape and backdrop click
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') toggleSettings(false)
+        })
+        if (settingsModal) {
+          settingsModal.addEventListener('click', function (e) {
+            if (e.target === settingsModal) toggleSettings(false)
           })
         }
 
         function formatAccuracy(value) {
-          const percent = Math.round(value * 1000) / 10
+          if (fmt && fmt.formatPercent) return fmt.formatPercent(value || 0, lang, 1)
+          const percent = Math.round((value || 0) * 1000) / 10
           return percent.toFixed(1) + '%'
         }
 
         function formatNumber(value) {
-          return value.toLocaleString()
+          if (fmt && fmt.formatNumber) return fmt.formatNumber(value || 0, lang)
+          return (value || 0).toLocaleString()
         }
 
         function formatDate(timestamp) {
+          if (fmt && fmt.formatDate) return fmt.formatDate(timestamp, lang, { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
           if (!timestamp) return ''
           const date = new Date(timestamp)
           if (!date.getTime()) return ''
           try {
-            const locale = lang === 'zh-hant' || lang === 'zh-hans' ? 'zh-TW' : lang
-            return date.toLocaleString(locale, { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+            return date.toLocaleString(lang, {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+            })
           } catch (e) {
             return date.toLocaleString()
           }
@@ -264,7 +397,7 @@ const path = Astro.url.pathname
             }
             const json = await res.json()
             if (json && json.authenticated && json.user) {
-            return json.user
+              return json.user
             }
             showStatsMessage(window.t('profile.notLoggedIn'), true)
             return null
@@ -289,7 +422,10 @@ const path = Astro.url.pathname
 
         async function fetchStats() {
           try {
-            const res = await fetch('/api/scores/stats?userId=' + encodeURIComponent(currentUser.id), { credentials: 'include' })
+            const res = await fetch(
+              '/api/scores/stats?userId=' + encodeURIComponent(currentUser.id),
+              { credentials: 'include' },
+            )
             if (res.ok) {
               statsAll = await res.json()
             }
@@ -300,7 +436,10 @@ const path = Astro.url.pathname
 
         async function fetchHistory() {
           try {
-            const res = await fetch('/api/scores/history?userId=' + encodeURIComponent(currentUser.id) + '&limit=100', { credentials: 'include' })
+            const res = await fetch(
+              '/api/scores/history?userId=' + encodeURIComponent(currentUser.id) + '&limit=100',
+              { credentials: 'include' },
+            )
             if (res.ok) {
               const json = await res.json()
               historyRecords = Array.isArray(json.history) ? json.history : []
@@ -312,7 +451,10 @@ const path = Astro.url.pathname
 
         async function fetchParticipations() {
           try {
-            const res = await fetch('/api/scores/rooms?userId=' + encodeURIComponent(currentUser.id) + '&limit=100', { credentials: 'include' })
+            const res = await fetch(
+              '/api/scores/rooms?userId=' + encodeURIComponent(currentUser.id) + '&limit=100',
+              { credentials: 'include' },
+            )
             if (res.ok) {
               const json = await res.json()
               participationsAll = Array.isArray(json.rooms) ? json.rooms : []
@@ -359,7 +501,7 @@ const path = Astro.url.pathname
 
           let records = historyRecords
           if (scope === '30d') {
-            records = historyRecords.filter(function(record) {
+            records = historyRecords.filter(function (record) {
               return record && record.answeredAt >= threshold
             })
           }
@@ -378,8 +520,10 @@ const path = Astro.url.pathname
           points = computeScore(totalCorrect, totalAnswered, totalTime)
 
           if (scope === 'all' && statsAll) {
-            totalAnswered = typeof statsAll.totalAnswered === 'number' ? statsAll.totalAnswered : totalAnswered
-            const totalCorrectAll = typeof statsAll.totalCorrect === 'number' ? statsAll.totalCorrect : totalCorrect
+            totalAnswered =
+              typeof statsAll.totalAnswered === 'number' ? statsAll.totalAnswered : totalAnswered
+            const totalCorrectAll =
+              typeof statsAll.totalCorrect === 'number' ? statsAll.totalCorrect : totalCorrect
             accuracy = totalAnswered > 0 ? totalCorrectAll / totalAnswered : 0
             const entryInfo = findLeaderboardEntry(currentUser.id)
             if (entryInfo) {
@@ -390,17 +534,26 @@ const path = Astro.url.pathname
               rankDisplay = '#' + position
               if (totalPlayers > 0) {
                 const percentile = Math.round((position / totalPlayers) * 100)
-                percentileDisplay = window.t('profile.stats.percentile').replace('{value}', String(percentile))
+                percentileDisplay = window
+                  .t('profile.stats.percentile')
+                  .replace('{value}', String(percentile))
               }
             }
-          } else if (scope === 'all' && statsAll && typeof statsAll.totalCorrect === 'number' && typeof statsAll.totalAnswered === 'number') {
+          } else if (
+            scope === 'all' &&
+            statsAll &&
+            typeof statsAll.totalCorrect === 'number' &&
+            typeof statsAll.totalAnswered === 'number'
+          ) {
             const entry = findLeaderboardEntry(currentUser.id)
             if (entry) {
               rankDisplay = '#' + (entry.index + 1)
               const totalPlayers = leaderboardEntries.length
               if (totalPlayers > 0) {
                 const percentile = Math.round(((entry.index + 1) / totalPlayers) * 100)
-                percentileDisplay = window.t('profile.stats.percentile').replace('{value}', String(percentile))
+                percentileDisplay = window
+                  .t('profile.stats.percentile')
+                  .replace('{value}', String(percentile))
               }
             }
           }
@@ -425,19 +578,25 @@ const path = Astro.url.pathname
 
         function renderParticipations(scope) {
           if (!participationsList) return
-          participationsList.innerHTML = '<p style="padding:16px;text-align:center;opacity:0.6">' + window.t('room.loading') + '</p>'
+          participationsList.innerHTML =
+            '<p style="padding:16px;text-align:center;opacity:0.6">' +
+            window.t('room.loading') +
+            '</p>'
           const now = Date.now()
           const threshold = now - 30 * 24 * 60 * 60 * 1000
           let items = participationsAll
           if (scope === '30d') {
-            items = participationsAll.filter(function(item) {
+            items = participationsAll.filter(function (item) {
               return item && item.lastAnsweredAt >= threshold
             })
           }
           if (!items.length) {
-            participationsList.innerHTML = '<p style="padding:16px;text-align:center;opacity:0.6">' + window.t('profile.participations.empty') + '</p>'
-              return
-            }
+            participationsList.innerHTML =
+              '<p style="padding:16px;text-align:center;opacity:0.6">' +
+              window.t('profile.participations.empty') +
+              '</p>'
+            return
+          }
           participationsList.innerHTML = ''
           for (let i = 0; i < items.length; i += 1) {
             const item = items[i]
@@ -460,7 +619,8 @@ const path = Astro.url.pathname
             const heading = document.createElement('h3')
             heading.style.margin = '0'
             heading.style.fontSize = '1rem'
-            heading.textContent = item.roomTitle || window.t('profile.roomIdLabel') + ' ' + item.roomId
+            heading.textContent =
+              item.roomTitle || window.t('profile.roomIdLabel') + ' ' + item.roomId
             title.appendChild(heading)
 
             const time = document.createElement('span')
@@ -479,12 +639,17 @@ const path = Astro.url.pathname
             meta.style.opacity = '0.75'
 
             const countSpan = document.createElement('span')
-            countSpan.textContent = window.t('profile.participations.total').replace('{value}', String(item.totalAnswered || 0))
+            countSpan.textContent = window
+              .t('profile.participations.total')
+              .replace('{value}', String(item.totalAnswered || 0))
             meta.appendChild(countSpan)
 
             const accuracySpan = document.createElement('span')
-            const accuracyValue = item.totalAnswered > 0 ? Math.round((item.accuracy || 0) * 1000) / 10 : 0
-            accuracySpan.textContent = window.t('profile.participations.accuracy').replace('{value}', accuracyValue.toFixed(1) + '%')
+            const accuracyValue =
+              item.totalAnswered > 0 ? Math.round((item.accuracy || 0) * 1000) / 10 : 0
+            accuracySpan.textContent = window
+              .t('profile.participations.accuracy')
+              .replace('{value}', accuracyValue.toFixed(1) + '%')
             meta.appendChild(accuracySpan)
 
             card.appendChild(meta)
@@ -526,9 +691,13 @@ const path = Astro.url.pathname
         }
 
         const createdTabsContainer = document.getElementById('created-tabs')
-        const createdTabs = createdTabsContainer ? Array.prototype.slice.call(createdTabsContainer.querySelectorAll('[data-status]')).map(function(button) {
-          return { status: button.getAttribute('data-status') || 'published', button: button }
-        }) : []
+        const createdTabs = createdTabsContainer
+          ? Array.prototype.slice
+              .call(createdTabsContainer.querySelectorAll('[data-status]'))
+              .map(function (button) {
+                return { status: button.getAttribute('data-status') || 'published', button: button }
+              })
+          : []
 
         if (!featureV2) {
           createdManager = setupRoomsManager({
@@ -536,17 +705,21 @@ const path = Astro.url.pathname
             paginationEl: createdPagination,
             tabs: createdTabs,
             lang: lang,
-            t: function(key) { return window.t(key) },
+            t: function (key) {
+              return window.t(key)
+            },
             pageSize: 5,
-            onNotify: function(text, isError) { showCreatedMessage(text, isError) },
-            filter: function(template) {
+            onNotify: function (text, isError) {
+              showCreatedMessage(text, isError)
+            },
+            filter: function (template) {
               if (!template || !template.updatedAt) return true
               if (currentScope !== '30d') return true
               const updatedAt = template.updatedAt
               const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000
               return updatedAt >= cutoff
             },
-            emptyText: window.t('profile.created.emptyScope')
+            emptyText: window.t('profile.created.emptyScope'),
           })
         }
 
@@ -557,7 +730,7 @@ const path = Astro.url.pathname
           if (!featureV2) {
             renderParticipations(scope)
             if (createdManager && typeof createdManager.setFilter === 'function') {
-              createdManager.setFilter(function(template) {
+              createdManager.setFilter(function (template) {
                 if (!template || !template.updatedAt) return scope !== '30d'
                 if (scope !== '30d') return true
                 const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000
@@ -568,12 +741,12 @@ const path = Astro.url.pathname
         }
 
         if (scopeAllBtn) {
-          scopeAllBtn.addEventListener('click', function() {
+          scopeAllBtn.addEventListener('click', function () {
             applyScope('all')
           })
         }
         if (scope30dBtn) {
-          scope30dBtn.addEventListener('click', function() {
+          scope30dBtn.addEventListener('click', function () {
             applyScope('30d')
           })
         }
@@ -587,4 +760,3 @@ const path = Astro.url.pathname
     </script>
   </body>
 </html>
-
