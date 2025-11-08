@@ -9,12 +9,13 @@ let initialized = false;
 
 function createOptions(namespaces: Namespace[]): InitOptions {
   return {
-    fallbackLng: ['zh-hant', 'en'],
+    fallbackLng: ['en'],
     supportedLngs: [...SUPPORTED_LOCALES],
     defaultNS: namespaces[0] ?? 'common',
     ns: namespaces,
     interpolation: { escapeValue: false },
-    load: 'languageOnly',
+    // 確保完整匹配 zh-hant，不使用 languageOnly
+    // load: 'languageOnly',
     returnEmptyString: false,
     returnNull: false,
     returnObjects: false,
@@ -27,7 +28,10 @@ function createOptions(namespaces: Namespace[]): InitOptions {
     saveMissing: false,
     missingKeyHandler: false,
     parseMissingKeyHandler: (key: string) => {
-      console.warn(`[i18n] Missing translation key: ${key}`);
+      if (import.meta?.env?.DEV) {
+        console.warn(`[i18n] Missing translation key: ${key}`);
+        return `🚧 ${key}`;
+      }
       return key;
     },
   } satisfies InitOptions;

@@ -8,7 +8,7 @@ const serverInstances: Map<Locale, ReturnType<typeof i18next.createInstance>> = 
 
 function createOptions(namespaces: Namespace[]): InitOptions {
   return {
-    fallbackLng: ['zh-hant', 'en'],
+    fallbackLng: ['en'],
     supportedLngs: [...SUPPORTED_LOCALES],
     defaultNS: namespaces[0] ?? 'common',
     ns: namespaces,
@@ -18,11 +18,14 @@ function createOptions(namespaces: Namespace[]): InitOptions {
     returnEmptyString: false,
     returnNull: false,
     returnObjects: false,
-    // 如果找不到翻譯，返回 key（但會先嘗試 fallback language）
+    // 缺字處理：DEV 打警告；PROD 直接回退至英文
     saveMissing: false,
     missingKeyHandler: false,
     parseMissingKeyHandler: (key: string) => {
-      console.warn(`[i18n] Missing translation key: ${key}`);
+      if (process?.env?.NODE_ENV !== 'production') {
+        console.warn(`[i18n] Missing translation key: ${key}`);
+        return `🚧 ${key}`;
+      }
       return key;
     },
   } satisfies InitOptions;
