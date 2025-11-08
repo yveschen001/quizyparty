@@ -16,7 +16,13 @@ function readRoomLangPreference(defaultLang) {
     if (stored) {
       const parsed = JSON.parse(stored)
       const normalized = Array.isArray(parsed)
-        ? parsed.map(function(item) { return String(item) }).filter(function(code) { return INTERFACE_LANGS.indexOf(code) >= 0 })
+        ? parsed
+            .map(function (item) {
+              return String(item)
+            })
+            .filter(function (code) {
+              return INTERFACE_LANGS.indexOf(code) >= 0
+            })
         : []
       if (normalized.length) return normalized
     }
@@ -27,7 +33,13 @@ function readRoomLangPreference(defaultLang) {
 }
 
 function writeRoomLangPreference(values) {
-  const unique = Array.from(new Set(values.filter(function(code) { return INTERFACE_LANGS.indexOf(code) >= 0 })))
+  const unique = Array.from(
+    new Set(
+      values.filter(function (code) {
+        return INTERFACE_LANGS.indexOf(code) >= 0
+      }),
+    ),
+  )
   window.localStorage.setItem('qp_room_langs', JSON.stringify(unique))
   return unique
 }
@@ -81,15 +93,7 @@ export function setStoredRoomLanguages(values) {
 }
 
 export function setupUserMenu(config) {
-  const {
-    lang,
-    t,
-    profileUrl,
-    aboutUrl,
-    privacyUrl,
-    termsUrl,
-    onLogout,
-  } = config || {}
+  const { lang, t, profileUrl, joinedUrl, aboutUrl, privacyUrl, termsUrl, onLogout } = config || {}
 
   const root = document.getElementById('user-info')
   if (!root) return null
@@ -156,28 +160,68 @@ export function setupUserMenu(config) {
 
   function renderMenu() {
     const current = currentLang || 'en'
-    const aboutHref = typeof aboutUrl === 'function' ? aboutUrl(current) : (aboutUrl || '#')
-    const privacyHref = typeof privacyUrl === 'function' ? privacyUrl(current) : (privacyUrl || '#')
-    const termsHref = typeof termsUrl === 'function' ? termsUrl(current) : (termsUrl || '#')
-    const profileHref = typeof profileUrl === 'function' ? profileUrl(current) : (profileUrl || '#')
+    const aboutHref = typeof aboutUrl === 'function' ? aboutUrl(current) : aboutUrl || '#'
+    const privacyHref =
+      typeof privacyUrl === 'function' ? privacyUrl(current) : '/' + current + '/legal/privacy'
+    const termsHref =
+      typeof termsUrl === 'function' ? termsUrl(current) : '/' + current + '/legal/terms'
+    const profileHref =
+      typeof profileUrl === 'function' ? profileUrl(current) : '/' + current + '/profile'
+    const joinedHref =
+      typeof joinedUrl === 'function' ? joinedUrl(current) : '/' + current + '/rooms/joined'
 
     var html = ''
     html += '<div style="display:grid;gap:12px">'
-    html +=   '<div style="display:grid;gap:8px;font-size:0.8rem;opacity:0.75" data-role="quota-container"></div>'
-    html +=   '<div style="display:grid;gap:6px">'
-    html +=     '<a data-role="profile-link" href="' + profileHref + '" class="btn" style="justify-content:flex-start">' + t('nav.menu.profile') + '</a>'
-    html +=     '<a data-role="myrooms-link" href="/' + current + '/my-rooms" class="btn" style="justify-content:flex-start">' + t('nav.menu.myRooms') + '</a>'
-    html +=     '<a data-role="about-link" href="' + aboutHref + '" class="btn" style="justify-content:flex-start">' + t('nav.about') + '</a>'
-    html +=     '<a data-role="privacy-link" href="' + privacyHref + '" target="_blank" rel="noopener" class="btn" style="justify-content:flex-start">' + t('nav.menu.privacy') + '</a>'
-    html +=     '<a data-role="terms-link" href="' + termsHref + '" target="_blank" rel="noopener" class="btn" style="justify-content:flex-start">' + t('nav.menu.terms') + '</a>'
-    html +=     '<button data-action="logout" class="btn" style="justify-content:flex-start">' + t('nav.menu.logout') + '</button>'
-    html +=   '</div>'
+    html +=
+      '<div style="display:grid;gap:8px;font-size:0.8rem;opacity:0.75" data-role="quota-container"></div>'
+    html += '<div style="display:grid;gap:6px">'
+    html +=
+      '<a data-role="profile-link" href="' +
+      profileHref +
+      '" class="btn" style="justify-content:flex-start">' +
+      t('nav.menu.profile') +
+      '</a>'
+    html +=
+      '<a data-role="myrooms-link" href="/' +
+      current +
+      '/my-rooms" class="btn" style="justify-content:flex-start">' +
+      t('nav.menu.myRooms') +
+      '</a>'
+    html +=
+      '<a data-role="joined-link" href="' +
+      joinedHref +
+      '" class="btn" style="justify-content:flex-start">' +
+      t('profile.sections.participations') +
+      '</a>'
+    html +=
+      '<a data-role="about-link" href="' +
+      aboutHref +
+      '" class="btn" style="justify-content:flex-start">' +
+      t('nav.about') +
+      '</a>'
+    html +=
+      '<a data-role="privacy-link" href="' +
+      privacyHref +
+      '" target="_blank" rel="noopener" class="btn" style="justify-content:flex-start">' +
+      t('nav.menu.privacy') +
+      '</a>'
+    html +=
+      '<a data-role="terms-link" href="' +
+      termsHref +
+      '" target="_blank" rel="noopener" class="btn" style="justify-content:flex-start">' +
+      t('nav.menu.terms') +
+      '</a>'
+    html +=
+      '<button data-action="logout" class="btn" style="justify-content:flex-start">' +
+      t('nav.menu.logout') +
+      '</button>'
+    html += '</div>'
     html += '</div>'
     panel.innerHTML = html
 
     const logoutBtn = panel.querySelector('[data-action="logout"]')
     if (logoutBtn) {
-      logoutBtn.addEventListener('click', async function(event) {
+      logoutBtn.addEventListener('click', async function (event) {
         event.preventDefault()
         if (typeof onLogout === 'function') {
           await onLogout()
@@ -189,7 +233,7 @@ export function setupUserMenu(config) {
     userMenuRendered = true
   }
 
-  trigger.addEventListener('click', function() {
+  trigger.addEventListener('click', function () {
     if (!currentUser) return
     toggleMenu()
   })
@@ -206,12 +250,15 @@ export function setupUserMenu(config) {
           avatar.src = user.avatar
           avatar.alt = user.name || user.email || fallbackAlt
         } else {
-          avatar.src = 'https://www.gravatar.com/avatar/' + encodeURIComponent(user && user.email ? user.email : '') + '?d=identicon'
-          avatar.alt = user && (user.name || user.email) ? (user.name || user.email) : fallbackAlt
+          avatar.src =
+            'https://www.gravatar.com/avatar/' +
+            encodeURIComponent(user && user.email ? user.email : '') +
+            '?d=identicon'
+          avatar.alt = user && (user.name || user.email) ? user.name || user.email : fallbackAlt
         }
       }
       if (nameLabel) {
-        nameLabel.textContent = user && (user.name || user.email) ? (user.name || user.email) : ''
+        nameLabel.textContent = user && (user.name || user.email) ? user.name || user.email : ''
       }
     },
     clearUser() {
@@ -232,12 +279,25 @@ export function setupUserMenu(config) {
       }
       const parts = []
       if (quota.generate) {
-        parts.push(formatQuota(t, quota.generate.remaining, quota.generate.max, 'createRoom.ai.generateQuota'))
+        parts.push(
+          formatQuota(
+            t,
+            quota.generate.remaining,
+            quota.generate.max,
+            'createRoom.ai.generateQuota',
+          ),
+        )
       }
       if (quota.improve) {
-        parts.push(formatQuota(t, quota.improve.remaining, quota.improve.max, 'createRoom.ai.optimizeQuota'))
+        parts.push(
+          formatQuota(t, quota.improve.remaining, quota.improve.max, 'createRoom.ai.optimizeQuota'),
+        )
       }
-      container.innerHTML = parts.map(function(text) { return '<div>' + text + '</div>' }).join('')
+      container.innerHTML = parts
+        .map(function (text) {
+          return '<div>' + text + '</div>'
+        })
+        .join('')
     },
     getRoomLanguages() {
       return readRoomLangPreference(currentLang)
@@ -247,5 +307,3 @@ export function setupUserMenu(config) {
     },
   }
 }
-
-

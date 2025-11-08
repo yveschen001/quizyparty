@@ -1,0 +1,54 @@
+---
+import { setupServerI18n } from '../../../lib/server-i18n'
+import SeoMeta from '../../../components/SeoMeta.astro'
+import AppHeader from '../../../components/layout/AppHeader.astro'
+import '../../../styles/base.css'
+
+const { lang, serverT } = await setupServerI18n(Astro.params.lang)
+const title = serverT('privacy.title')
+const desc = serverT('privacy.title')
+
+export const prerender = false
+const siteOrigin =
+  (Astro.site && Astro.site.origin) || import.meta.env.SITE || 'https://quizyparty.com'
+const path = Astro.url.pathname
+---
+
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <SeoMeta lang={lang} title={title} description={desc} path={path} siteOrigin={siteOrigin} />
+  </head>
+  <body>
+    <a href="#main" class="sr-only">{serverT('a11y.skipToContent')}</a>
+    <AppHeader lang={lang} serverT={serverT} />
+    <main id="main" class="container" style="display:grid;gap:16px;padding-top:24px;padding-bottom:48px">
+      <h1 class="h1" style="margin:0">{title}（暫代）</h1>
+      <p class="caption" style="margin:0">最後更新日期：2025-11-08</p>
+      <article class="card" style="display:grid;gap:12px">
+        <p class="p">我們重視您的隱私。本文說明我們如何蒐集、使用、保存與分享您的個人資料。</p>
+        <h2 class="h2">1. 蒐集資料類型</h2>
+        <p class="p">帳號基本資料（暱稱、聯絡方式）、使用紀錄（建立或參與的房間、答題成績）、裝置與技術資料（瀏覽器、IP、Cookie/本地儲存）。</p>
+        <h2 class="h2">2. 使用目的</h2>
+        <p class="p">提供與維運服務、身份驗證與安全、統計與產品優化、法令遵循與爭議處理。</p>
+        <h2 class="h2">3. Cookie 與追蹤</h2>
+        <p class="p">我們可能使用 Cookie/本地儲存以維持登入狀態與偏好設定。您可於瀏覽器管理相關設定。</p>
+        <h2 class="h2">4. 第三方服務</h2>
+        <p class="p">若服務整合第三方（如分析、寄信、雲端），我們僅於必要範圍內提供資料並督促其遵循資安與隱私規範。</p>
+        <h2 class="h2">5. 資料保存與安全</h2>
+        <p class="p">我們採取合適之技術與管理措施保護資料；資料保存期間以達成目的或法令要求為限。</p>
+        <h2 class="h2">6. 您的權利</h2>
+        <p class="p">您可依適用法令請求查詢、下載、更正或刪除個資，或撤回同意；申請方式請聯繫我們。</p>
+        <h2 class="h2">7. 未成年人</h2>
+        <p class="p">未成年人使用本服務應取得法定代理人同意。</p>
+        <h2 class="h2">8. 變更</h2>
+        <p class="p">條款若有變更將於網站公告；變更後持續使用即視為同意。</p>
+        <h2 class="h2">9. 聯絡我們</h2>
+        <p class="p">隱私相關請求或申訴：privacy@example.com</p>
+      </article>
+    </main>
+  </body>
+  </html>
+
+

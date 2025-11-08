@@ -1,23 +1,48 @@
 ---
 const { lang, serverT } = Astro.props as { lang: string; serverT: (k: string) => string }
 ---
+
 <header class="navbar">
   <div class="container inner">
     <a href={`/${lang}/`}>{serverT('nav.home')}</a>
     <nav style="display:flex;gap:12px;align-items:center">
-      <button id="auth-btn" class="btn" style="font-size:0.875rem;display:none">{serverT('auth.login')}</button>
+      <button id="auth-btn" class="btn" style="font-size:0.875rem;display:none"
+        >{serverT('auth.login')}</button
+      >
       <div id="user-info" style="display:none;position:relative;align-items:center">
-        <button id="user-menu-trigger" data-role="menu-trigger" type="button" style="display:flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;font-size:0.875rem;cursor:pointer">
-          <img id="user-avatar" data-role="avatar" src="" alt="" style="width:28px;height:28px;border-radius:50%;object-fit:cover" />
-          <span id="user-name" data-role="name" style="max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></span>
-          <span data-role="menu-caret" aria-hidden="true" style="font-size:0.7rem;color:#6b7280">▼</span>
+        <button
+          id="user-menu-trigger"
+          data-role="menu-trigger"
+          type="button"
+          style="display:flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;font-size:0.875rem;cursor:pointer"
+        >
+          <img
+            id="user-avatar"
+            data-role="avatar"
+            src=""
+            alt=""
+            style="width:28px;height:28px;border-radius:50%;object-fit:cover"
+          />
+          <span
+            id="user-name"
+            data-role="name"
+            style="max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"
+          ></span>
+          <span data-role="menu-caret" aria-hidden="true" style="font-size:0.7rem;color:#6b7280"
+            >▼</span
+          >
         </button>
-        <div id="user-menu" data-role="menu-panel" style="display:none;position:absolute;right:0;top:calc(100% + 8px);min-width:260px;padding:16px;border:1px solid #e5e7eb;border-radius:12px;background:#fff;box-shadow:0 18px 38px rgba(15,23,42,0.16);z-index:40"></div>
+        <div
+          id="user-menu"
+          data-role="menu-panel"
+          style="display:none;position:absolute;right:0;top:calc(100% + 8px);min-width:260px;padding:16px;border:1px solid #e5e7eb;border-radius:12px;background:#fff;box-shadow:0 18px 38px rgba(15,23,42,0.16);z-index:40"
+        >
+        </div>
       </div>
     </nav>
   </div>
   <script type="module">
-    (async function(){
+    ;(async function () {
       await import('/js/i18n.js')
       const { setupUserMenu } = await import('/js/user-menu.js')
       const lang = document.documentElement.getAttribute('lang') || 'en'
@@ -25,19 +50,32 @@ const { lang, serverT } = Astro.props as { lang: string; serverT: (k: string) =>
       const userInfo = document.getElementById('user-info')
       const userMenu = setupUserMenu({
         lang,
-        t: function(key) { return window.t(key) },
-        profileUrl: function(targetLang) { return '/' + targetLang + '/profile' },
-        aboutUrl: function(targetLang) { return '/' + targetLang + '/about' },
-        privacyUrl: function() { return 'https://quizyparty.com/privacy' },
-        termsUrl: function() { return 'https://quizyparty.com/terms' },
-        onLogout: async function() {
+        t: function (key) {
+          return window.t(key)
+        },
+        profileUrl: function (targetLang) {
+          return '/' + targetLang + '/profile'
+        },
+        joinedUrl: function (targetLang) {
+          return '/' + targetLang + '/rooms/joined'
+        },
+        aboutUrl: function (targetLang) {
+          return '/' + targetLang + '/about'
+        },
+        privacyUrl: function (targetLang) {
+          return '/' + targetLang + '/legal/privacy'
+        },
+        termsUrl: function (targetLang) {
+          return '/' + targetLang + '/legal/terms'
+        },
+        onLogout: async function () {
           try {
             await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
           } catch (e) {
             console.error('Logout failed', e)
           }
           window.location.reload()
-        }
+        },
       })
       async function initUser() {
         try {
@@ -56,13 +94,12 @@ const { lang, serverT } = Astro.props as { lang: string; serverT: (k: string) =>
         if (userMenu && typeof userMenu.clearUser === 'function') userMenu.clearUser()
       }
       if (authBtn) {
-        authBtn.addEventListener('click', function() {
-          window.location.href = '/api/auth/google/login?redirect=' + encodeURIComponent(window.location.pathname)
+        authBtn.addEventListener('click', function () {
+          window.location.href =
+            '/api/auth/google/login?redirect=' + encodeURIComponent(window.location.pathname)
         })
       }
       await initUser()
     })()
   </script>
 </header>
-
-
