@@ -1,0 +1,16 @@
+---
+type: Agent Requested
+
+description: 當你需要指導「如何寫測試、如何過 CI、如何寫 PR/Commit」時引用本規則。
+---
+
+# 品質流程
+
+- 單元測試（Vitest）達最低覆蓋率；端對端（Playwright）覆蓋主要使用流程。
+- PR 模板必填「風險/回歸點」；Conventional Commits；每 PR 至少一人審核。
+- CI 失敗嚴禁合併；pre-commit 務必通過 typecheck、lint、i18n 檢查與格式化。
+
+## 變更前檢查（Before-Add Checklist）
+
+- 新增檔案/依賴前，請先搜尋既有實作（grep/rg/AST）是否可覆用。
+- PR 說明需標註「沿用或替換了哪些既有檔案」，以及為什麼無法沿用。

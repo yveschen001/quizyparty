@@ -1,0 +1,579 @@
+---
+import { setupServerI18n } from '../../lib/server-i18n'
+import SeoMeta from '../../components/SeoMeta.astro'
+import '../../styles/base.css'
+
+const { lang, serverT } = await setupServerI18n(Astro.params.lang)
+const title = serverT('profile.title')
+const desc = serverT('profile.desc')
+
+export const prerender = false
+const siteOrigin = (Astro.site && Astro.site.origin) || import.meta.env.SITE || 'https://quizyparty.com'
+const path = Astro.url.pathname
+---
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <SeoMeta lang={lang} title={title} description={desc} path={path} siteOrigin={siteOrigin} />
+  </head>
+  <body>
+    <a href="#main" class="sr-only">{serverT('a11y.skipToContent')}</a>
+    <header class="navbar">
+      <div class="container inner">
+        <a href={`/${lang}/`}>{serverT('nav.home')}</a>
+        <nav style="display:flex;gap:12px;align-items:center">
+          <label for="lang-switch" class="sr-only">{serverT('languages.label')}</label>
+          <select id="lang-switch" class="tab" style="font-size:0.85rem">
+            <option value="en" selected={lang === 'en'}>{serverT('languages.en')}</option>
+            <option value="zh-hant" selected={lang === 'zh-hant'}>{serverT('languages.zhHant')}</option>
+            <option value="zh-hans" selected={lang === 'zh-hans'}>{serverT('languages.zhHans')}</option>
+            <option value="ja" selected={lang === 'ja'}>{serverT('languages.ja')}</option>
+            <option value="ko" selected={lang === 'ko'}>{serverT('languages.ko')}</option>
+            <option value="de" selected={lang === 'de'}>{serverT('languages.de')}</option>
+            <option value="fr" selected={lang === 'fr'}>{serverT('languages.fr')}</option>
+          </select>
+          <button id="auth-btn" class="btn" style="font-size:0.875rem;display:none">{serverT('auth.login')}</button>
+          <div id="user-info" style="display:none;position:relative;align-items:center">
+            <button id="user-menu-trigger" data-role="menu-trigger" type="button" style="display:flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;font-size:0.875rem;cursor:pointer">
+              <img id="user-avatar" data-role="avatar" src="" alt="" style="width:28px;height:28px;border-radius:50%;object-fit:cover" />
+              <span id="user-name" data-role="name" style="max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></span>
+              <span data-role="menu-caret" aria-hidden="true" style="font-size:0.7rem;color:#6b7280">▼</span>
+            </button>
+            <div id="user-menu" data-role="menu-panel" style="display:none;position:absolute;right:0;top:calc(100% + 8px);min-width:260px;padding:16px;border:1px solid #e5e7eb;border-radius:12px;background:#fff;box-shadow:0 18px 38px rgba(15,23,42,0.16);z-index:40"></div>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="container" style="display:grid;gap:32px;padding-top:32px;padding-bottom:64px">
+      <section style="display:grid;gap:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+          <div>
+            <h1 class="h1" style="margin:0">{title}</h1>
+            <p style="margin:4px 0 0;font-size:0.95rem;opacity:0.7">{serverT('profile.desc')}</p>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap" role="group" aria-label={serverT('profile.stats.scopeLabel')}>
+            <button id="scope-all" class="btn btn-primary" type="button" data-scope="all" aria-pressed="true">{serverT('profile.scope.all')}</button>
+            <button id="scope-30d" class="btn" type="button" data-scope="30d" aria-pressed="false">{serverT('profile.scope.30d')}</button>
+          </div>
+        </div>
+        <div id="stats-message" style="min-height:1.2em;font-size:0.9rem"></div>
+        <div id="stats-panel" class="stats-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px">
+          <article class="card" style="padding:20px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;display:grid;gap:8px">
+            <h2 style="margin:0;font-size:0.95rem;opacity:0.65">{serverT('profile.stats.totalAnswers')}</h2>
+            <p id="stats-total" style="margin:0;font-size:1.8rem;font-weight:600">0</p>
+          </article>
+          <article class="card" style="padding:20px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;display:grid;gap:8px">
+            <h2 style="margin:0;font-size:0.95rem;opacity:0.65">{serverT('profile.stats.accuracy')}</h2>
+            <p id="stats-accuracy" style="margin:0;font-size:1.8rem;font-weight:600">0%</p>
+          </article>
+          <article class="card" style="padding:20px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;display:grid;gap:8px">
+            <h2 style="margin:0;font-size:0.95rem;opacity:0.65">{serverT('profile.stats.points')}</h2>
+            <p id="stats-points" style="margin:0;font-size:1.8rem;font-weight:600">0</p>
+          </article>
+          <article class="card" style="padding:20px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;display:grid;gap:8px">
+            <h2 style="margin:0;font-size:0.95rem;opacity:0.65">{serverT('profile.stats.rank')}</h2>
+            <p id="stats-rank" style="margin:0;font-size:1.8rem;font-weight:600">—</p>
+            <span id="stats-percentile" style="font-size:0.85rem;opacity:0.7"></span>
+          </article>
+        </div>
+      </section>
+
+      <section style="display:grid;gap:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+          <h2 class="h2" style="margin:0">{serverT('profile.sections.myRooms')}</h2>
+          <a class="btn" href={`/${lang}/create-room`} style="font-size:0.9rem">{serverT('profile.sections.createRoom')}</a>
+        </div>
+        <div id="created-tabs" role="tablist" aria-label={serverT('profile.sections.myRooms')} style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-primary" data-status="published" type="button" aria-pressed="true">{serverT('myRooms.published')}</button>
+          <button class="btn" data-status="draft" type="button" aria-pressed="false">{serverT('myRooms.drafts')}</button>
+        </div>
+        <div id="created-message" style="min-height:1.1em;font-size:0.9rem"></div>
+        <div id="created-list" style="display:grid;gap:12px"></div>
+        <div id="created-pagination" style="display:none;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px"></div>
+      </section>
+
+      <section style="display:grid;gap:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+          <h2 class="h2" style="margin:0">{serverT('profile.sections.participations')}</h2>
+      </div>
+        <div id="participations-message" style="min-height:1.1em;font-size:0.9rem"></div>
+        <div id="participations-list" style="display:grid;gap:12px"></div>
+      </section>
+    </main>
+    <script type="module" src="/js/i18n.js"></script>
+    <script src="/js/room-templates.js" is:inline></script>
+    <script type="module">
+      (async function() {
+        await import('/js/i18n.js')
+        const { setupUserMenu } = await import('/js/user-menu.js')
+        const { setupRoomsManager } = await import('/js/rooms-manager.js')
+        const lang = document.documentElement.getAttribute('lang') || 'en'
+        const profileStatsV1 = (import.meta.env && import.meta.env.PUBLIC_FEATURE_PROFILE_V1 !== 'false')
+
+        const authBtn = document.getElementById('auth-btn')
+        const userInfo = document.getElementById('user-info')
+        const langSwitch = document.getElementById('lang-switch')
+        const statsTotalEl = document.getElementById('stats-total')
+        const statsAccuracyEl = document.getElementById('stats-accuracy')
+        const statsPointsEl = document.getElementById('stats-points')
+        const statsRankEl = document.getElementById('stats-rank')
+        const statsPercentileEl = document.getElementById('stats-percentile')
+        const statsMessageEl = document.getElementById('stats-message')
+        const scopeAllBtn = document.getElementById('scope-all')
+        const scope30dBtn = document.getElementById('scope-30d')
+        const createdList = document.getElementById('created-list')
+        const createdPagination = document.getElementById('created-pagination')
+        const createdMessage = document.getElementById('created-message')
+        const participationsList = document.getElementById('participations-list')
+        const participationsMessage = document.getElementById('participations-message')
+
+        if (!profileStatsV1) {
+          if (statsMessageEl) {
+            statsMessageEl.textContent = window.t('profile.stats.fallback')
+          }
+          return
+        }
+
+        function computeRedirectPath(targetLang) {
+          const url = new URL(window.location.href)
+          const segments = url.pathname.split('/').filter(Boolean)
+          if (segments.length === 0) {
+            segments.push(targetLang)
+          } else {
+            segments[0] = targetLang
+          }
+          return '/' + segments.join('/') + url.search + url.hash
+        }
+
+        if (langSwitch) {
+          langSwitch.addEventListener('change', function() {
+            const target = langSwitch.value || lang
+            window.location.href = computeRedirectPath(target)
+          })
+        }
+
+        function showStatsMessage(text, isError) {
+          if (!statsMessageEl) return
+          if (!text) {
+            statsMessageEl.textContent = ''
+            return
+          }
+          statsMessageEl.textContent = text
+          statsMessageEl.style.color = isError ? '#d00' : '#059669'
+        }
+
+        function showCreatedMessage(text, isError) {
+          if (!createdMessage) return
+          if (!text) {
+            createdMessage.textContent = ''
+            return
+          }
+          createdMessage.textContent = text
+          createdMessage.style.color = isError ? '#d00' : '#059669'
+        }
+
+        function showParticipationsMessage(text, isError) {
+          if (!participationsMessage) return
+          if (!text) {
+            participationsMessage.textContent = ''
+            return
+          }
+          participationsMessage.textContent = text
+          participationsMessage.style.color = isError ? '#d00' : '#059669'
+        }
+
+        const userMenu = setupUserMenu({
+          lang: lang,
+          t: function(key) { return window.t(key) },
+          profileUrl: function(targetLang) { return '/' + targetLang + '/profile' },
+          aboutUrl: function(targetLang) { return '/' + targetLang + '/about' },
+          privacyUrl: function() { return 'https://quizyparty.com/privacy' },
+          termsUrl: function() { return 'https://quizyparty.com/terms' },
+          onLogout: async function() {
+            try {
+              await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
+            } catch (e) {
+              console.error('Logout failed', e)
+            }
+            window.location.reload()
+          }
+        })
+
+        if (authBtn) {
+          authBtn.addEventListener('click', function() {
+            window.location.href = '/api/auth/google/login?redirect=' + encodeURIComponent(window.location.pathname)
+          })
+        }
+
+        function formatAccuracy(value) {
+          const percent = Math.round(value * 1000) / 10
+          return percent.toFixed(1) + '%'
+        }
+
+        function formatNumber(value) {
+          return value.toLocaleString()
+        }
+
+        function formatDate(timestamp) {
+          if (!timestamp) return ''
+          const date = new Date(timestamp)
+          if (!date.getTime()) return ''
+          try {
+            const locale = lang === 'zh-hant' || lang === 'zh-hans' ? 'zh-TW' : lang
+            return date.toLocaleString(locale, { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+          } catch (e) {
+            return date.toLocaleString()
+          }
+        }
+
+        function computeScore(correct, total, totalTimeMs) {
+          if (total <= 0) return 0
+          const accuracy = correct / total
+          const maxTime = 15000
+          const averageTime = totalTimeMs > 0 ? totalTimeMs / total : maxTime
+          const clamped = Math.min(Math.max(averageTime, 0), maxTime)
+          const quantityScore = correct * 100
+          const accuracyScore = accuracy * 600
+          const speedScore = ((maxTime - clamped) / maxTime) * 300
+          const totalScore = quantityScore + accuracyScore + Math.max(0, speedScore)
+          return Math.round(totalScore)
+        }
+
+        async function checkAuth() {
+          try {
+            const res = await fetch('/api/auth/me', { credentials: 'include' })
+            if (!res.ok) {
+              if (authBtn) authBtn.style.display = 'block'
+              if (userInfo) userInfo.style.display = 'none'
+              if (userMenu && typeof userMenu.clearUser === 'function') {
+                userMenu.clearUser()
+              }
+              showStatsMessage(window.t('profile.notLoggedIn'), true)
+              return null
+            }
+            const json = await res.json()
+            if (json && json.authenticated && json.user) {
+            if (authBtn) authBtn.style.display = 'none'
+            if (userInfo) userInfo.style.display = 'flex'
+            if (userMenu && typeof userMenu.applyUser === 'function') {
+              userMenu.applyUser(json.user)
+            }
+            return json.user
+            }
+            showStatsMessage(window.t('profile.notLoggedIn'), true)
+            return null
+          } catch (e) {
+            console.error('[profile] auth check failed', e)
+            showStatsMessage(window.t('errors.networkError'), true)
+            return null
+          }
+        }
+
+        const currentUser = await checkAuth()
+        if (!currentUser) {
+          return
+        }
+
+        let statsAll = null
+        let historyRecords = []
+        let participationsAll = []
+        let leaderboardEntries = []
+        let createdManager = null
+        let currentScope = 'all'
+
+        async function fetchStats() {
+          try {
+            const res = await fetch('/api/scores/stats?userId=' + encodeURIComponent(currentUser.id), { credentials: 'include' })
+            if (res.ok) {
+              statsAll = await res.json()
+            }
+          } catch (e) {
+            console.error('[profile] fetch stats failed', e)
+          }
+        }
+
+        async function fetchHistory() {
+          try {
+            const res = await fetch('/api/scores/history?userId=' + encodeURIComponent(currentUser.id) + '&limit=100', { credentials: 'include' })
+            if (res.ok) {
+              const json = await res.json()
+              historyRecords = Array.isArray(json.history) ? json.history : []
+            }
+          } catch (e) {
+            console.error('[profile] fetch history failed', e)
+          }
+        }
+
+        async function fetchParticipations() {
+          try {
+            const res = await fetch('/api/scores/rooms?userId=' + encodeURIComponent(currentUser.id) + '&limit=100', { credentials: 'include' })
+            if (res.ok) {
+              const json = await res.json()
+              participationsAll = Array.isArray(json.rooms) ? json.rooms : []
+            }
+          } catch (e) {
+            console.error('[profile] fetch participations failed', e)
+          }
+        }
+
+        async function fetchLeaderboard() {
+          try {
+            const res = await fetch('/api/scores/leaderboard?limit=200')
+            if (res.ok) {
+              const json = await res.json()
+              leaderboardEntries = Array.isArray(json.leaderboard) ? json.leaderboard : []
+            }
+          } catch (e) {
+            console.error('[profile] fetch leaderboard failed', e)
+          }
+        }
+
+        await Promise.all([fetchStats(), fetchHistory(), fetchParticipations(), fetchLeaderboard()])
+
+        function findLeaderboardEntry(userId) {
+          for (let i = 0; i < leaderboardEntries.length; i += 1) {
+            const entry = leaderboardEntries[i]
+            if (entry && entry.userId === userId) {
+              return { entry: entry, index: i }
+            }
+          }
+          return null
+        }
+
+        function computeStatsForScope(scope) {
+          const now = Date.now()
+          const threshold = now - 30 * 24 * 60 * 60 * 1000
+          let totalAnswered = 0
+          let totalCorrect = 0
+          let totalTime = 0
+          let points = 0
+          let accuracy = 0
+          let rankDisplay = '—'
+          let percentileDisplay = ''
+
+          let records = historyRecords
+          if (scope === '30d') {
+            records = historyRecords.filter(function(record) {
+              return record && record.answeredAt >= threshold
+            })
+          }
+          for (let i = 0; i < records.length; i += 1) {
+            const record = records[i]
+            if (!record) continue
+            totalAnswered += 1
+            if (record.isCorrect) totalCorrect += 1
+            if (typeof record.timeSpentMs === 'number') {
+              totalTime += record.timeSpentMs
+            }
+          }
+          if (totalAnswered > 0) {
+            accuracy = totalCorrect / totalAnswered
+          }
+          points = computeScore(totalCorrect, totalAnswered, totalTime)
+
+          if (scope === 'all' && statsAll) {
+            totalAnswered = typeof statsAll.totalAnswered === 'number' ? statsAll.totalAnswered : totalAnswered
+            const totalCorrectAll = typeof statsAll.totalCorrect === 'number' ? statsAll.totalCorrect : totalCorrect
+            accuracy = totalAnswered > 0 ? totalCorrectAll / totalAnswered : 0
+            const entryInfo = findLeaderboardEntry(currentUser.id)
+            if (entryInfo) {
+              const entry = entryInfo.entry
+              points = typeof entry.score === 'number' ? entry.score : points
+              const position = entryInfo.index + 1
+              const totalPlayers = leaderboardEntries.length
+              rankDisplay = '#' + position
+              if (totalPlayers > 0) {
+                const percentile = Math.round((position / totalPlayers) * 100)
+                percentileDisplay = window.t('profile.stats.percentile').replace('{value}', String(percentile))
+              }
+            }
+          } else if (scope === 'all' && statsAll && typeof statsAll.totalCorrect === 'number' && typeof statsAll.totalAnswered === 'number') {
+            const entry = findLeaderboardEntry(currentUser.id)
+            if (entry) {
+              rankDisplay = '#' + (entry.index + 1)
+              const totalPlayers = leaderboardEntries.length
+              if (totalPlayers > 0) {
+                const percentile = Math.round(((entry.index + 1) / totalPlayers) * 100)
+                percentileDisplay = window.t('profile.stats.percentile').replace('{value}', String(percentile))
+              }
+            }
+          }
+
+          return {
+            totalAnswered: totalAnswered,
+            accuracy: accuracy,
+            points: points,
+            rankLabel: rankDisplay,
+            percentileLabel: percentileDisplay,
+          }
+        }
+
+        function renderStats(scope) {
+          const stats = computeStatsForScope(scope)
+          if (statsTotalEl) statsTotalEl.textContent = formatNumber(stats.totalAnswered)
+          if (statsAccuracyEl) statsAccuracyEl.textContent = formatAccuracy(stats.accuracy || 0)
+          if (statsPointsEl) statsPointsEl.textContent = formatNumber(stats.points || 0)
+          if (statsRankEl) statsRankEl.textContent = stats.rankLabel || '—'
+          if (statsPercentileEl) statsPercentileEl.textContent = stats.percentileLabel || ''
+        }
+
+        function renderParticipations(scope) {
+          if (!participationsList) return
+          participationsList.innerHTML = '<p style="padding:16px;text-align:center;opacity:0.6">' + window.t('room.loading') + '</p>'
+          const now = Date.now()
+          const threshold = now - 30 * 24 * 60 * 60 * 1000
+          let items = participationsAll
+          if (scope === '30d') {
+            items = participationsAll.filter(function(item) {
+              return item && item.lastAnsweredAt >= threshold
+            })
+          }
+          if (!items.length) {
+            participationsList.innerHTML = '<p style="padding:16px;text-align:center;opacity:0.6">' + window.t('profile.participations.empty') + '</p>'
+              return
+            }
+          participationsList.innerHTML = ''
+          for (let i = 0; i < items.length; i += 1) {
+            const item = items[i]
+            if (!item) continue
+            const card = document.createElement('div')
+            card.style.display = 'grid'
+            card.style.gap = '8px'
+            card.style.padding = '16px'
+            card.style.border = '1px solid #e5e7eb'
+            card.style.borderRadius = '12px'
+            card.style.background = '#fff'
+
+            const title = document.createElement('div')
+            title.style.display = 'flex'
+            title.style.justifyContent = 'space-between'
+            title.style.alignItems = 'center'
+            title.style.flexWrap = 'wrap'
+            title.style.gap = '8px'
+
+            const heading = document.createElement('h3')
+            heading.style.margin = '0'
+            heading.style.fontSize = '1rem'
+            heading.textContent = item.roomTitle || window.t('profile.roomIdLabel') + ' ' + item.roomId
+            title.appendChild(heading)
+
+            const time = document.createElement('span')
+            time.style.fontSize = '0.85rem'
+            time.style.opacity = '0.65'
+            time.textContent = formatDate(item.lastAnsweredAt)
+            title.appendChild(time)
+
+            card.appendChild(title)
+
+            const meta = document.createElement('div')
+            meta.style.display = 'flex'
+            meta.style.gap = '16px'
+            meta.style.flexWrap = 'wrap'
+            meta.style.fontSize = '0.9rem'
+            meta.style.opacity = '0.75'
+
+            const countSpan = document.createElement('span')
+            countSpan.textContent = window.t('profile.participations.total').replace('{value}', String(item.totalAnswered || 0))
+            meta.appendChild(countSpan)
+
+            const accuracySpan = document.createElement('span')
+            const accuracyValue = item.totalAnswered > 0 ? Math.round((item.accuracy || 0) * 1000) / 10 : 0
+            accuracySpan.textContent = window.t('profile.participations.accuracy').replace('{value}', accuracyValue.toFixed(1) + '%')
+            meta.appendChild(accuracySpan)
+
+            card.appendChild(meta)
+
+            const actions = document.createElement('div')
+            actions.style.display = 'flex'
+            actions.style.gap = '8px'
+            actions.style.flexWrap = 'wrap'
+
+            const replay = document.createElement('a')
+            replay.className = 'btn'
+            replay.style.fontSize = '0.85rem'
+            replay.href = '/' + lang + '/room/' + encodeURIComponent(item.roomId)
+            replay.textContent = window.t('profile.history.playAgain')
+            actions.appendChild(replay)
+
+            card.appendChild(actions)
+            participationsList.appendChild(card)
+          }
+        }
+
+        function updateScopeButtons(scope) {
+          const buttons = [scopeAllBtn, scope30dBtn]
+          for (let i = 0; i < buttons.length; i += 1) {
+            const button = buttons[i]
+            if (!button) continue
+            const targetScope = button.getAttribute('data-scope') || 'all'
+            const isActive = targetScope === scope
+            if (isActive) {
+              button.classList.add('btn-primary')
+              button.classList.remove('btn')
+              button.setAttribute('aria-pressed', 'true')
+            } else {
+              button.classList.remove('btn-primary')
+              button.classList.add('btn')
+              button.setAttribute('aria-pressed', 'false')
+            }
+          }
+        }
+
+        const createdTabsContainer = document.getElementById('created-tabs')
+        const createdTabs = createdTabsContainer ? Array.prototype.slice.call(createdTabsContainer.querySelectorAll('[data-status]')).map(function(button) {
+          return { status: button.getAttribute('data-status') || 'published', button: button }
+        }) : []
+
+        createdManager = setupRoomsManager({
+          listEl: createdList,
+          paginationEl: createdPagination,
+          tabs: createdTabs,
+          lang: lang,
+          t: function(key) { return window.t(key) },
+          pageSize: 5,
+          onNotify: function(text, isError) { showCreatedMessage(text, isError) },
+          filter: function(template) {
+            if (!template || !template.updatedAt) return true
+            if (currentScope !== '30d') return true
+            const updatedAt = template.updatedAt
+            const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000
+            return updatedAt >= cutoff
+          },
+          emptyText: window.t('profile.created.emptyScope')
+        })
+
+        function applyScope(scope) {
+          currentScope = scope
+          updateScopeButtons(scope)
+          renderStats(scope)
+          renderParticipations(scope)
+          if (createdManager && typeof createdManager.setFilter === 'function') {
+            createdManager.setFilter(function(template) {
+              if (!template || !template.updatedAt) return scope !== '30d'
+              if (scope !== '30d') return true
+              const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000
+              return template.updatedAt >= cutoff
+            })
+          }
+        }
+
+        if (scopeAllBtn) {
+          scopeAllBtn.addEventListener('click', function() {
+            applyScope('all')
+          })
+        }
+        if (scope30dBtn) {
+          scope30dBtn.addEventListener('click', function() {
+            applyScope('30d')
+          })
+        }
+
+        renderStats('all')
+        renderParticipations('all')
+        applyScope('all')
+      })()
+    </script>
+  </body>
+</html>
+

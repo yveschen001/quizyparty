@@ -1,0 +1,17 @@
+---
+import { t as tt } from '../i18n/t'
+import type { Locale } from '../i18n/config'
+
+const { managementUrl, lang = 'en' } = Astro.props as { managementUrl?: string; lang?: Locale }
+const ua = Astro.request.headers.get('user-agent') || ''
+const isIOS = /iPhone|iPad|iPod/i.test(ua)
+const isAndroid = /Android/i.test(ua)
+
+const IOS_SUBS = 'https://apps.apple.com/account/subscriptions'
+const AND_SUBS = 'https://play.google.com/store/account/subscriptions'
+const fallbackUrl = managementUrl ?? (isIOS ? IOS_SUBS : isAndroid ? AND_SUBS : AND_SUBS)
+const label = await tt((lang as Locale) || 'en', 'paywall.manage')
+---
+<a href={fallbackUrl} rel="noopener noreferrer">{label}</a>
+
+

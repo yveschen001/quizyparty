@@ -1,0 +1,13 @@
+---
+import { SUPPORTED_LOCALES, type Locale } from '../i18n/config'
+import { buildHreflangAlternates } from '../lib/seo'
+
+const { path, siteOrigin } = Astro.props as {
+  path: string
+  siteOrigin: string
+}
+const links = buildHreflangAlternates(siteOrigin, SUPPORTED_LOCALES, path)
+---
+{links.map(l => <link rel="alternate" hreflang={l.hreflang} href={l.href} />)}
+
+

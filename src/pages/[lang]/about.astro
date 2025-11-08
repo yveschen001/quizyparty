@@ -1,0 +1,67 @@
+---
+import { setupServerI18n } from '../../lib/server-i18n';
+import SeoMeta from '../../components/SeoMeta.astro'
+import '../../styles/base.css';
+
+const { lang, serverT } = await setupServerI18n(Astro.params.lang);
+const title = serverT('nav.about');
+const subtitle = serverT('home.hero.subtitle');
+
+export const prerender = false;
+const siteOrigin = (Astro.site && Astro.site.origin) || import.meta.env.SITE || 'https://quizyparty.com'
+const path = Astro.url.pathname
+---
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <SeoMeta lang={lang} title={title} description={subtitle} path={path} siteOrigin={siteOrigin} />
+  </head>
+  <body>
+    <a href="#main" class="sr-only">{serverT('a11y.skipToContent')}</a>
+    <header class="navbar">
+      <div class="container inner">
+        <a href={`/${lang}/`}>{serverT('nav.home')}</a>
+        <nav style="display:flex;gap:12px;align-items:center">
+          <label for="lang-switch" class="sr-only">{serverT('languages.label')}</label>
+          <select id="lang-switch" class="tab" style="font-size:0.85rem">
+            <option value="en" selected={lang === 'en'}>{serverT('languages.en')}</option>
+            <option value="zh-hant" selected={lang === 'zh-hant'}>{serverT('languages.zhHant')}</option>
+            <option value="zh-hans" selected={lang === 'zh-hans'}>{serverT('languages.zhHans')}</option>
+            <option value="ja" selected={lang === 'ja'}>{serverT('languages.ja')}</option>
+            <option value="ko" selected={lang === 'ko'}>{serverT('languages.ko')}</option>
+            <option value="de" selected={lang === 'de'}>{serverT('languages.de')}</option>
+            <option value="fr" selected={lang === 'fr'}>{serverT('languages.fr')}</option>
+          </select>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="container hero">
+      <h1 class="h1">{title}</h1>
+      <p>{subtitle}</p>
+      <a class="btn" href={`/${lang}/`}>{serverT('nav.home')}</a>
+    </main>
+    <script type="module">
+      (function(){
+        const lang = document.documentElement.getAttribute('lang') || 'en'
+        const langSwitch = document.getElementById('lang-switch')
+        function computeRedirectPath(targetLang) {
+          const url = new URL(window.location.href)
+          const segments = url.pathname.split('/').filter(Boolean)
+          if (segments.length === 0) {
+            segments.push(targetLang)
+          } else {
+            segments[0] = targetLang
+          }
+          return '/' + segments.join('/') + url.search + url.hash
+        }
+        if (langSwitch) {
+          langSwitch.addEventListener('change', function() {
+            const target = langSwitch.value || lang
+            window.location.href = computeRedirectPath(target)
+          })
+        }
+      })()
+    </script>
+  </body>
+</html>

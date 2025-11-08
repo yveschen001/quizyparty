@@ -1,0 +1,7 @@
+- [x] todo-1 | 盤點 zh-hant 語系字串，找出仍為英文或未翻譯的 key
+- [x] todo-2 | 對各頁面（home、create-room、room、profile 等）測試並記錄缺失翻譯
+- [ ] todo-3 | 補齊 zh-hant 翻譯並更新對應 i18n 檔與 fallback
+- [x] todo-4 | 調整偏好設定區塊改為預設收合，點擊後展開
+- [ ] todo-5 | 調整房間分享連結，提供可作答的房間網址
+- [ ] todo-6 | 首頁房間列表加上最近 24 小時 fallback，若無則擴展到 30 天
+- [ ] todo-7 | 未登入時隱藏或鎖定作答相關操作，修復 currentUser 初始化錯誤

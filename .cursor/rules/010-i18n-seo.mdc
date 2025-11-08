@@ -1,0 +1,64 @@
+---
+type: Auto Attached
+
+globs:
+  - "src/**/*.astro"
+  - "src/**/*.tsx"
+
+description: i18n + SEO 規範（對應 Web H5，Telegram/行動端共用文案規則）
+---
+
+# i18n
+
+## 核心原則
+
+- **嚴格禁止硬編碼**：任何面向使用者的文字（包括中文、英文、日文等所有語言）都必須使用 `t('...')` 或 `window.t('...')`，絕對禁止直接在代碼中寫死文字。
+- **所有文字都需要翻譯鍵**：包括：
+  - 標籤文字（label）
+  - 按鈕文字（button）
+  - 錯誤訊息（error messages）
+  - 提示訊息（hint messages）
+  - 成功訊息（success messages）
+  - 佔位符文字（placeholder）
+  - 選項文字（option text）
+  - 動態生成的文字（dynamic text）
+  - 確認對話框文字
+  - 工具提示文字（tooltip）
+
+## i18n Key 命名規範
+
+- 格式：`<domain>.<page>.<section>.<element>`（全小寫、dot 分隔）
+- 範例：
+  - `questions.form.submit` - 題目表單的提交按鈕
+  - `errors.createRoomFailed` - 建立房間失敗的錯誤訊息
+  - `questions.ai.generateSuccess` - AI 生成成功的訊息（支持參數 `{count}`）
+
+## 使用規範
+
+- **Astro 模板**：使用 `{await t(lang, 'key')}` 或 `{t(lang, 'key')}`
+- **客戶端 JavaScript**：使用 `window.t('key')` 或 `window.t('key').replace('{param}', value)`
+- **動態文字**：使用參數插值，例如 `window.t('questions.ai.generateSuccess').replace('{count}', String(count))`
+- **條件文字**：禁止使用 `lang === 'zh-hant' ? '中文' : 'English'`，必須使用 i18n keys
+
+## 例外情況
+
+- 測試、mocks 可放過字串，但必須標記 `// test-only`
+- 語言選項列表中的語言名稱可以保留（如 "繁體中文"、"English"），但建議也使用 i18n
+- 技術性的錯誤訊息（如 API 錯誤）可以使用英文，但應提供用戶友好的 i18n 版本
+
+## 檢查清單
+
+在提交代碼前，請確認：
+- [ ] 沒有硬編碼的中文文字
+- [ ] 沒有硬編碼的英文文字（除了技術性錯誤）
+- [ ] 所有動態文字都使用參數插值
+- [ ] 所有新增的文字都有對應的 i18n key
+- [ ] 所有語言文件（zh-hant, en, ja, ko, de, fr）都包含新添加的翻譯鍵
+
+
+# Multilingual SEO（僅 Web）
+
+- 每頁 `<html lang={locale}>`，設置 `title / description / og:* / twitter:*`。
+- 每個語言版本相互標註 `hreflang`（含 `x-default`），並確保雙向對應。建議做 `<HreflangLinks />` 元件集中輸出。
+- 站台必備 `@astrojs/sitemap`，在 `astro.config.mjs` 設置 `site`；大型多語站建議配置 i18n 參數與 robots.txt。
+- 禁止依 IP/UA 強制自動跳語言；務必提供清楚的語言切換連結。

@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+pnpm typecheck || exit 1
+pnpm i18n:keygen || exit 1
+pnpm i18n:check || exit 1
+pnpm lint-staged

@@ -1,0 +1,52 @@
+:root{
+  /* 字體 */
+  --font-sans: 'Inter', 'Noto Sans TC', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji';
+
+  /* 字級 */
+  --fs-xs: 12px;  /* 輔助標籤 */
+  --fs-sm: 14px;  /* 次要文字 */
+  --fs-md: 16px;  /* 內文預設 */
+  --fs-lg: 18px;  /* 小標題/重要按鈕 */
+  --fs-xl: 20px;  /* 卡片標題 */
+  --fs-2xl: 24px; /* 區塊標題 */
+  --fs-3xl: 28px; /* 頁面主標題 */
+
+  /* 行高 */
+  --lh-tight: 1.2;
+  --lh-normal: 1.5;
+
+  /* 間距 */
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+
+  /* 配色（WCAG 對比達標） */
+  --c-bg: #FFFFFF;
+  --c-text: #111827;
+  --c-muted: #6B7280;
+  --c-border: #E5E7EB;
+
+  --c-primary: #635BFF;
+  --c-primary-weak: #EEF2FF;
+  --c-success: #16A34A;
+  --c-warning: #F59E0B;
+  --c-danger: #DC2626;
+}
+
+.h1{font-size:var(--fs-3xl);line-height:var(--lh-tight);font-weight:800;letter-spacing:-0.01em}
+.h2{font-size:var(--fs-2xl);line-height:var(--lh-tight);font-weight:700}
+.h3{font-size:var(--fs-xl);line-height:var(--lh-tight);font-weight:700}
+.p{font-size:var(--fs-md);line-height:var(--lh-normal);color:var(--c-text)}
+.caption{font-size:var(--fs-sm);color:var(--c-muted)}
+
+.card{border:1px solid var(--c-border);border-radius:12px;background:var(--c-bg);padding:var(--sp-6)}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;background:var(--c-primary-weak);color:var(--c-primary);font-size:var(--fs-xs);font-weight:700}
+.tab{padding:6px 12px;border-radius:10px;border:1px solid var(--c-border);background:#fff}
+.tab.active{background:var(--c-primary);color:#fff;border-color:var(--c-primary)}
+
+@media (max-width: 640px) {
+  .stats-grid{grid-template-columns:1fr!important}
+}
+

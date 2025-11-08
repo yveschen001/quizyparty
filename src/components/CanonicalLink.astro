@@ -1,0 +1,14 @@
+---
+import type { Locale } from '../i18n/config'
+import { buildCanonical } from '../lib/seo'
+
+const { lang, path, siteOrigin } = Astro.props as {
+  lang: Locale
+  path: string
+  siteOrigin: string
+}
+const href = buildCanonical(siteOrigin, lang, path)
+---
+<link rel="canonical" href={href} />
+
+

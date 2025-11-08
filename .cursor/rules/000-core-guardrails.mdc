@@ -1,0 +1,40 @@
+---
+type: Always
+
+description: QuizyParty 核心守門規範。所有修改與新檔均需遵守（多端共用）。
+---
+
+# QuizyParty 核心守門
+
+- 一律使用 TypeScript，嚴格模式；新檔預設為 `.ts` 或 `.tsx`。
+- 不得在程式碼中硬編碼面向使用者的文字，全部走 `t('<domain.key>')`（測試檔除外）。
+- 組件與頁面需可 i18n；文件/註解/變數命名使用英文，顯示文案走 i18n。
+- 原則優先級：安全 > 可維護 > 效能 > 開發速度。
+- 無副作用的純函式優先；UI 與業務邏輯分層；資料請用型別守門（zod/TS）。
+- 可存取用戶資料的邏輯必須在 server 端；client 僅處理顯示與交互。
+- 首屏體驗：HTML < 35 KB（gz），每路由 JS < 150 KB（gz）；圖片用現代格式與 lazy。
+- 第三方 SDK（廣告/追蹤）必須在同意後掛載（遵循 CMP），並避免阻塞互動。
+
+## 檔案生成原則（File Evolution Policy）
+
+- 盡可能**更新原檔**而非新建：已有檔案/腳本/規範能擴充時，不另起新檔。
+- **單一來源原則（SSOT）**：避免重複職能的工具與腳本；如需新增，請先比對專案內是否已有等價功能。
+- **最小差異（Minimal Diff）**：偏好小改動、可讀 PR、明確變更點；避免大搬遷與不必要重命名。
+- **相容升級**：保留現有對外 API/匯出介面（必要時加 Deprecated 註解），逐步倒鉤遷移。
+
+## 移動端支付與秘密管理
+
+- SDK 公鑰（如 RevenueCat Public API Key）可放客戶端；**真正秘密**（OpenAI/平台私鑰/Webhook Auth）只存後端/CI Secret。
+- Web/H5 不直接發起商店支付；若採 Web Billing/Stripe，走後端發放/查詢權益，或用 RC 官方 Web SDK/Paywall Link。
+- Paywall 文案與價格顯示使用 i18n key；價格數值以 SDK 或後端返回為準，不硬編碼。
+
+## JavaScript 語法兼容性（Client-Side Code）
+
+- **禁止使用可選鏈結運算符（`?.`）**：在內嵌 `<script>` 或公開的 JS 檔案中，使用 `obj && obj.prop` 替代 `obj?.prop`。
+- **禁止使用空值合併運算符（`??`）**：使用 `||` 替代，或明確的條件判斷。
+- **禁止使用擴展運算符（`...obj`）**：在 fetch/API 呼叫中，明確展開物件屬性，或使用 `Object.assign()`。
+- **避免模板字串中的表達式**：在需要兼容舊瀏覽器的場景，使用字串拼接 `'str' + var + 'str'` 替代 `` `str ${var} str` ``。
+- **避免數字字面量前綴點**：使用 `0.6` 而非 `.6`，避免解析錯誤。
+- **Astro 內嵌腳本中的變數注入**：不使用 `{JSON.stringify(lang)}` 直接注入，改用 DOM 屬性（`data-*` 或 `document.documentElement.getAttribute('lang')`）或明確的 `const lang = 'en'` 字面量。
+- **禁止在模組腳本頂層使用 `return`**：在 `<script type="module">` 中，將所有邏輯包裝在立即執行的函數中 `(async function() { ... })()`，避免「Illegal return statement」錯誤。
+- **錯誤處理**：所有 API 調用必須有錯誤處理，顯示用戶友好的錯誤訊息；避免靜默失敗導致 UI 顯示異常。

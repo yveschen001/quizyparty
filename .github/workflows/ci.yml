@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push: { branches: [ main ] }
+  pull_request: { branches: [ main ] }
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v3
+        with: { version: 9 }
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.18.0'
+          cache: 'pnpm'
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck / i18n / Lint / Build / SEO
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          RC_WEBHOOK_AUTH: ${{ secrets.RC_WEBHOOK_AUTH }}
+          RC_IOS_PUBLIC_API_KEY: ${{ secrets.RC_IOS_PUBLIC_API_KEY }}
+          RC_ANDROID_PUBLIC_API_KEY: ${{ secrets.RC_ANDROID_PUBLIC_API_KEY }}
+          SITE: https://quizyparty.com
+        run: |
+          pnpm typecheck
+          pnpm i18n:keygen
+          pnpm i18n:check
+          pnpm lint
+          pnpm build
+          pnpm seo:check
+
+

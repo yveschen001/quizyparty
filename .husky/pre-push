@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+NODE_MAJOR=$(node -p "process.versions.node.split('.')[0]")
+if [ "$NODE_MAJOR" -ge 20 ]; then
+  echo "Node $NODE_MAJOR detected → running i18n:scan"
+  pnpm i18n:scan || exit 1
+else
+  echo "Node $NODE_MAJOR detected → skipping i18n:scan (will run in CI)"
+fi
+
+
