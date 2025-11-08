@@ -1,16 +1,13 @@
-export const SUPPORTED_LOCALES = ['zh-hant','zh-hans','ja','en','ko','de','fr'] as const;
+export const SUPPORTED_LOCALES = ['en','zh-hant','zh-hans','ja'] as const;
 export type Locale = typeof SUPPORTED_LOCALES[number];
 
-export const DEFAULT_LOCALE: Locale = 'zh-hant';
+export const DEFAULT_LOCALE: Locale = 'en';
 
 export const LOCALE_TAG_MAP: Record<Locale, string> = {
+  'en': 'en_US',
   'zh-hant': 'zh_TW',
   'zh-hans': 'zh_CN',
   'ja': 'ja_JP',
-  'en': 'en_US',
-  'ko': 'ko_KR',
-  'de': 'de_DE',
-  'fr': 'fr_FR',
 };
 
 export const NAMESPACES = [

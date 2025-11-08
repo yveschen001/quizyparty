@@ -1,0 +1,39 @@
+---
+const { lang, serverT } = Astro.props as { lang: string; serverT: (k: string) => string }
+---
+<section aria-labelledby="create-room-cta" style="margin-top:24px;display:grid;gap:16px">
+  <h2 id="create-room-cta" class="h2" style="margin:0">{serverT('createRoom.cta.title')}</h2>
+  <div class="grid" style="display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
+    <article class="card" style="display:grid;gap:8px">
+      <h3 class="h3" style="margin:0">{serverT('createRoom.cta.manage.title')}</h3>
+      <p class="p" style="margin:0;opacity:0.85">{serverT('createRoom.cta.manage.desc')}</p>
+      <div><a href={`/${lang}/rooms/created`} class="btn btn-primary">{serverT('createRoom.cta.manage.action')}</a></div>
+    </article>
+    <article class="card" style="display:grid;gap:8px">
+      <h3 class="h3" style="margin:0">{serverT('createRoom.cta.import.title')}</h3>
+      <p class="p" style="margin:0;opacity:0.85">{serverT('createRoom.cta.import.desc')}</p>
+      <div><button id="cta-browse-library" type="button" class="btn btn-primary">{serverT('createRoom.cta.import.action')}</button></div>
+    </article>
+    <article class="card" style="display:grid;gap:8px">
+      <h3 class="h3" style="margin:0">{serverT('createRoom.cta.afterPublish.title')}</h3>
+      <ul class="p" style="margin:0 0 0 18px;opacity:0.9;display:grid;gap:6px;list-style:disc">
+        <li>{serverT('createRoom.cta.afterPublish.point1')}</li>
+        <li>{serverT('createRoom.cta.afterPublish.point2')}</li>
+        <li>{serverT('createRoom.cta.afterPublish.point3')}</li>
+      </ul>
+    </article>
+  </div>
+  <script type="module">
+    const trigger = document.getElementById('cta-browse-library')
+    if (trigger) {
+      trigger.addEventListener('click', function(){
+        const btn = document.querySelector('[data-browse-library]')
+        if (btn && typeof (btn as HTMLButtonElement).click === 'function') {
+          ;(btn as HTMLButtonElement).click()
+        }
+      })
+    }
+  </script>
+</section>
+
+
