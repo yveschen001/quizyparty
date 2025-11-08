@@ -1,0 +1,71 @@
+---
+import { setupServerI18n } from '../../../lib/server-i18n'
+import SeoMeta from '../../../components/SeoMeta.astro'
+import AppHeader from '../../../components/layout/AppHeader.astro'
+import '../../../styles/base.css'
+
+const { lang, serverT } = await setupServerI18n(Astro.params.lang)
+const title = serverT('profile.sections.myRooms')
+const desc = serverT('profile.sections.myRooms')
+
+export const prerender = false
+const siteOrigin = (Astro.site && Astro.site.origin) || import.meta.env.SITE || 'https://quizyparty.com'
+const path = Astro.url.pathname
+---
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <SeoMeta lang={lang} title={title} description={desc} path={path} siteOrigin={siteOrigin} />
+  </head>
+  <body>
+    <a href="#main" class="sr-only">{serverT('a11y.skipToContent')}</a>
+    <AppHeader lang={lang} serverT={serverT} />
+    <main id="main" class="container" style="display:grid;gap:16px;padding-top:24px;padding-bottom:48px">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <h1 class="h1" style="margin:0">{title}</h1>
+        <a class="btn" href={`/${lang}/create-room`} style="font-size:0.9rem">{serverT('profile.sections.createRoom')}</a>
+      </div>
+      <div id="created-tabs" role="tablist" aria-label={serverT('profile.sections.myRooms')} style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-primary" data-status="published" type="button" aria-pressed="true">{serverT('myRooms.published')}</button>
+        <button class="btn" data-status="draft" type="button" aria-pressed="false">{serverT('myRooms.drafts')}</button>
+      </div>
+      <div id="created-message" style="min-height:1.1em;font-size:0.9rem"></div>
+      <div id="created-list" style="display:grid;gap:12px"></div>
+      <div id="created-pagination" style="display:none;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px"></div>
+    </main>
+    <script type="module" src="/js/i18n.js"></script>
+    <script src="/js/room-templates.js" is:inline></script>
+    <script type="module">
+      (async function(){
+        await import('/js/i18n.js')
+        const { setupRoomsManager } = await import('/js/rooms-manager.js')
+        const lang = document.documentElement.getAttribute('lang') || 'en'
+        const createdList = document.getElementById('created-list')
+        const createdPagination = document.getElementById('created-pagination')
+        const createdMessage = document.getElementById('created-message')
+        const createdTabsContainer = document.getElementById('created-tabs')
+        const createdTabs = createdTabsContainer ? Array.prototype.slice.call(createdTabsContainer.querySelectorAll('[data-status]')).map(function(button) {
+          return { status: button.getAttribute('data-status') || 'published', button: button }
+        }) : []
+        const mgr = setupRoomsManager({
+          listEl: createdList,
+          paginationEl: createdPagination,
+          tabs: createdTabs,
+          lang: lang,
+          t: function(key){ return window.t(key) },
+          pageSize: 10,
+          onNotify: function(text, isError) {
+            if (!createdMessage) return
+            createdMessage.textContent = text || ''
+            createdMessage.style.color = isError ? '#d00' : '#059669'
+          },
+          emptyText: window.t('profile.created.emptyScope')
+        })
+        if (mgr && mgr.refresh) mgr.refresh()
+      })()
+    </script>
+  </body>
+  </html>
+*** End Patch*** }```} error code: 400, error: Bad RequestThe arguments to the tool are not valid JSON: invalid character '*' looking for beginning of object key string. Please ensure your function arguments is valid JSON. Also ensure that the argument "code_edit" is a valid patch. Please ensure that you escape any control characters in the patch such as newlines. Please ensure that both the keys and values in PATCH_ARGS are valid JSON. Also ensure that you pass a single JSON object in the call. (If you are requesting multiple actions, please send them in separate calls.)
+

@@ -1,4 +1,4 @@
-const INTERFACE_LANGS = ['en', 'zh-hant', 'zh-hans', 'ja', 'ko', 'de', 'fr']
+const INTERFACE_LANGS = ['en', 'zh-hant', 'zh-hans', 'ja']
 
 function readInterfacePreference(defaultLang) {
   const stored = window.localStorage.getItem('qp_interface_lang')
@@ -49,9 +49,6 @@ function buildLanguageOptions(t) {
     'zh-hant': t('languages.zhHant'),
     'zh-hans': t('languages.zhHans'),
     ja: t('languages.ja'),
-    ko: t('languages.ko'),
-    de: t('languages.de'),
-    fr: t('languages.fr'),
   }
 }
 

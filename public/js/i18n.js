@@ -70,9 +70,15 @@
 
   function normaliseLang(raw) {
     if (!raw) return DEFAULT_LANG
-    var lower = raw.toLowerCase()
-    if (lower === 'zh-hant' || lower === 'zh-hans') return lower
-    return lower
+    var lower = String(raw).toLowerCase()
+    // 僅允許已支援的語言代碼；其餘一律回退預設
+    if (lower === 'en' || lower === 'zh-hant' || lower === 'zh-hans' || lower === 'ja') return lower
+    // 一些常見別名做轉換
+    if (lower === 'zh-tw' || lower === 'zh-hk') return 'zh-hant'
+    if (lower === 'zh-cn' || lower === 'zh') return 'zh-hans'
+    if (lower.startsWith('en')) return 'en'
+    if (lower.startsWith('ja')) return 'ja'
+    return DEFAULT_LANG
   }
 
   function getActiveLang() {
@@ -81,6 +87,15 @@
     if (!cache[docLang]) loadLocale(docLang)
     if (cache[docLang] && Object.keys(cache[docLang]).length) return docLang
     return FALLBACK_LANG
+  }
+
+  function isDev() {
+    try {
+      var host = (window && window.location && window.location.hostname) || ''
+      return host === 'localhost' || host === '127.0.0.1'
+    } catch (e) {
+      return false
+    }
   }
 
   function translate(key) {
@@ -98,7 +113,8 @@
       if (typeof console !== 'undefined' && console.warn) {
         console.warn('[i18n] Missing translation key:', key, 'lang:', lang)
       }
-      return key
+      // 開發期用 🚧 標記缺字；正式環境回退為英文 key 或原 key
+      return isDev() ? ('🚧 ' + key) : (key)
     }
 
     return value

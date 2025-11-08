@@ -313,6 +313,15 @@
   "languages.de": "Deutsch",
   "languages.fr": "Französisch",
   "languages.label": "Sprache",
+  "common.viewAll": "Alle anzeigen",
+  "common.save": "Speichern",
+  "common.cancel": "Abbrechen",
+  "profile.settings.title": "Einstellungen",
+  "profile.settings.close": "Schließen",
+  "profile.cards.created.title": "Meine erstellten Räume",
+  "profile.cards.created.desc": "Verwalte deine Quizze, wechsle Veröffentlicht/Entwurf und bearbeite schnell.",
+  "profile.cards.joined.title": "Meine beigetretenen Räume",
+  "profile.cards.joined.desc": "Sieh deine Historie und Genauigkeit, spiele erneut."
   "questions.form.choicePlaceholder": "Antwort {count}"
 }
 

@@ -2,6 +2,7 @@
 import { setupServerI18n } from '../../lib/server-i18n'
 import SeoMeta from '../../components/SeoMeta.astro'
 import '../../styles/base.css'
+import AppHeader from '../../components/layout/AppHeader.astro'
 
 const { lang, serverT } = await setupServerI18n(Astro.params.lang)
 const title = serverT('profile.title')
@@ -19,32 +20,7 @@ const path = Astro.url.pathname
   </head>
   <body>
     <a href="#main" class="sr-only">{serverT('a11y.skipToContent')}</a>
-    <header class="navbar">
-      <div class="container inner">
-        <a href={`/${lang}/`}>{serverT('nav.home')}</a>
-        <nav style="display:flex;gap:12px;align-items:center">
-          <label for="lang-switch" class="sr-only">{serverT('languages.label')}</label>
-          <select id="lang-switch" class="tab" style="font-size:0.85rem">
-            <option value="en" selected={lang === 'en'}>{serverT('languages.en')}</option>
-            <option value="zh-hant" selected={lang === 'zh-hant'}>{serverT('languages.zhHant')}</option>
-            <option value="zh-hans" selected={lang === 'zh-hans'}>{serverT('languages.zhHans')}</option>
-            <option value="ja" selected={lang === 'ja'}>{serverT('languages.ja')}</option>
-            <option value="ko" selected={lang === 'ko'}>{serverT('languages.ko')}</option>
-            <option value="de" selected={lang === 'de'}>{serverT('languages.de')}</option>
-            <option value="fr" selected={lang === 'fr'}>{serverT('languages.fr')}</option>
-          </select>
-          <button id="auth-btn" class="btn" style="font-size:0.875rem;display:none">{serverT('auth.login')}</button>
-          <div id="user-info" style="display:none;position:relative;align-items:center">
-            <button id="user-menu-trigger" data-role="menu-trigger" type="button" style="display:flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;font-size:0.875rem;cursor:pointer">
-              <img id="user-avatar" data-role="avatar" src="" alt="" style="width:28px;height:28px;border-radius:50%;object-fit:cover" />
-              <span id="user-name" data-role="name" style="max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></span>
-              <span data-role="menu-caret" aria-hidden="true" style="font-size:0.7rem;color:#6b7280">▼</span>
-            </button>
-            <div id="user-menu" data-role="menu-panel" style="display:none;position:absolute;right:0;top:calc(100% + 8px);min-width:260px;padding:16px;border:1px solid #e5e7eb;border-radius:12px;background:#fff;box-shadow:0 18px 38px rgba(15,23,42,0.16);z-index:40"></div>
-          </div>
-        </nav>
-      </div>
-    </header>
+    <AppHeader lang={lang} serverT={serverT} />
     <main id="main" class="container" style="display:grid;gap:32px;padding-top:32px;padding-bottom:64px">
       <section style="display:grid;gap:16px">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
@@ -52,9 +28,12 @@ const path = Astro.url.pathname
             <h1 class="h1" style="margin:0">{title}</h1>
             <p style="margin:4px 0 0;font-size:0.95rem;opacity:0.7">{serverT('profile.desc')}</p>
           </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap" role="group" aria-label={serverT('profile.stats.scopeLabel')}>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center" role="group" aria-label={serverT('profile.stats.scopeLabel')}>
             <button id="scope-all" class="btn btn-primary" type="button" data-scope="all" aria-pressed="true">{serverT('profile.scope.all')}</button>
             <button id="scope-30d" class="btn" type="button" data-scope="30d" aria-pressed="false">{serverT('profile.scope.30d')}</button>
+            <button id="open-settings" class="btn" type="button" aria-label="Settings" title="Settings" style="display:inline-flex;align-items:center;gap:6px">
+              <span aria-hidden="true">⚙️</span><span class="sr-only">Settings</span>
+            </button>
           </div>
         </div>
         <div id="stats-message" style="min-height:1.2em;font-size:0.9rem"></div>
@@ -79,7 +58,22 @@ const path = Astro.url.pathname
         </div>
       </section>
 
-      <section style="display:grid;gap:16px">
+      <section id="v2-cards" style="display:none;gap:16px">
+        <div class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:8px">
+          <article class="card" style="display:grid;gap:8px">
+            <h3 class="h3" style="margin:0">{serverT('profile.cards.created.title')}</h3>
+            <p class="p" style="margin:0;opacity:0.8">{serverT('profile.cards.created.desc')}</p>
+            <div><a class="btn btn-primary" href={`/${lang}/rooms/created`}>{serverT('common.viewAll')}</a></div>
+          </article>
+          <article class="card" style="display:grid;gap:8px">
+            <h3 class="h3" style="margin:0">{serverT('profile.cards.joined.title')}</h3>
+            <p class="p" style="margin:0;opacity:0.8">{serverT('profile.cards.joined.desc')}</p>
+            <div><a class="btn btn-primary" href={`/${lang}/rooms/joined`}>{serverT('common.viewAll')}</a></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="v1-created" style="display:grid;gap:16px">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
           <h2 class="h2" style="margin:0">{serverT('profile.sections.myRooms')}</h2>
           <a class="btn" href={`/${lang}/create-room`} style="font-size:0.9rem">{serverT('profile.sections.createRoom')}</a>
@@ -93,7 +87,7 @@ const path = Astro.url.pathname
         <div id="created-pagination" style="display:none;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px"></div>
       </section>
 
-      <section style="display:grid;gap:16px">
+      <section id="v1-joined" style="display:grid;gap:16px">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
           <h2 class="h2" style="margin:0">{serverT('profile.sections.participations')}</h2>
       </div>
@@ -101,19 +95,46 @@ const path = Astro.url.pathname
         <div id="participations-list" style="display:grid;gap:12px"></div>
       </section>
     </main>
+    <div id="settings-modal" style="display:none;position:fixed;inset:0;z-index:60;background:rgba(15,23,42,0.45);align-items:center;justify-content:center;padding:24px">
+      <div role="dialog" aria-modal="true" aria-labelledby="settings-title" style="width:min(560px,100%);background:#fff;border-radius:16px;padding:20px;display:grid;gap:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <h3 id="settings-title" class="h3" style="margin:0">{serverT('profile.settings.title')}</h3>
+          <button id="close-settings" class="btn" type="button" aria-label="{serverT('profile.settings.close')}">✕</button>
+        </div>
+        <div style="display:grid;gap:12px">
+          <label for="settings-lang" style="font-weight:600">{serverT('languages.label')}</label>
+          <select id="settings-lang" class="tab" style="font-size:0.95rem">
+            <option value="en">{serverT('languages.en')}</option>
+            <option value="zh-hant">{serverT('languages.zhHant')}</option>
+            <option value="zh-hans">{serverT('languages.zhHans')}</option>
+            <option value="ja">{serverT('languages.ja')}</option>
+            <option value="ko">{serverT('languages.ko')}</option>
+            <option value="de">{serverT('languages.de')}</option>
+            <option value="fr">{serverT('languages.fr')}</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end">
+          <button id="settings-cancel" class="btn" type="button">{serverT('common.cancel')}</button>
+          <button id="settings-save" class="btn btn-primary" type="button">{serverT('common.save')}</button>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/js/i18n.js"></script>
     <script src="/js/room-templates.js" is:inline></script>
     <script type="module">
       (async function() {
         await import('/js/i18n.js')
-        const { setupUserMenu } = await import('/js/user-menu.js')
         const { setupRoomsManager } = await import('/js/rooms-manager.js')
         const lang = document.documentElement.getAttribute('lang') || 'en'
-        const profileStatsV1 = (import.meta.env && import.meta.env.PUBLIC_FEATURE_PROFILE_V1 !== 'false')
+        const featureV2 = (import.meta.env && import.meta.env.PUBLIC_FEATURE_PROFILE_V2 !== 'false')
+        const profileStatsV1 = true
 
-        const authBtn = document.getElementById('auth-btn')
-        const userInfo = document.getElementById('user-info')
-        const langSwitch = document.getElementById('lang-switch')
+        const openSettingsBtn = document.getElementById('open-settings')
+        const settingsModal = document.getElementById('settings-modal')
+        const settingsLang = document.getElementById('settings-lang')
+        const settingsCancel = document.getElementById('settings-cancel')
+        const settingsClose = document.getElementById('close-settings')
+        const settingsSave = document.getElementById('settings-save')
         const statsTotalEl = document.getElementById('stats-total')
         const statsAccuracyEl = document.getElementById('stats-accuracy')
         const statsPointsEl = document.getElementById('stats-points')
@@ -127,30 +148,17 @@ const path = Astro.url.pathname
         const createdMessage = document.getElementById('created-message')
         const participationsList = document.getElementById('participations-list')
         const participationsMessage = document.getElementById('participations-message')
+        const v2Cards = document.getElementById('v2-cards')
+        const v1Created = document.getElementById('v1-created')
+        const v1Joined = document.getElementById('v1-joined')
 
-        if (!profileStatsV1) {
-          if (statsMessageEl) {
-            statsMessageEl.textContent = window.t('profile.stats.fallback')
-          }
-          return
-        }
-
-        function computeRedirectPath(targetLang) {
-          const url = new URL(window.location.href)
-          const segments = url.pathname.split('/').filter(Boolean)
-          if (segments.length === 0) {
-            segments.push(targetLang)
-          } else {
-            segments[0] = targetLang
-          }
-          return '/' + segments.join('/') + url.search + url.hash
-        }
-
-        if (langSwitch) {
-          langSwitch.addEventListener('change', function() {
-            const target = langSwitch.value || lang
-            window.location.href = computeRedirectPath(target)
-          })
+        // V2 卡片入口顯示控制
+        if (featureV2) {
+          if (v2Cards) v2Cards.style.display = 'grid'
+          if (v1Created) v1Created.style.display = 'none'
+          if (v1Joined) v1Joined.style.display = 'none'
+        } else {
+          if (v2Cards) v2Cards.style.display = 'none'
         }
 
         function showStatsMessage(text, isError) {
@@ -183,26 +191,33 @@ const path = Astro.url.pathname
           participationsMessage.style.color = isError ? '#d00' : '#059669'
         }
 
-        const userMenu = setupUserMenu({
-          lang: lang,
-          t: function(key) { return window.t(key) },
-          profileUrl: function(targetLang) { return '/' + targetLang + '/profile' },
-          aboutUrl: function(targetLang) { return '/' + targetLang + '/about' },
-          privacyUrl: function() { return 'https://quizyparty.com/privacy' },
-          termsUrl: function() { return 'https://quizyparty.com/terms' },
-          onLogout: async function() {
-            try {
-              await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
-            } catch (e) {
-              console.error('Logout failed', e)
-            }
-            window.location.reload()
-          }
-        })
-
-        if (authBtn) {
-          authBtn.addEventListener('click', function() {
-            window.location.href = '/api/auth/google/login?redirect=' + encodeURIComponent(window.location.pathname)
+        // Settings modal 行為
+        function toggleSettings(open) {
+          if (!settingsModal) return
+          settingsModal.style.display = open ? 'flex' : 'none'
+        }
+        function computeRedirectPath(targetLang) {
+          const url = new URL(window.location.href)
+          const segments = url.pathname.split('/').filter(Boolean)
+          if (segments.length === 0) segments.push(targetLang)
+          else segments[0] = targetLang
+          return '/' + segments.join('/') + url.search + url.hash
+        }
+        if (openSettingsBtn) {
+          openSettingsBtn.addEventListener('click', function() {
+            if (settingsLang) settingsLang.value = lang
+            toggleSettings(true)
+          })
+        }
+        if (settingsCancel) settingsCancel.addEventListener('click', function(){ toggleSettings(false) })
+        if (settingsClose) settingsClose.addEventListener('click', function(){ toggleSettings(false) })
+        if (settingsSave) {
+          settingsSave.addEventListener('click', function() {
+            if (!settingsLang) return
+            const target = settingsLang.value || lang
+            try { window.localStorage.setItem('lang', target) } catch {}
+            try { window.localStorage.setItem('qp_interface_lang', target) } catch {}
+            window.location.href = computeRedirectPath(target)
           })
         }
 
@@ -244,21 +259,11 @@ const path = Astro.url.pathname
           try {
             const res = await fetch('/api/auth/me', { credentials: 'include' })
             if (!res.ok) {
-              if (authBtn) authBtn.style.display = 'block'
-              if (userInfo) userInfo.style.display = 'none'
-              if (userMenu && typeof userMenu.clearUser === 'function') {
-                userMenu.clearUser()
-              }
               showStatsMessage(window.t('profile.notLoggedIn'), true)
               return null
             }
             const json = await res.json()
             if (json && json.authenticated && json.user) {
-            if (authBtn) authBtn.style.display = 'none'
-            if (userInfo) userInfo.style.display = 'flex'
-            if (userMenu && typeof userMenu.applyUser === 'function') {
-              userMenu.applyUser(json.user)
-            }
             return json.user
             }
             showStatsMessage(window.t('profile.notLoggedIn'), true)
@@ -525,36 +530,40 @@ const path = Astro.url.pathname
           return { status: button.getAttribute('data-status') || 'published', button: button }
         }) : []
 
-        createdManager = setupRoomsManager({
-          listEl: createdList,
-          paginationEl: createdPagination,
-          tabs: createdTabs,
-          lang: lang,
-          t: function(key) { return window.t(key) },
-          pageSize: 5,
-          onNotify: function(text, isError) { showCreatedMessage(text, isError) },
-          filter: function(template) {
-            if (!template || !template.updatedAt) return true
-            if (currentScope !== '30d') return true
-            const updatedAt = template.updatedAt
-            const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000
-            return updatedAt >= cutoff
-          },
-          emptyText: window.t('profile.created.emptyScope')
-        })
+        if (!featureV2) {
+          createdManager = setupRoomsManager({
+            listEl: createdList,
+            paginationEl: createdPagination,
+            tabs: createdTabs,
+            lang: lang,
+            t: function(key) { return window.t(key) },
+            pageSize: 5,
+            onNotify: function(text, isError) { showCreatedMessage(text, isError) },
+            filter: function(template) {
+              if (!template || !template.updatedAt) return true
+              if (currentScope !== '30d') return true
+              const updatedAt = template.updatedAt
+              const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000
+              return updatedAt >= cutoff
+            },
+            emptyText: window.t('profile.created.emptyScope')
+          })
+        }
 
         function applyScope(scope) {
           currentScope = scope
           updateScopeButtons(scope)
           renderStats(scope)
-          renderParticipations(scope)
-          if (createdManager && typeof createdManager.setFilter === 'function') {
-            createdManager.setFilter(function(template) {
-              if (!template || !template.updatedAt) return scope !== '30d'
-              if (scope !== '30d') return true
-              const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000
-              return template.updatedAt >= cutoff
-            })
+          if (!featureV2) {
+            renderParticipations(scope)
+            if (createdManager && typeof createdManager.setFilter === 'function') {
+              createdManager.setFilter(function(template) {
+                if (!template || !template.updatedAt) return scope !== '30d'
+                if (scope !== '30d') return true
+                const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000
+                return template.updatedAt >= cutoff
+              })
+            }
           }
         }
 
@@ -570,7 +579,9 @@ const path = Astro.url.pathname
         }
 
         renderStats('all')
-        renderParticipations('all')
+        if (!featureV2) {
+          renderParticipations('all')
+        }
         applyScope('all')
       })()
     </script>

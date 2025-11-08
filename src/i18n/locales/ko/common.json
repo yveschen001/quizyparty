@@ -322,6 +322,15 @@
   "languages.de": "독일어",
   "languages.fr": "프랑스어",
   "languages.label": "언어",
+  "common.viewAll": "전체 보기",
+  "common.save": "저장",
+  "common.cancel": "취소",
+  "profile.settings.title": "설정",
+  "profile.settings.close": "닫기",
+  "profile.cards.created.title": "내가 만든 방",
+  "profile.cards.created.desc": "만든 퀴즈 관리, 공개/초안 전환, 빠른 편집.",
+  "profile.cards.joined.title": "내가 참여한 방",
+  "profile.cards.joined.desc": "응답 기록과 정확도 확인, 여기서 다시 플레이."
   "questions.form.choicePlaceholder": "선택지 {count}"
 }
 
