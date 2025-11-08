@@ -17,6 +17,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "i18n:all:ci": "pnpm i18n:scan && pnpm i18n:keygen && pnpm i18n:check",
+    "ci:i18n": "node scripts/check-i18n-core.mjs",
     "seo:check": "node scripts/check-seo.mjs",
     "i18n:auto": "node scripts/auto-translate.mjs",
     "i18n:csv:export": "node scripts/i18n-csv-export.mjs",
