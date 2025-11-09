@@ -1,5 +1,16 @@
 /* global window */
 ;(function (global) {
+  function tt(key, fallbackKey) {
+    try {
+      var primary = (global.t && typeof global.t === 'function') ? global.t(key) : ''
+      if (primary && primary !== key) return primary
+      if (fallbackKey) {
+        var secondary = (global.t && typeof global.t === 'function') ? global.t(fallbackKey) : ''
+        if (secondary && secondary !== fallbackKey) return secondary
+      }
+    } catch (e) {}
+    return ''
+  }
   function formatDate(ts) {
     try {
       var d = ts instanceof Date ? ts : new Date(ts)
@@ -32,21 +43,21 @@
   function roomCardHTML(p) {
     var t = typeof global.t === 'function' ? global.t : function (k) { return k }
     var status = p.status || 'public'
-    var statusLabel = status === 'draft' ? t('common.card.status.draft') : t('common.card.status.public')
-    var updated = p.updatedAt ? t('common.card.updatedAt') + ': ' + formatDate(p.updatedAt) : ''
+    var statusLabel = status === 'draft' ? tt('common.card.status.draft','card.status.draft') : tt('common.card.status.public','card.status.public')
+    var updated = p.updatedAt ? tt('common.card.updatedAt','card.updatedAt') + ': ' + formatDate(p.updatedAt) : ''
     var members =
       typeof p.participants === 'number'
         ? t('common.card.participants') + ': ' + (p.capacity ? esc(p.participants + '/' + p.capacity) : esc(p.participants))
         : ''
     // 進一步的 meta：題數/正確率/最近作答（皆為可選）
     var answered =
-      typeof p.answered === 'number' ? t('common.card.answered') + ': ' + esc(p.answered) : ''
+      typeof p.answered === 'number' ? tt('common.card.answered','card.answered') + ': ' + esc(p.answered) : ''
     var accuracy =
       typeof p.accuracy === 'number'
-        ? t('common.card.accuracy') + ': ' + Math.round(p.accuracy * 100) + '%'
+        ? tt('common.card.accuracy','card.accuracy') + ': ' + Math.round(p.accuracy * 100) + '%'
         : ''
     var lastPlayed =
-      p.lastPlayedAt ? t('common.card.lastPlayedAt') + ': ' + formatDate(p.lastPlayedAt) : ''
+      p.lastPlayedAt ? tt('common.card.lastPlayedAt','card.lastPlayedAt') + ': ' + formatDate(p.lastPlayedAt) : ''
     var metaLine = [updated, members, answered, accuracy, lastPlayed].filter(Boolean).join(' · ')
 
     var ctas = ''
@@ -61,9 +72,9 @@
         '" data-room-id="' +
         esc(p.id) +
         '" aria-label="' +
-        esc(t('common.card.cta.edit') + ' · ' + p.title) +
+        esc(tt('common.card.cta.edit','card.cta.edit') + ' · ' + p.title) +
         '">' +
-        esc(t('common.card.cta.edit')) +
+        esc(tt('common.card.cta.edit','card.cta.edit')) +
         '</a>' +
         '<button class="btn btn-secondary" data-action="' +
         publishAction +
@@ -81,16 +92,16 @@
         '" data-room-id="' +
         esc(p.id) +
         '" aria-label="' +
-        esc(t('common.card.cta.delete') + ' · ' + p.title) +
+        esc(tt('common.card.cta.delete','card.cta.delete') + ' · ' + p.title) +
         '">' +
-        esc(t('common.card.cta.delete')) +
+        esc(tt('common.card.cta.delete','card.cta.delete')) +
         '</button>'
     } else {
       // joined：沿用 data-action="replay"
       var href = p.href || ('/' + (p.lang || 'en') + '/room/' + esc(p.id))
       ctas =
-        '<a class="btn btn-primary" data-action="replay" href="' + href + '" data-room-id="' + esc(p.id) + '" aria-label="' + esc(t('common.card.cta.playAgain') + ' · ' + p.title) + '">' + esc(t('common.card.cta.playAgain')) + '</a>' +
-        '<a class="btn" data-action="result" href="#" aria-label="' + esc(t('common.card.cta.viewResult') + ' · ' + p.title) + '">' + esc(t('common.card.cta.viewResult')) + '</a>'
+        '<a class="btn btn-primary" data-action="replay" href="' + href + '" data-room-id="' + esc(p.id) + '" aria-label="' + esc(tt('common.card.cta.playAgain','card.cta.playAgain') + ' · ' + p.title) + '">' + esc(tt('common.card.cta.playAgain','card.cta.playAgain')) + '</a>' +
+        '<a class="btn" data-action="result" href="#" aria-label="' + esc(tt('common.card.cta.viewResult','card.cta.viewResult') + ' · ' + p.title) + '">' + esc(tt('common.card.cta.viewResult','card.cta.viewResult')) + '</a>'
     }
     var linkHref = p.href || '#'
     return (

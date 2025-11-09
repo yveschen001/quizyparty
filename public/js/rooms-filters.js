@@ -43,7 +43,7 @@
       s1.appendChild(o)
     })
     const s2 = el('select', {
-      'aria-label': t('common.controls.sort'),
+      'aria-label': t('common.controls.sort.label'),
       'aria-controls': 'created-list',
     })
     ;[
@@ -100,7 +100,7 @@
     const sort = q.get('sort') || 'lastPlayed'
     const wrap = el('div', { class: 'stack gap-2', 'data-testid': 'joined-controls' })
     const s2 = el('select', {
-      'aria-label': t('common.controls.sort'),
+      'aria-label': t('common.controls.sort.label'),
       'aria-controls': 'list',
     })
     ;[

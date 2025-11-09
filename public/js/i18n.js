@@ -74,7 +74,7 @@
     // 僅允許已支援的語言代碼；其餘一律回退預設
     if (lower === 'en' || lower === 'zh-hant' || lower === 'zh-hans' || lower === 'ja') return lower
     // 一些常見別名做轉換
-    if (lower === 'zh-tw' || lower === 'zh-hk') return 'zh-hant'
+    if (lower === 'zh-tw' || lower === 'zh_tw' || lower === 'zh-hk') return 'zh-hant'
     if (lower === 'zh-cn' || lower === 'zh') return 'zh-hans'
     if (lower.startsWith('en')) return 'en'
     if (lower.startsWith('ja')) return 'ja'

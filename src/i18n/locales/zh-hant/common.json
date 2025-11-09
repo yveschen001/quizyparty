@@ -507,10 +507,10 @@
   "common": {
     "pager": {
       "perPage": "每頁",
-      "pageSize": "每頁數量",
+      "pageSize": "每頁筆數",
       "prev": "上一頁",
       "next": "下一頁",
-      "indicator": "第 {{page}} / {{pages}} 頁"
+      "indicator": "第 {page} / {pages} 頁"
     },
     "cache": {
       "refreshing": "資料更新中…"
@@ -520,15 +520,15 @@
         "public": "公開",
         "draft": "草稿"
       },
-      "updatedAt": "更新",
+      "updatedAt": "更新於",
       "answered": "作答數",
       "accuracy": "正確率",
       "lastPlayedAt": "最近作答",
       "cta": {
         "playAgain": "再玩一次",
         "viewResult": "查看結果",
-        "publish": "發佈",
-        "unpublish": "下架",
+        "publish": "發布",
+        "unpublish": "取消發布",
         "delete": "刪除",
         "edit": "編輯",
         "manage": "管理",
@@ -538,13 +538,15 @@
     "controls": {
       "sort": {
         "title": "標題",
-        "updated": "最近更新",
+        "updated": "更新時間",
         "members": "人數",
         "lastPlayed": "最近作答",
         "answered": "作答數",
-        "accuracy": "正確率"
+        "accuracy": "正確率",
+        "label": "排序"
       },
-      "status": {
+      "status": "狀態",
+      "statusOptions": {
         "all": "全部"
       }
     },
@@ -553,6 +555,9 @@
       "title": "載入失敗",
       "desc": "無法取得資料，請稍後再試。",
       "retry": "重試"
+    },
+    "stats": {
+      "rankPct": "超越 {pct}% 的玩家"
     }
   },
   "pager": {
