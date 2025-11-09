@@ -1,0 +1,9 @@
+[
+  {"id":"1","question":"2 + 2 = ?","choices":["3","4","5","22"],"answer":"4"},
+  {"id":"2","question":"Capital of Japan?","choices":["Osaka","Tokyo","Kyoto","Nagoya"],"answer":"Tokyo"},
+  {"id":"3","question":"Color of the sky on a clear day?","choices":["Blue","Green","Red","Yellow"],"answer":"Blue"},
+  {"id":"4","question":"Which is a mammal?","choices":["Shark","Salmon","Dolphin","Trout"],"answer":"Dolphin"},
+  {"id":"5","question":"HTTP status for Not Found?","choices":["200","301","404","500"],"answer":"404"}
+]
+
+

@@ -1,0 +1,384 @@
+import { e as createAstro, f as createComponent, r as renderTemplate, h as addAttribute, ah as renderHead, p as renderComponent } from '../chunks/astro/server_BigfXiJV.mjs';
+import { s as setupServerI18n } from '../chunks/server-i18n_B6Cgzsxy.mjs';
+import { $ as $$SeoMeta } from '../chunks/SeoMeta_mSwdbQaA.mjs';
+/* empty css                                 */
+export { renderers } from '../renderers.mjs';
+
+var __freeze = Object.freeze;
+var __defProp = Object.defineProperty;
+var __template = (cooked, raw) => __freeze(__defProp(cooked, "raw", { value: __freeze(cooked.slice()) }));
+var _a;
+const $$Astro = createAstro("https://quizyparty.com");
+const prerender = false;
+const $$Index = createComponent(async ($$result, $$props, $$slots) => {
+  const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);
+  Astro2.self = $$Index;
+  const { lang, serverT } = await setupServerI18n(Astro2.params.lang);
+  const title = serverT("home.hero.title");
+  const subtitle = serverT("home.hero.subtitle");
+  const siteOrigin = Astro2.site && Astro2.site.origin || "https://quizyparty.com";
+  const path = Astro2.url.pathname;
+  return renderTemplate(_a || (_a = __template(["<html", '> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">', "", '</head> <body> <a href="#main" class="sr-only">', '</a> <header class="navbar"> <div class="container inner"> <a', ' aria-current="page">', '</a> <nav style="display:flex;gap:12px;align-items:center"> <button id="auth-btn" class="btn" style="font-size:0.875rem;display:none">', '</button> <div id="user-info" style="display:none;position:relative;align-items:center"> <button id="user-menu-trigger" data-role="menu-trigger" type="button" style="display:flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;font-size:0.875rem;cursor:pointer"> <img id="user-avatar" data-role="avatar" src="" alt="" style="width:28px;height:28px;border-radius:50%;object-fit:cover"> <span id="user-name" data-role="name" style="max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></span> <span data-role="menu-caret" aria-hidden="true" style="font-size:0.7rem;color:#6b7280">▼</span> </button> <div id="user-menu" data-role="menu-panel" style="display:none;position:absolute;right:0;top:calc(100% + 8px);min-width:260px;padding:16px;border:1px solid #e5e7eb;border-radius:12px;background:#fff;box-shadow:0 18px 38px rgba(15,23,42,0.16);z-index:40"></div> </div> </nav> </div> </header> <main id="main" class="container hero"> <h1>', "</h1> <p>", '</p> <div style="display:grid;gap:24px"> <div style="display:grid;gap:12px;max-width:520px"> <div style="display:flex;gap:10px;flex-wrap:wrap"> <button id="create" class="btn btn-primary">', '</button> </div> <div style="display:flex;gap:8px;align-items:center"> <input id="roomId"', ' style="flex:1;padding:10px 12px;border:1px solid #ddd;border-radius:10px;background:#fff"> <button id="join" class="btn">', '</button> </div> <div id="msg" style="color:#d00;min-height:1em"></div> </div> <div style="display:grid;gap:16px"> <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"> <h2 style="margin:0;font-size:1.25rem">', '</h2> <div style="display:flex;gap:8px;margin-left:auto"> <button id="sort-popular" class="btn" style="font-size:0.875rem">', '</button> <button id="sort-latest" class="btn btn-primary" style="font-size:0.875rem">', '</button> <button id="refresh-rooms" class="btn" style="font-size:0.875rem">', '</button> </div> </div> <div id="rooms-list" style="display:grid;gap:12px;min-height:100px"> <p style="padding:16px;text-align:center;opacity:0.6">', `</p> </div> </div> </div> </main> <script type="module" src="/js/i18n.js"></script> <script type="module">
+      (async function() {
+        await import('/js/i18n.js')
+        const { setupUserMenu, getStoredRoomLanguages } = await import('/js/user-menu.js')
+        const lang = document.documentElement.getAttribute('lang') || 'en'
+        
+        // Debug: Log language detection
+        console.log('[i18n Client] ===== CLIENT DEBUG START =====');
+        console.log('[i18n Client] HTML lang attribute:', document.documentElement.getAttribute('lang'));
+        console.log('[i18n Client] Detected lang:', lang);
+        console.log('[i18n Client] window.t function exists:', typeof window.t === 'function');
+        console.log('[i18n Client] Test translation - home.hero.title:', window.t('home.hero.title'));
+        console.log('[i18n Client] Test translation - home.hero.subtitle:', window.t('home.hero.subtitle'));
+        console.log('[i18n Client] Current URL:', window.location.href);
+        console.log('[i18n Client] ===== CLIENT DEBUG END =====');
+        const userInfo = document.getElementById('user-info')
+        const authBtn = document.getElementById('auth-btn')
+        const userAvatar = document.getElementById('user-avatar')
+        const userName = document.getElementById('user-name')
+        const userMenu = setupUserMenu({
+          lang,
+          t: function(key) { return window.t(key) },
+          profileUrl: function(targetLang) { return '/' + targetLang + '/profile' },
+          aboutUrl: function(targetLang) { return '/' + targetLang + '/about' },
+          privacyUrl: function() { return 'https://quizyparty.com/privacy' },
+          termsUrl: function() { return 'https://quizyparty.com/terms' },
+          onLogout: async function() {
+            try {
+              await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
+            } catch (e) {
+              console.error('Logout failed', e)
+            }
+            window.location.reload()
+          }
+        })
+
+        const createBtn = document.getElementById('create')
+        const joinBtn = document.getElementById('join')
+        const roomInput = document.getElementById('roomId')
+        const msg = document.getElementById('msg')
+        let currentUser = null
+        let userRoomSummaryMap = new Map()
+        function showError(text) {
+          if (msg) {
+            msg.textContent = text
+            msg.style.display = 'block'
+          }
+        }
+        function clearError() {
+          if (msg) {
+            msg.textContent = ''
+            msg.style.display = 'none'
+          }
+        }
+
+        function consumeHomeRefreshFlag() {
+          try {
+            const flag = window.localStorage.getItem('qp_home_refresh')
+            if (flag) {
+              window.localStorage.removeItem('qp_home_refresh')
+              return true
+            }
+          } catch (e) {
+            console.warn('Failed to access home refresh flag', e)
+          }
+          return false
+        }
+        async function createRoom() {
+          // Redirect to create room page (which will select question set first)
+          location.href = '/' + lang + '/create-room'
+        }
+        async function joinRoom() {
+          clearError()
+          const id = roomInput ? roomInput.value.trim() : ''
+          if (!id) {
+            showError(window.t('errors.roomIdRequired'))
+            return
+          }
+          if (joinBtn) joinBtn.disabled = true
+          try {
+            const r = await fetch('/api/rooms/' + id + '/join', {
+              method: 'POST',
+              credentials: 'include'
+            })
+            if (!r.ok) {
+              let errorText = window.t('errors.joinRoomFailed')
+              try {
+                const json = await r.json()
+                if (json && json.error === 'room_full_upgrade_required') {
+                  errorText = window.t('errors.roomFullUpgrade')
+                } else if (json && json.error === 'room_full') {
+                  errorText = window.t('errors.roomFull')
+                } else if (json && json.error) {
+                  errorText = String(json.error)
+                }
+              } catch {}
+              throw new Error(errorText)
+            }
+            location.href = '/' + lang + '/room/' + id
+          } catch (e) {
+            showError(e.message || window.t('errors.unknown'))
+          } finally {
+            if (joinBtn) joinBtn.disabled = false
+          }
+        }
+        if (createBtn) createBtn.addEventListener('click', createRoom)
+        if (joinBtn) joinBtn.addEventListener('click', joinRoom)
+        if (roomInput) {
+          roomInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') joinRoom()
+          })
+        }
+
+        // Load and display rooms
+        const roomsList = document.getElementById('rooms-list')
+        const sortPopular = document.getElementById('sort-popular')
+        const sortLatest = document.getElementById('sort-latest')
+        const refreshRooms = document.getElementById('refresh-rooms')
+        let currentSort = 'created'
+
+        async function fetchUserRoomSummaries() {
+          if (!currentUser || !currentUser.id) {
+            userRoomSummaryMap = new Map()
+            return
+          }
+          try {
+            const params = new URLSearchParams({ userId: currentUser.id, limit: '100' })
+            const response = await fetch('/api/scores/rooms?' + params.toString(), { credentials: 'include' })
+            if (!response.ok) {
+              userRoomSummaryMap = new Map()
+              return
+            }
+            const json = await response.json()
+            const map = new Map()
+            if (json && Array.isArray(json.rooms)) {
+              json.rooms.forEach(function(item) {
+                if (item && item.roomId) {
+                  map.set(String(item.roomId), item)
+                }
+              })
+            }
+            userRoomSummaryMap = map
+          } catch (e) {
+            console.warn('Failed to load user room summaries', e)
+            userRoomSummaryMap = new Map()
+          }
+        }
+
+        async function loadRooms(sortBy) {
+          if (!roomsList) return
+          roomsList.innerHTML = '<p style="padding:16px;text-align:center;opacity:0.6">' + window.t('room.loading') + '</p>'
+
+          if (currentUser) {
+            await fetchUserRoomSummaries()
+          } else {
+            userRoomSummaryMap = new Map()
+          }
+
+          const preferredLangs = typeof getStoredRoomLanguages === 'function' ? getStoredRoomLanguages(lang) : [lang]
+          const activeLang = preferredLangs && preferredLangs.length ? preferredLangs[0] : lang
+
+          async function requestRooms(hours, includeLang) {
+            const params = new URLSearchParams({
+              limit: '10',
+              sortBy: sortBy || 'created',
+              order: 'desc',
+            })
+            if (includeLang !== false && activeLang) {
+              params.set('lang', activeLang)
+            }
+            if (hours) params.set('hours', String(hours))
+            const response = await fetch('/api/rooms/list?' + params.toString())
+            if (!response.ok) {
+              throw new Error('network')
+            }
+            return response.json()
+          }
+
+          const searchWindows = [24, 72, 168, 360, 720]
+          let rooms = []
+          let fetchError = null
+
+          for (const windowHours of searchWindows) {
+            try {
+              const json = await requestRooms(windowHours, true)
+              const list = json.rooms || []
+              if (list.length > 0) {
+                rooms = list
+                break
+              }
+            } catch (e) {
+              fetchError = e
+              break
+            }
+          }
+
+          if (!fetchError && rooms.length === 0) {
+            for (const windowHours of searchWindows) {
+              try {
+                const json = await requestRooms(windowHours, false)
+                const list = json.rooms || []
+                if (list.length > 0) {
+                  rooms = list
+                  break
+                }
+              } catch (e) {
+                fetchError = e
+                break
+              }
+            }
+          }
+
+          if (fetchError) {
+            roomsList.innerHTML = '<p style="padding:16px;text-align:center;color:#d00">' + window.t('errors.networkError') + '</p>'
+            return
+          }
+
+          if (rooms.length === 0) {
+            roomsList.innerHTML = '<p style="padding:16px;text-align:center;opacity:0.6">' + window.t('home.rooms.empty') + '</p>'
+            return
+          }
+
+          const roomLabel = window.t('home.rooms.roomLabel')
+          const html = rooms.map(function(room) {
+            const roomId = String(room.id)
+            const summary = userRoomSummaryMap.get(roomId)
+            const hasPlayed = !!summary
+            const statusText = hasPlayed ? window.t('home.rooms.answered') : window.t('home.rooms.notAnswered')
+            const statusColor = hasPlayed ? '#27ae60' : '#95a5a6'
+            const memberCount = Number(room.memberCount || 0)
+            const totalAttempts = Number(room.totalAnswers || 0)
+            const accuracyPercent = (typeof room.averageAccuracy === 'number' && room.averageAccuracy > 0)
+              ? Math.round(room.averageAccuracy * 100)
+              : 0
+            const accuracyDisplay = totalAttempts > 0 ? (accuracyPercent + '%') : '—'
+            const playerStats = hasPlayed ? '<span>' + window.t('profile.correctShort') + ': <strong>' + summary.totalCorrect + '/' + summary.totalAnswered + '</strong></span>' : ''
+            return (
+              '<div style="display:flex;gap:12px;align-items:center;padding:12px;background:#fff;border:1px solid #eee;border-radius:10px">' +
+                '<div style="flex:1;display:grid;gap:6px">' +
+                  '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">' +
+                    '<div style="font-weight:600">' + roomLabel + ': <code style="background:#f5f5f5;padding:2px 6px;border-radius:4px">' + roomId + '</code></div>' +
+                    '<span style="font-size:0.75rem;padding:2px 8px;border-radius:999px;color:#fff;background:' + statusColor + ';line-height:1.4">' + statusText + '</span>' +
+                  '</div>' +
+                  '<div style="font-size:0.875rem;opacity:0.7;display:flex;gap:12px;flex-wrap:wrap">' +
+                    '<span>' + memberCount + ' ' + window.t('home.rooms.members') + '</span>' +
+                    '<span>' + window.t('home.rooms.accuracy') + ': <strong>' + accuracyDisplay + '</strong></span>' +
+                    '<span>' + window.t('home.rooms.totalAttempts') + ': <strong>' + totalAttempts + '</strong></span>' +
+                    (playerStats || '') +
+                  '</div>' +
+                '</div>' +
+                '<a href="/' + lang + '/room/' + roomId + '" class="btn btn-primary" style="font-size:0.875rem">' + window.t('home.rooms.join') + '</a>' +
+              '</div>'
+            )
+          }).join('')
+          roomsList.innerHTML = html
+        }
+
+        function updateSortButtons(activeSort) {
+          if (sortPopular && sortLatest) {
+            if (activeSort === 'members') {
+              sortPopular.classList.add('btn-primary')
+              sortLatest.classList.remove('btn-primary')
+            } else {
+              sortPopular.classList.remove('btn-primary')
+              sortLatest.classList.add('btn-primary')
+            }
+          }
+        }
+
+        if (sortPopular) {
+          sortPopular.addEventListener('click', function() {
+            currentSort = 'members'
+            updateSortButtons(currentSort)
+            loadRooms(currentSort)
+          })
+        }
+        if (sortLatest) {
+          sortLatest.addEventListener('click', function() {
+            currentSort = 'created'
+            updateSortButtons(currentSort)
+            loadRooms(currentSort)
+          })
+        }
+        if (refreshRooms) {
+          refreshRooms.addEventListener('click', function() {
+            loadRooms(currentSort)
+          })
+        }
+
+        // Auth UI
+        async function checkAuth() {
+          try {
+            const r = await fetch('/api/auth/me', { credentials: 'include' })
+            if (!r.ok) {
+              if (authBtn) authBtn.style.display = 'block'
+              if (userInfo) userInfo.style.display = 'none'
+              if (userMenu && typeof userMenu.clearUser === 'function') {
+                userMenu.clearUser()
+              }
+              return null
+            }
+            const json = await r.json()
+            if (json && json.authenticated && json.user) {
+              if (authBtn) authBtn.style.display = 'none'
+              if (userInfo) userInfo.style.display = 'flex'
+              if (userMenu && typeof userMenu.applyUser === 'function') {
+                userMenu.applyUser(json.user)
+              }
+              return json.user
+            } else {
+              if (authBtn) authBtn.style.display = 'block'
+              if (userInfo) userInfo.style.display = 'none'
+              if (userMenu && typeof userMenu.clearUser === 'function') {
+                userMenu.clearUser()
+              }
+            }
+            return null
+          } catch (e) {
+            console.error('Auth check failed', e)
+            if (authBtn) authBtn.style.display = 'block'
+            if (userInfo) userInfo.style.display = 'none'
+            if (userMenu && typeof userMenu.clearUser === 'function') {
+              userMenu.clearUser()
+            }
+            return null
+          }
+        }
+
+        if (authBtn) {
+          authBtn.addEventListener('click', function() {
+            window.location.href = '/api/auth/google/login?redirect=' + encodeURIComponent(window.location.pathname)
+          })
+        }
+
+        const user = await checkAuth()
+        if (user && user.id) {
+          currentUser = user
+        } else {
+          currentUser = null
+        }
+        consumeHomeRefreshFlag()
+        await loadRooms(currentSort)
+        window.addEventListener('storage', function(event) {
+          if (event.key === 'qp_home_refresh' && event.newValue) {
+            loadRooms(currentSort)
+          }
+        })
+      })()
+    </script> </body> </html>`])), addAttribute(lang, "lang"), renderComponent($$result, "SeoMeta", $$SeoMeta, { "lang": lang, "title": title, "description": subtitle, "path": path, "siteOrigin": siteOrigin }), renderHead(), serverT("a11y.skipToContent"), addAttribute(`/${lang}/`, "href"), serverT("nav.home"), serverT("auth.login"), title, subtitle, serverT("home.actions.createRoom"), addAttribute(serverT("home.actions.roomIdPlaceholder"), "placeholder"), serverT("home.actions.joinRoom"), serverT("home.rooms.title"), serverT("home.rooms.popular"), serverT("home.rooms.latest"), serverT("home.rooms.refresh"), serverT("room.loading"));
+}, "/Users/yichen/Downloads/cursor/QuizyParty/src/pages/[lang]/index.astro", void 0);
+const $$file = "/Users/yichen/Downloads/cursor/QuizyParty/src/pages/[lang]/index.astro";
+const $$url = "/[lang]";
+
+const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: $$Index,
+  file: $$file,
+  prerender,
+  url: $$url
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const page = () => _page;
+
+export { page };

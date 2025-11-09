@@ -1,0 +1,428 @@
+import { e as createAstro, f as createComponent, r as renderTemplate, h as addAttribute, ah as renderHead, p as renderComponent } from '../../chunks/astro/server_BigfXiJV.mjs';
+import { s as setupServerI18n } from '../../chunks/server-i18n_B6Cgzsxy.mjs';
+import { $ as $$SeoMeta } from '../../chunks/SeoMeta_mSwdbQaA.mjs';
+/* empty css                                    */
+export { renderers } from '../../renderers.mjs';
+
+var __freeze = Object.freeze;
+var __defProp = Object.defineProperty;
+var __template = (cooked, raw) => __freeze(__defProp(cooked, "raw", { value: __freeze(cooked.slice()) }));
+var _a;
+const $$Astro = createAstro("https://quizyparty.com");
+const prerender = false;
+const $$CreateQuestion = createComponent(async ($$result, $$props, $$slots) => {
+  const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);
+  Astro2.self = $$CreateQuestion;
+  const { lang, serverT } = await setupServerI18n(Astro2.params.lang);
+  const title = serverT("questions.title");
+  const desc = serverT("questions.title");
+  const siteOrigin = Astro2.site && Astro2.site.origin || "https://quizyparty.com";
+  const path = Astro2.url.pathname;
+  return renderTemplate(_a || (_a = __template(["<html", '> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">', "", '</head> <body> <header class="navbar"> <div class="container inner"> <a', ">", '</a> <nav style="display:flex;gap:12px;align-items:center"> <button id="auth-btn" class="btn" style="font-size:0.875rem;display:none">', '</button> <div id="user-info" style="display:none;position:relative;align-items:center"> <button id="user-menu-trigger" data-role="menu-trigger" type="button" style="display:flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;font-size:0.875rem;cursor:pointer"> <img id="user-avatar" data-role="avatar" src="" alt="" style="width:28px;height:28px;border-radius:50%;object-fit:cover"> <span id="user-name" data-role="name" style="max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></span> <span data-role="menu-caret" aria-hidden="true" style="font-size:0.7rem;color:#6b7280">▼</span> </button> <div id="user-menu" data-role="menu-panel" style="display:none;position:absolute;right:0;top:calc(100% + 8px);min-width:260px;padding:16px;border:1px solid #e5e7eb;border-radius:12px;background:#fff;box-shadow:0 18px 38px rgba(15,23,42,0.16);z-index:40"></div> </div> </nav> </div> </header> <main class="container hero"> <h1>', '</h1> <div style="display:flex;gap:12px;margin-bottom:24px"> <button id="mode-manual" class="btn btn-primary">', '</button> <button id="mode-ai" class="btn">', '</button> </div> <div id="manual-form" style="display:grid;gap:16px;max-width:600px"> <div> <label style="display:block;margin-bottom:8px;font-weight:600">', '</label> <textarea id="question-text"', ' style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;min-height:80px;font-family:inherit"></textarea> </div> <div> <label style="display:block;margin-bottom:8px;font-weight:600">', '</label> <div id="choices-list" style="display:grid;gap:8px"></div> </div> <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"> <div> <label style="display:block;margin-bottom:8px;font-weight:600">', '</label> <select id="question-lang" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px"> <option value="zh-hant">繁體中文</option> <option value="zh-hans">简体中文</option> <option value="en">English</option> <option value="ja">日本語</option> <option value="ko">한국어</option> <option value="de">Deutsch</option> <option value="fr">Français</option> </select> </div> <div> <label style="display:block;margin-bottom:8px;font-weight:600"># (最多5個)</label> <div id="tags-container" style="display:flex;flex-wrap:wrap;gap:8px"> <input id="tag-1" type="text" placeholder="#" style="flex:1;min-width:100px;padding:10px;border:1px solid #ddd;border-radius:8px"> <input id="tag-2" type="text" placeholder="#" style="flex:1;min-width:100px;padding:10px;border:1px solid #ddd;border-radius:8px"> <input id="tag-3" type="text" placeholder="#" style="flex:1;min-width:100px;padding:10px;border:1px solid #ddd;border-radius:8px"> <input id="tag-4" type="text" placeholder="#" style="flex:1;min-width:100px;padding:10px;border:1px solid #ddd;border-radius:8px"> <input id="tag-5" type="text" placeholder="#" style="flex:1;min-width:100px;padding:10px;border:1px solid #ddd;border-radius:8px"> </div> </div> </div> <div style="display:flex;gap:12px"> <button id="submit-manual" class="btn btn-primary">', '</button> <button id="cancel-manual" class="btn">', '</button> </div> <div id="manual-msg" style="color:#d00;min-height:1em"></div> </div> <div id="ai-form" style="display:none;grid;gap:16px;max-width:600px"> <div style="padding:16px;background:#fff3cd;border:1px solid #ffc107;border-radius:8px;margin-bottom:16px"> <p style="margin:0;font-size:0.875rem;color:#856404"> ', ' </p> </div> <div> <label style="display:block;margin-bottom:8px;font-weight:600">', '</label> <input id="ai-keywords" type="text"', ' style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px"> </div> <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"> <div> <label style="display:block;margin-bottom:8px;font-weight:600">', '</label> <input id="ai-count" type="number" value="10" min="1" max="50" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px"> </div> <div> <label style="display:block;margin-bottom:8px;font-weight:600">', '</label> <select id="ai-lang" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px"> <option value="zh-hant">繁體中文</option> <option value="zh-hans">简体中文</option> <option value="en">English</option> <option value="ja">日本語</option> <option value="ko">한국어</option> <option value="de">Deutsch</option> <option value="fr">Français</option> </select> </div> </div> <div style="display:flex;gap:12px"> <button id="submit-ai" class="btn btn-primary">', '</button> <button id="cancel-ai" class="btn">', `</button> </div> <div id="ai-msg" style="color:#d00;min-height:1em"></div> </div> </main> <script type="module" src="/js/i18n.js"></script> <script type="module">
+      (async function() {
+        await import('/js/i18n.js')
+        const { setupUserMenu } = await import('/js/user-menu.js')
+        const lang = document.documentElement.getAttribute('lang') || 'en'
+        const authBtn = document.getElementById('auth-btn')
+        const userInfo = document.getElementById('user-info')
+        const userMenu = setupUserMenu({
+          lang,
+          t: function(key) { return window.t(key) },
+          profileUrl: function(targetLang) { return '/' + targetLang + '/profile' },
+          aboutUrl: function(targetLang) { return '/' + targetLang + '/about' },
+          privacyUrl: function() { return 'https://quizyparty.com/privacy' },
+          termsUrl: function() { return 'https://quizyparty.com/terms' },
+          onLogout: async function() {
+            try {
+              await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
+            } catch (err) {
+              console.error('Logout failed', err)
+            }
+            window.location.reload()
+          }
+        })
+
+        function goToLogin() {
+          const redirect = window.location.pathname + window.location.search
+          window.location.href = '/api/auth/google/login?redirect=' + encodeURIComponent(redirect)
+        }
+
+        if (authBtn) {
+          authBtn.addEventListener('click', function() {
+            goToLogin()
+          })
+        }
+        
+        async function initAuth() {
+          try {
+            const res = await fetch('/api/auth/me', { credentials: 'include' })
+            if (res.ok) {
+              const data = await res.json()
+              if (data && data.authenticated && data.user) {
+                if (authBtn) authBtn.style.display = 'none'
+                if (userMenu && typeof userMenu.applyUser === 'function') {
+                  userMenu.applyUser(data.user)
+                } else if (userInfo) {
+                  userInfo.style.display = 'flex'
+                }
+                return
+              }
+            }
+          } catch (err) {
+            console.error('initAuth failed', err)
+          }
+          if (authBtn) authBtn.style.display = 'block'
+          if (userMenu && typeof userMenu.clearUser === 'function') {
+            userMenu.clearUser()
+          } else if (userInfo) {
+            userInfo.style.display = 'none'
+          }
+        }
+
+        await initAuth()
+
+        // Mode switching
+        const modeManual = document.getElementById('mode-manual')
+        const modeAI = document.getElementById('mode-ai')
+        const manualForm = document.getElementById('manual-form')
+        const aiForm = document.getElementById('ai-form')
+        
+        function setMode(mode) {
+          if (mode === 'manual') {
+            if (modeManual) modeManual.className = 'btn btn-primary'
+            if (modeAI) modeAI.className = 'btn'
+            if (manualForm) manualForm.style.display = 'grid'
+            if (aiForm) aiForm.style.display = 'none'
+          } else {
+            if (modeManual) modeManual.className = 'btn'
+            if (modeAI) modeAI.className = 'btn btn-primary'
+            if (manualForm) manualForm.style.display = 'none'
+            if (aiForm) aiForm.style.display = 'grid'
+          }
+        }
+        
+        if (modeManual) modeManual.addEventListener('click', function() { setMode('manual') })
+        if (modeAI) modeAI.addEventListener('click', function() { setMode('ai') })
+        
+        // Manual form
+        const choicesList = document.getElementById('choices-list')
+        const choiceIds = ['choice-1', 'choice-2', 'choice-3', 'choice-4']
+        
+        // Initialize 4 fixed choices with radio buttons (only one correct answer)
+        function initChoices() {
+          if (!choicesList) {
+            console.error('choicesList element not found')
+            return
+          }
+          choicesList.innerHTML = ''
+          for (let i = 0; i < 4; i++) {
+            const choiceId = choiceIds[i]
+            const div = document.createElement('div')
+            div.style.display = 'flex'
+            div.style.gap = '8px'
+            div.style.alignItems = 'center'
+            const choicePlaceholder = window.t('questions.form.choicePlaceholder').replace('{count}', String(i + 1))
+            div.innerHTML = (
+              '<input type="text" id="' + choiceId + '" placeholder="' + choicePlaceholder + '" style="flex:1;padding:8px;border:1px solid #ddd;border-radius:6px" />' +
+              '<input type="radio" id="correct-' + choiceId + '" name="correct-answer" value="' + choiceId + '" style="width:20px;height:20px;cursor:pointer" />'
+            )
+            choicesList.appendChild(div)
+          }
+          console.log('Choices initialized, count:', choicesList.children.length)
+        }
+        
+        // Initialize choices when page loads
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initChoices)
+        } else {
+          initChoices()
+        }
+        
+        // Submit manual
+        const submitManual = document.getElementById('submit-manual')
+        const manualMsg = document.getElementById('manual-msg')
+        
+        function showManualMsg(text, isError) {
+          if (manualMsg) {
+            manualMsg.textContent = text
+            manualMsg.style.color = isError ? '#d00' : '#28a745'
+            manualMsg.style.display = 'block'
+          }
+        }
+        
+        if (submitManual) {
+          submitManual.addEventListener('click', async function() {
+            const questionText = document.getElementById('question-text')
+            const questionLang = document.getElementById('question-lang')
+            const questionTags = document.getElementById('question-tags')
+            
+            if (!questionText || !questionText.value.trim()) {
+              showManualMsg(window.t('errors.questionRequired'), true)
+              return
+            }
+            
+            const choices = []
+            let correctAnswer = ''
+            let correctAnswerId = ''
+            
+            // Find selected radio button
+            const radioButtons = document.querySelectorAll('input[name="correct-answer"]:checked')
+            if (radioButtons.length > 0) {
+              const selectedRadio = radioButtons[0]
+              if (selectedRadio && selectedRadio.value) {
+                correctAnswerId = selectedRadio.value
+              }
+            }
+            
+            for (let i = 0; i < choiceIds.length; i++) {
+              const choiceId = choiceIds[i]
+              const input = document.getElementById(choiceId)
+              if (input && input.value && input.value.trim) {
+                const val = input.value.trim()
+                if (val) {
+                  choices.push(val)
+                  if (choiceId === correctAnswerId) {
+                    correctAnswer = val
+                  }
+                }
+              }
+            }
+            
+            if (choices.length < 2) {
+              showManualMsg(window.t('questions.form.minChoices'), true)
+              return
+            }
+            
+            if (!correctAnswer) {
+              showManualMsg(window.t('questions.form.selectCorrectRequired'), true)
+              return
+            }
+            
+            if (!choices.includes(correctAnswer)) {
+              showManualMsg(window.t('questions.form.correctAnswerInvalid'), true)
+              return
+            }
+            
+            if (submitManual) submitManual.disabled = true
+            showManualMsg(window.t('room.loading'), false)
+            
+            try {
+              // Collect tags (最多5个)
+              const tags = []
+              for (let i = 1; i <= 5; i++) {
+                const tagInput = document.getElementById('tag-' + i)
+                if (tagInput && tagInput.value && tagInput.value.trim) {
+                  const tag = tagInput.value.trim()
+                  if (tag) tags.push(tag)
+                }
+              }
+              
+              const res = await fetch('/api/questions/create', {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({
+                  question: questionText.value.trim(),
+                  choices: choices,
+                  correctAnswer: correctAnswer,
+                  lang: questionLang ? questionLang.value : lang,
+                  category: tags.length > 0 ? tags.join(',') : undefined,
+                })
+              })
+              
+              if (!res.ok) {
+                const json = await res.json().catch(() => ({}))
+                if (res.status === 401) {
+                  throw new Error(window.t('errors.notAuthenticated'))
+                }
+                let errorMsg = json.error || window.t('questions.error')
+                // 将英文错误消息转换为用户友好的消息
+                if (errorMsg.includes('not authenticated')) {
+                  errorMsg = window.t('errors.notAuthenticated')
+                } else if (errorMsg.includes('question, choices')) {
+                  errorMsg = window.t('questions.form.minChoices')
+                } else if (errorMsg.includes('correctAnswer')) {
+                  errorMsg = window.t('questions.form.correctAnswerInvalid')
+                }
+                throw new Error(errorMsg)
+              }
+              
+              const json = await res.json()
+              const newQuestionId = json.id
+              
+              if (!newQuestionId) {
+                throw new Error(window.t('questions.error'))
+              }
+              
+              showManualMsg(window.t('questions.success'), false)
+              
+              // 自动创建题目集（如果还没有题目集）
+              try {
+                const setsRes = await fetch('/api/question-sets/list', { credentials: 'include' })
+                if (setsRes.ok) {
+                  const setsData = await setsRes.json()
+                  const sets = setsData.sets || []
+                  
+                  if (sets.length === 0) {
+                    // 没有题目集，自动创建一个包含当前题目的题目集
+                    const createSetRes = await fetch('/api/question-sets/create', {
+                      method: 'POST',
+                      credentials: 'include',
+                      headers: { 'content-type': 'application/json' },
+                      body: JSON.stringify({
+                        title: undefined,
+                        lang: questionLang ? questionLang.value : lang,
+                        questionIds: [newQuestionId],
+                      })
+                    })
+                    
+                    if (createSetRes.ok) {
+                      showManualMsg(window.t('questions.success') + '，已自動建立題目集', false)
+                    }
+                  }
+                }
+              } catch (e) {
+                console.error('Failed to auto-create question set:', e)
+              }
+              
+              setTimeout(function() {
+                window.location.href = '/' + lang + '/question-sets'
+              }, 1500)
+            } catch (e) {
+              showManualMsg(e.message || window.t('questions.error'), true)
+            } finally {
+              if (submitManual) submitManual.disabled = false
+            }
+          })
+        }
+        
+        // Submit AI
+        const submitAI = document.getElementById('submit-ai')
+        const aiMsg = document.getElementById('ai-msg')
+        
+        function showAIMsg(text, isError) {
+          if (aiMsg) {
+            aiMsg.textContent = text
+            aiMsg.style.color = isError ? '#d00' : '#28a745'
+            aiMsg.style.display = 'block'
+          }
+        }
+        
+        if (submitAI) {
+          submitAI.addEventListener('click', async function() {
+            const keywordsInput = document.getElementById('ai-keywords')
+            const countInput = document.getElementById('ai-count')
+            const aiLangSelect = document.getElementById('ai-lang')
+            
+            const keywords = keywordsInput ? keywordsInput.value.trim() : ''
+            if (!keywords) {
+              showAIMsg(window.t('questions.ai.keywordsRequired'), true)
+              return
+            }
+            
+            if (submitAI) {
+              submitAI.disabled = true
+              submitAI.textContent = window.t('questions.ai.generating')
+            }
+            showAIMsg(window.t('questions.ai.generating'), false)
+            
+            try {
+              const res = await fetch('/api/questions/generate', {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({
+                  keywords: keywords,
+                  count: countInput ? Number(countInput.value) : 10,
+                  lang: aiLangSelect ? aiLangSelect.value : lang,
+                })
+              })
+              
+              if (!res.ok) {
+                const json = await res.json().catch(() => ({}))
+                if (res.status === 401) {
+                  throw new Error(window.t('errors.notAuthenticated'))
+                }
+                let errorMsg = json.error || window.t('questions.error')
+                // 将英文错误消息转换为用户友好的消息
+                if (errorMsg.includes('not authenticated')) {
+                  errorMsg = window.t('errors.notAuthenticated')
+                } else if (errorMsg.includes('OpenAI') || errorMsg.includes('API')) {
+                  errorMsg = window.t('questions.ai.configRequired')
+                }
+                throw new Error(errorMsg)
+              }
+              
+              const json = await res.json()
+              const generatedQuestionIds = json.questionIds || []
+              const generatedCount = json.count || 0
+              
+              showAIMsg(window.t('questions.ai.generateSuccess').replace('{count}', String(generatedCount)), false)
+              
+              // 自动创建题目集（如果还没有题目集）
+              if (generatedQuestionIds.length > 0) {
+                try {
+                  const setsRes = await fetch('/api/question-sets/list', { credentials: 'include' })
+                  if (setsRes.ok) {
+                    const setsData = await setsRes.json()
+                    const sets = setsData.sets || []
+                    
+                    if (sets.length === 0) {
+                      // 没有题目集，自动创建一个包含所有生成题目的题目集
+                      const createSetRes = await fetch('/api/question-sets/create', {
+                        method: 'POST',
+                        credentials: 'include',
+                        headers: { 'content-type': 'application/json' },
+                        body: JSON.stringify({
+                          title: undefined,
+                          lang: aiLangSelect ? aiLangSelect.value : lang,
+                          questionIds: generatedQuestionIds,
+                        })
+                      })
+                      
+                      if (createSetRes.ok) {
+                        showAIMsg(window.t('questions.ai.generateSuccess').replace('{count}', String(generatedCount)) + '，已自動建立題目集', false)
+                      }
+                    }
+                  }
+                } catch (e) {
+                  console.error('Failed to auto-create question set:', e)
+                }
+              }
+              
+              setTimeout(function() {
+                window.location.href = '/' + lang + '/question-sets'
+              }, 2000)
+            } catch (e) {
+              showAIMsg(e.message || window.t('questions.error'), true)
+            } finally {
+              if (submitAI) {
+                submitAI.disabled = false
+                submitAI.textContent = window.t('questions.ai.generate')
+              }
+            }
+          })
+        }
+        
+        // Cancel buttons
+        const cancelManual = document.getElementById('cancel-manual')
+        const cancelAI = document.getElementById('cancel-ai')
+        if (cancelManual) cancelManual.addEventListener('click', function() { window.location.href = '/' + lang + '/' })
+        if (cancelAI) cancelAI.addEventListener('click', function() { window.location.href = '/' + lang + '/' })
+      })()
+    </script> </body> </html>`])), addAttribute(lang, "lang"), renderComponent($$result, "SeoMeta", $$SeoMeta, { "lang": lang, "title": title, "description": desc, "path": path, "siteOrigin": siteOrigin }), renderHead(), addAttribute(`/${lang}/`, "href"), serverT("nav.home"), serverT("auth.login"), serverT("questions.title"), serverT("questions.manual"), serverT("questions.generate"), serverT("questions.form.question"), addAttribute(serverT("questions.form.questionPlaceholder"), "placeholder"), serverT("questions.form.choices"), serverT("questions.form.lang"), serverT("questions.form.submit"), serverT("questions.form.cancel"), serverT("questions.ai.note"), serverT("questions.ai.keywords"), addAttribute(serverT("questions.ai.keywordsPlaceholder"), "placeholder"), serverT("questions.ai.count"), serverT("questions.ai.lang"), serverT("questions.ai.generate"), serverT("questions.form.cancel"));
+}, "/Users/yichen/Downloads/cursor/QuizyParty/src/pages/[lang]/create-question.astro", void 0);
+const $$file = "/Users/yichen/Downloads/cursor/QuizyParty/src/pages/[lang]/create-question.astro";
+const $$url = "/[lang]/create-question";
+
+const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: $$CreateQuestion,
+  file: $$file,
+  prerender,
+  url: $$url
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const page = () => _page;
+
+export { page };

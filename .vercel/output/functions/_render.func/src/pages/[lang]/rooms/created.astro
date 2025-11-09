@@ -1,0 +1,252 @@
+---
+import { setupServerI18n } from '../../../lib/server-i18n'
+import SeoMeta from '../../../components/SeoMeta.astro'
+import AppHeader from '../../../components/layout/AppHeader.astro'
+import '../../../styles/base.css'
+import EmptyState from '../../../components/ui/EmptyState.astro'
+import LoadingState from '../../../components/ui/LoadingState.astro'
+
+const { lang, serverT } = await setupServerI18n(Astro.params.lang)
+const title = serverT('profile.sections.myRooms')
+const desc = serverT('profile.sections.myRooms')
+const featureV3 = (import.meta.env.PUBLIC_FEATURE_QP_V3 ?? 'true') !== 'false'
+
+export const prerender = false
+const siteOrigin =
+  (Astro.site && Astro.site.origin) || (import.meta.env.SITE ?? 'https://quizyparty.com')
+const path = Astro.url.pathname
+---
+
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <SeoMeta lang={lang} title={title} description={desc} path={path} siteOrigin={siteOrigin} />
+  </head>
+  <body data-feature-v3={featureV3 ? 'true' : 'false'}>
+    <a href="#main" class="sr-only">{serverT('a11y.skipToContent')}</a>
+    <AppHeader lang={lang} serverT={serverT} />
+    <main
+      id="main"
+      class:list={['container', featureV3 ? 'stack-lg' : 'legacy-profile-main']}
+    >
+      <nav aria-label={serverT('common.breadcrumbs')} class="caption breadcrumb">
+        <a
+          href={`/${lang}/profile`}
+          class="caption"
+          aria-label={serverT('profile.title')}
+          >{serverT('profile.title')}</a
+        >
+        <span aria-hidden="true">/</span>
+        <span class="caption">{title}</span>
+      </nav>
+      <div class="flex-between">
+        <h1 class="h1 no-margin">{title}</h1>
+        <a
+          class={featureV3 ? 'btn-primary' : 'btn btn-compact'}
+          href={`/${lang}/create-room`}
+          >{serverT('profile.sections.createRoom')}</a
+        >
+      </div>
+      <div
+        id="created-tabs"
+        role="tablist"
+        aria-label={serverT('profile.sections.myRooms')}
+        class="tab-row"
+      >
+        <button
+          id="created-tab-published"
+          class={featureV3 ? 'tab active' : 'btn btn-primary'}
+          role="tab"
+          data-status="published"
+          type="button"
+          aria-selected="true"
+          aria-controls="created-list"
+          tabindex="0"
+        >
+          <span>{serverT('myRooms.published')}</span>
+          <span class="badge" data-count-badge="published">0</span>
+        </button>
+        <button
+          id="created-tab-draft"
+          class={featureV3 ? 'tab' : 'btn'}
+          role="tab"
+          data-status="draft"
+          type="button"
+          aria-selected="false"
+          aria-controls="created-list"
+          tabindex="-1"
+        >
+          <span>{serverT('myRooms.drafts')}</span>
+          <span class="badge" data-count-badge="draft">0</span>
+        </button>
+      </div>
+      <div id="created-message" class="status-text" role="status" aria-live="polite"></div>
+      <LoadingState
+        id="created-loading"
+        lang={lang}
+        serverT={serverT}
+        titleKey="common.loading"
+      />
+      <EmptyState
+        id="created-empty"
+        lang={lang}
+        serverT={serverT}
+        titleKey="common.empty.created.title"
+        descKey="common.empty.created.desc"
+        actionHref={`/${lang}/create-room`}
+        actionKey="common.empty.created.action"
+      />
+      <div
+        id="created-list"
+        role="tabpanel"
+        aria-labelledby="created-tab-published"
+        class={featureV3 ? 'stack' : 'legacy-section'}
+      ></div>
+      <div id="created-pagination" class="flex-between is-hidden"></div>
+    </main>
+    <script type="module" src="/js/i18n.js"></script>
+    <script src="/js/room-card-template.js" is:inline></script>
+    <script src="/js/room-templates.js" is:inline></script>
+    <script type="module">
+      ;(async function () {
+        await import('/js/i18n.js')
+        const { setupRoomsManager } = await import('/js/rooms-manager.js')
+        const lang = document.documentElement.getAttribute('lang') || 'en'
+        const createdList = document.getElementById('created-list')
+        const createdPagination = document.getElementById('created-pagination')
+        const createdMessage = document.getElementById('created-message')
+        const createdTabsContainer = document.getElementById('created-tabs')
+        const featureV3 =
+          document.body && document.body.dataset
+            ? document.body.dataset.featureV3 === 'true'
+            : false
+        const countBadges = {
+          published: document.querySelector('[data-count-badge="published"]'),
+          draft: document.querySelector('[data-count-badge="draft"]'),
+        }
+        const createdTabs = createdTabsContainer
+          ? Array.prototype.slice
+              .call(createdTabsContainer.querySelectorAll('[data-status]'))
+              .map(function (button) {
+                return { status: button.getAttribute('data-status') || 'published', button: button }
+              })
+          : []
+        const createdLoading = document.getElementById('created-loading')
+        const createdEmpty = document.getElementById('created-empty')
+        function toggle(el, show) {
+          if (!el) return
+          el.style.display = show ? '' : 'none'
+        }
+        function showMessage(text, isError) {
+          if (!createdMessage) return
+          // 最小整合：若為空範圍提示，顯示統一 EmptyState；其他訊息維持舊行為
+          const emptyScope = window.t('profile.created.emptyScope')
+          if (text && text === emptyScope) {
+            toggle(createdLoading, false)
+            toggle(createdEmpty, true)
+            createdMessage.innerHTML = ''
+            createdMessage.style.color = ''
+            return
+          } else {
+            toggle(createdEmpty, false)
+          }
+          if (!text) {
+            createdMessage.innerHTML = ''
+            createdMessage.style.color = ''
+            toggle(createdLoading, false)
+            return
+          }
+          if (featureV3) {
+            createdMessage.innerHTML =
+              '<div class="card ' +
+              (isError ? 'text-danger' : '') +
+              ' text-center">' +
+              text +
+              '</div>'
+            createdMessage.style.color = ''
+            toggle(createdLoading, false)
+            return
+          }
+          createdMessage.textContent = text
+          createdMessage.style.color = isError ? '#d00' : '#059669'
+        }
+        function setCountBadge(status, value) {
+          const badge = status === 'draft' ? countBadges.draft : countBadges.published
+          if (!badge) return
+          const safe = typeof value === 'number' && value >= 0 ? value : 0
+          badge.textContent = String(safe)
+          const tab = createdTabs.find(function (entry) {
+            return entry.status === status
+          })
+          if (tab && tab.button) {
+            const labelKey = status === 'draft' ? 'myRooms.drafts' : 'myRooms.published'
+            tab.button.setAttribute('aria-label', window.t(labelKey) + ' ' + safe)
+          }
+        }
+        async function fetchStatusTotal(status) {
+          try {
+            const params = new URLSearchParams()
+            params.set('status', status)
+            params.set('limit', '1')
+            params.set('offset', '0')
+            const res = await fetch('/api/room-templates?' + params.toString(), {
+              credentials: 'include',
+            })
+            if (!res.ok) return null
+            const json = await res.json()
+            if (typeof json.total === 'number') return json.total
+            const templates = Array.isArray(json.templates) ? json.templates : []
+            return templates.length
+          } catch (e) {
+            console.warn('[rooms/created] fetchStatusTotal failed', status, e)
+            return null
+          }
+        }
+        async function updateCounts() {
+          const [published, draft] = await Promise.all([
+            fetchStatusTotal('published'),
+            fetchStatusTotal('draft'),
+          ])
+          setCountBadge('published', published)
+          setCountBadge('draft', draft)
+        }
+        const mgr = setupRoomsManager({
+          listEl: createdList,
+          paginationEl: createdPagination,
+          tabs: createdTabs,
+          lang: lang,
+          t: function (key) {
+            return window.t(key)
+          },
+          pageSize: 10,
+          onNotify: function (text, isError) {
+            showMessage(text, isError)
+            updateCounts()
+          },
+          emptyText: window.t('profile.created.emptyScope'),
+          emptyAction: {
+            href: '/' + lang + '/create-room',
+            label: window.t('profile.sections.createRoom'),
+          },
+        })
+        updateCounts()
+        if (mgr && mgr.refresh) {
+          const originalRefresh = mgr.refresh
+          mgr.refresh = function () {
+            originalRefresh()
+            updateCounts()
+          }
+          mgr.refresh()
+        }
+      })()
+    </script>
+  </body>
+</html>
+*** End Patch*** }```} error code: 400, error: Bad RequestThe arguments to the tool are not valid JSON:
+invalid character '*' looking for beginning of object key string. Please ensure your function arguments
+is valid JSON. Also ensure that the argument "code_edit" is a valid patch. Please ensure that you escape
+any control characters in the patch such as newlines. Please ensure that both the keys and values in
+PATCH_ARGS are valid JSON. Also ensure that you pass a single JSON object in the call. (If you are requesting
+multiple actions, please send them in separate calls.)
+
