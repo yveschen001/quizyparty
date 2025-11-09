@@ -536,8 +536,17 @@
       }
     },
     "controls": {
-      "sort": "排序",
-      "status": "狀態"
+      "sort": {
+        "title": "標題",
+        "updated": "最近更新",
+        "members": "人數",
+        "lastPlayed": "最近作答",
+        "answered": "作答數",
+        "accuracy": "正確率"
+      },
+      "status": {
+        "all": "全部"
+      }
     },
     "loading": "載入中…",
     "error": {
@@ -545,5 +554,54 @@
       "desc": "無法取得資料，請稍後再試。",
       "retry": "重試"
     }
+  },
+  "pager": {
+    "perPage": "每頁",
+    "pageSize": "每頁數量",
+    "prev": "上一頁",
+    "next": "下一頁",
+    "indicator": "第 {{page}} / {{pages}} 頁"
+  },
+  "cache": {
+    "refreshing": "資料更新中…"
+  },
+  "card": {
+    "status": {
+      "public": "公開",
+      "draft": "草稿"
+    },
+    "updatedAt": "更新",
+    "answered": "作答數",
+    "accuracy": "正確率",
+    "lastPlayedAt": "最近作答",
+    "cta": {
+      "playAgain": "再玩一次",
+      "viewResult": "查看結果",
+      "publish": "發佈",
+      "unpublish": "下架",
+      "delete": "刪除",
+      "edit": "編輯",
+      "manage": "管理",
+      "share": "分享"
+    }
+  },
+  "controls": {
+    "sort": {
+      "title": "標題",
+      "updated": "最近更新",
+      "members": "人數",
+      "lastPlayed": "最近作答",
+      "answered": "作答數",
+      "accuracy": "正確率"
+    },
+    "status": {
+      "all": "全部"
+    }
+  },
+  "loading": "載入中…",
+  "error": {
+    "title": "載入失敗",
+    "desc": "無法取得資料，請稍後再試。",
+    "retry": "重試"
   }
 }
