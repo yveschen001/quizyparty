@@ -44,22 +44,13 @@ const path = Astro.url.pathname
         <span class="caption">{title}</span>
       </nav>
       <h1 id="joined-title" class="h1 no-margin">{title}</h1>
-      <div id="joined-tabs" class="tab-row" role="tablist" aria-label={serverT('common.controls.sort.label')}>
-        <button class="tab active" role="tab" data-sort="lastPlayed" aria-selected="true" tabindex="0">
-          {serverT('common.controls.sort.lastPlayed')}
-        </button>
-        <button class="tab" role="tab" data-sort="answered" aria-selected="false" tabindex="-1">
-          {serverT('common.controls.sort.answered')}
-        </button>
-        <button class="tab" role="tab" data-sort="accuracy" aria-selected="false" tabindex="-1">
-          {serverT('common.controls.sort.accuracy')}
-        </button>
-        <button class="tab" role="tab" data-sort="title" aria-selected="false" tabindex="-1">
-          {serverT('common.controls.sort.title')}
-        </button>
-        <button class="tab" role="tab" data-sort="updated" aria-selected="false" tabindex="-1">
-          {serverT('common.controls.sort.updated')}
-        </button>
+      <div class="mb-2" style="display:flex;gap:8px;align-items:center">
+        <input
+          id="joined-search"
+          type="search"
+          placeholder={serverT('questionSets.library.searchPlaceholder')}
+          style="flex:1;min-width:220px;padding:9px 12px;border:1px solid #e5e7eb;border-radius:10px"
+        />
       </div>
       <div id="message" class="status-text" role="status" aria-live="polite"></div>
       <LoadingState id="joined-loading" lang={lang} serverT={serverT} titleKey="common.loading" />
@@ -103,7 +94,7 @@ const path = Astro.url.pathname
         } catch (e) {}
         const message = document.getElementById('message')
         const list = document.getElementById('list')
-        const tabsContainer = document.getElementById('joined-tabs')
+        const searchInput = document.getElementById('joined-search')
         function showMessage(text, isError) {
           if (!message) return
           if (!text) {
@@ -218,40 +209,17 @@ const path = Astro.url.pathname
           legacyWrapper.appendChild(legacyLink)
           list.appendChild(legacyWrapper)
         }
-        function getSortFromUrl(){
-          try { const q=new URLSearchParams(location.search); return q.get('sort')||'lastPlayed' } catch { return 'lastPlayed' }
-        }
-        function setSortInUrl(v){
-          try { const u=new URL(location.href); u.searchParams.set('sort', v); history.replaceState(null,'',u.toString()) } catch {}
-        }
-        function updateSortTabs(active){
-          if (!tabsContainer) return
-          const buttons = Array.prototype.slice.call(tabsContainer.querySelectorAll('[data-sort]'))
-          buttons.forEach(function(btn){
-            const isActive = (btn.getAttribute('data-sort')||'') === active
-            if (isActive) { btn.classList.add('active'); btn.setAttribute('aria-selected','true'); btn.setAttribute('tabindex','0') }
-            else { btn.classList.remove('active'); btn.setAttribute('aria-selected','false'); btn.setAttribute('tabindex','-1') }
+        function getSortFromUrl(){ try { const q=new URLSearchParams(location.search); return q.get('sort')||'lastPlayed' } catch { return 'lastPlayed' } }
+        function getQueryFromUrl(){ try { const q=new URLSearchParams(location.search); return q.get('q')||'' } catch { return '' } }
+        function setQueryInUrl(v){ try { const u=new URL(location.href); if(v){u.searchParams.set('q',v)} else {u.searchParams.delete('q')} history.replaceState(null,'',u.toString()) } catch {} }
+        if (searchInput){
+          try { const init = getQueryFromUrl(); if (init) searchInput.value = init } catch {}
+          let t=null
+          searchInput.addEventListener('input', function(){
+            if (t) clearTimeout(t)
+            t=setTimeout(function(){ setQueryInUrl(searchInput.value||''); loadParticipations() }, 250)
           })
-        }
-        if (tabsContainer){
-          tabsContainer.addEventListener('click', function(e){
-            const btn = e.target && e.target.closest('[data-sort]')
-            if (!btn) return
-            const next = btn.getAttribute('data-sort')||'lastPlayed'
-            setSortInUrl(next); updateSortTabs(next); loadParticipations()
-          })
-          tabsContainer.addEventListener('keydown', function(e){
-            const btns = Array.prototype.slice.call(tabsContainer.querySelectorAll('[data-sort]'))
-            const active = getSortFromUrl()
-            let idx = btns.findIndex(function(b){ return (b.getAttribute('data-sort')||'')===active })
-            if (idx < 0) idx = 0
-            if (e.key === 'ArrowRight') { e.preventDefault(); idx = Math.min(idx+1, btns.length-1) }
-            else if (e.key === 'ArrowLeft') { e.preventDefault(); idx = Math.max(idx-1, 0) }
-            else return
-            const next = btns[idx].getAttribute('data-sort')||'lastPlayed'
-            setSortInUrl(next); updateSortTabs(next); loadParticipations(); btns[idx].focus()
-          })
-          updateSortTabs(getSortFromUrl())
+          searchInput.addEventListener('keydown', function(e){ if (e.key==='Enter'){ setQueryInUrl(searchInput.value||''); loadParticipations() } })
         }
 
         async function loadParticipations() {
@@ -266,10 +234,16 @@ const path = Astro.url.pathname
             }
             const json = await res.json()
             let items = Array.isArray(json.rooms) ? json.rooms : []
-            // 依 URL sort 控制排序（本頁內建 tabs）
+            // 依 URL 參數進行排序 + 關鍵字過濾
             try {
               const q = new URLSearchParams(location.search)
               const sort = q.get('sort') || 'lastPlayed'
+              const kw = (q.get('q') || '').trim().toLowerCase()
+              if (kw) {
+                items = items.filter(function (it) {
+                  return String(it && it.roomTitle ? it.roomTitle : '').toLowerCase().indexOf(kw) >= 0
+                })
+              }
               if (sort === 'answered') {
                 items.sort(function(a,b){ return (Number(b?.totalAnswered||0) - Number(a?.totalAnswered||0)) })
               } else if (sort === 'accuracy') {
