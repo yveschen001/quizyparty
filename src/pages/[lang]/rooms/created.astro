@@ -63,10 +63,14 @@ const path = Astro.url.pathname
         style={featureV3 ? undefined : 'display:flex;gap:8px;flex-wrap:wrap'}
       >
         <button
+          id="created-tab-published"
           class={featureV3 ? 'tab active' : 'btn btn-primary'}
+          role="tab"
           data-status="published"
           type="button"
-          aria-pressed="true"
+          aria-selected="true"
+          aria-controls="created-list"
+          tabindex="0"
         >
           <span>{serverT('myRooms.published')}</span>
           <span
@@ -77,10 +81,14 @@ const path = Astro.url.pathname
           >
         </button>
         <button
+          id="created-tab-draft"
           class={featureV3 ? 'tab' : 'btn'}
+          role="tab"
           data-status="draft"
           type="button"
-          aria-pressed="false"
+          aria-selected="false"
+          aria-controls="created-list"
+          tabindex="-1"
         >
           <span>{serverT('myRooms.drafts')}</span>
           <span
@@ -91,8 +99,14 @@ const path = Astro.url.pathname
           >
         </button>
       </div>
-      <div id="created-message" class={featureV3 ? 'status-text' : undefined} style={featureV3 ? undefined : 'min-height:1.1em;font-size:0.9rem'}></div>
-      <div id="created-list" class={featureV3 ? 'stack' : undefined} style={featureV3 ? undefined : 'display:grid;gap:12px'}></div>
+      <div id="created-message" class={featureV3 ? 'status-text' : undefined} role="status" aria-live="polite" style={featureV3 ? undefined : 'min-height:1.1em;font-size:0.9rem'}></div>
+      <div
+        id="created-list"
+        role="tabpanel"
+        aria-labelledby="created-tab-published"
+        class={featureV3 ? 'stack' : undefined}
+        style={featureV3 ? undefined : 'display:grid;gap:12px'}
+      ></div>
       <div
         id="created-pagination"
         class={featureV3 ? 'flex-between' : undefined}

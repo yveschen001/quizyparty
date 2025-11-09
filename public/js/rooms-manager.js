@@ -69,6 +69,9 @@ async function removeLiveRoom(roomId) {
 export function setupRoomsManager(config) {
   const listEl = config && config.listEl ? config.listEl : null
   if (!listEl) return null
+  if (!listEl.getAttribute('role')) {
+    listEl.setAttribute('role', 'tabpanel')
+  }
 
   const paginationEl = config && config.paginationEl ? config.paginationEl : null
   const tabs = Array.isArray(config && config.tabs) ? config.tabs : []
@@ -102,6 +105,9 @@ export function setupRoomsManager(config) {
     for (let i = 0; i < tabs.length; i += 1) {
       const tab = tabs[i]
       if (!tab || !tab.button) continue
+      if (!tab.button.hasAttribute('role')) {
+        tab.button.setAttribute('role', 'tab')
+      }
       const isActive = tab.status === status
       const isDesignTab = tab.button.classList.contains('tab')
       if (isActive) {
@@ -111,7 +117,6 @@ export function setupRoomsManager(config) {
           tab.button.classList.add('btn-primary')
           tab.button.classList.remove('btn')
         }
-        tab.button.setAttribute('aria-pressed', 'true')
       } else {
         if (isDesignTab) {
           tab.button.classList.remove('active')
@@ -119,7 +124,15 @@ export function setupRoomsManager(config) {
           tab.button.classList.remove('btn-primary')
           tab.button.classList.add('btn')
         }
-        tab.button.setAttribute('aria-pressed', 'false')
+      }
+      tab.button.setAttribute('aria-pressed', isActive ? 'true' : 'false')
+      tab.button.setAttribute('aria-selected', isActive ? 'true' : 'false')
+      tab.button.setAttribute('tabindex', isActive ? '0' : '-1')
+      if (isActive && listEl && tab.button.id) {
+        listEl.setAttribute('aria-labelledby', tab.button.id)
+        if (!listEl.hasAttribute('tabindex')) {
+          listEl.setAttribute('tabindex', '-1')
+        }
       }
     }
   }
@@ -399,6 +412,51 @@ export function setupRoomsManager(config) {
       }
       currentOffset = 0
       load(status, 0)
+    })
+    tab.button.addEventListener('keydown', function (event) {
+      const key = event.key
+      if (!key) return
+      if (key === 'ArrowRight' || key === 'ArrowLeft') {
+        event.preventDefault()
+        const dir = key === 'ArrowRight' ? 1 : -1
+        const currentIndex = tabs.indexOf(tab)
+        const nextIndex = (currentIndex + dir + tabs.length) % tabs.length
+        const nextTab = tabs[nextIndex]
+        if (nextTab && nextTab.button) {
+          nextTab.button.focus()
+          const status = nextTab.status || 'published'
+          if (status !== currentStatus || filterFn) {
+            currentOffset = 0
+            load(status, 0)
+          }
+        }
+        return
+      }
+      if (key === 'Home') {
+        event.preventDefault()
+        const firstTab = tabs[0]
+        if (firstTab && firstTab.button) {
+          firstTab.button.focus()
+          const status = firstTab.status || 'published'
+          if (status !== currentStatus || filterFn) {
+            currentOffset = 0
+            load(status, 0)
+          }
+        }
+        return
+      }
+      if (key === 'End') {
+        event.preventDefault()
+        const lastTab = tabs[tabs.length - 1]
+        if (lastTab && lastTab.button) {
+          lastTab.button.focus()
+          const status = lastTab.status || 'draft'
+          if (status !== currentStatus || filterFn) {
+            currentOffset = 0
+            load(status, 0)
+          }
+        }
+      }
     })
   }
 

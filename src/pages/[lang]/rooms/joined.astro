@@ -44,8 +44,8 @@ const path = Astro.url.pathname
         <span class="caption">{title}</span>
       </nav>
       <h1 class="h1" style={featureV3 ? undefined : 'margin:0'}>{title}</h1>
-      <div id="message" class={featureV3 ? 'status-text' : undefined} style={featureV3 ? undefined : 'min-height:1.1em;font-size:0.9rem'}></div>
-      <div id="list" class={featureV3 ? 'stack' : undefined} style={featureV3 ? undefined : 'display:grid;gap:12px'}></div>
+      <div id="message" class={featureV3 ? 'status-text' : undefined} role="status" aria-live="polite" style={featureV3 ? undefined : 'min-height:1.1em;font-size:0.9rem'}></div>
+      <div id="list" class={featureV3 ? 'stack' : undefined} role="list" style={featureV3 ? undefined : 'display:grid;gap:12px'}></div>
     </main>
     <script type="module" src="/js/i18n.js"></script>
     <script type="module">
@@ -114,47 +114,57 @@ const path = Astro.url.pathname
         }
         function renderSkeleton() {
           if (!list) return
+          list.innerHTML = ''
           if (featureV3) {
-            list.innerHTML =
-              '<div class="card card-skeleton" style="min-height:104px"></div>' +
-              '<div class="card card-skeleton" style="min-height:104px"></div>' +
-              '<div class="card card-skeleton" style="min-height:104px"></div>'
-          } else {
-            list.innerHTML =
-              '<p style="padding:16px;text-align:center;opacity:0.6">' +
-              window.t('room.loading') +
-              '</p>'
+            for (let i = 0; i < 3; i += 1) {
+              const skeleton = document.createElement('div')
+              skeleton.className = 'card card-skeleton'
+              skeleton.style.minHeight = '104px'
+              skeleton.setAttribute('role', 'listitem')
+              list.appendChild(skeleton)
+            }
+            return
           }
+          list.innerHTML =
+            '<p style="padding:16px;text-align:center;opacity:0.6">' +
+            window.t('room.loading') +
+            '</p>'
         }
         function renderEmpty() {
           if (!list) return
           const ctaLabel = window.t('profile.participations.cta')
           const ctaHref = '/' + lang + '/'
+          list.innerHTML = ''
           if (featureV3) {
-            list.innerHTML =
-              '<div class="card stack text-center">' +
-              '<p class="p text-muted">' +
-              window.t('profile.participations.empty') +
-              '</p>' +
-              '<a class="btn btn-primary" href="' +
-              ctaHref +
-              '">' +
-              ctaLabel +
-              '</a>' +
-              '</div>'
-          } else {
-            list.innerHTML =
-              '<div style="padding:16px;text-align:center;opacity:0.6">' +
-              '<p style="margin-bottom:12px">' +
-              window.t('profile.participations.empty') +
-              '</p>' +
-              '<a class="btn" href="' +
-              ctaHref +
-              '">' +
-              ctaLabel +
-              '</a>' +
-              '</div>'
+            const wrapper = document.createElement('div')
+            wrapper.className = 'card stack text-center'
+            wrapper.setAttribute('role', 'listitem')
+            const text = document.createElement('p')
+            text.className = 'p text-muted'
+            text.textContent = window.t('profile.participations.empty')
+            const link = document.createElement('a')
+            link.className = 'btn btn-primary'
+            link.href = ctaHref
+            link.textContent = ctaLabel
+            wrapper.appendChild(text)
+            wrapper.appendChild(link)
+            list.appendChild(wrapper)
+            return
           }
+          const legacyWrapper = document.createElement('div')
+          legacyWrapper.style.padding = '16px'
+          legacyWrapper.style.textAlign = 'center'
+          legacyWrapper.style.opacity = '0.6'
+          const legacyText = document.createElement('p')
+          legacyText.style.marginBottom = '12px'
+          legacyText.textContent = window.t('profile.participations.empty')
+          const legacyLink = document.createElement('a')
+          legacyLink.className = 'btn'
+          legacyLink.href = ctaHref
+          legacyLink.textContent = ctaLabel
+          legacyWrapper.appendChild(legacyText)
+          legacyWrapper.appendChild(legacyLink)
+          list.appendChild(legacyWrapper)
         }
         async function loadParticipations() {
           if (!list) return
@@ -184,6 +194,7 @@ const path = Astro.url.pathname
               if (!item) continue
               const card = document.createElement('div')
               card.className = featureV3 ? 'card stack' : 'card'
+              card.setAttribute('role', 'listitem')
               if (!featureV3) {
                 card.style.padding = '16px'
                 card.style.display = 'grid'

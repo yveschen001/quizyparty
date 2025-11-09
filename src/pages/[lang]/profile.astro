@@ -52,22 +52,28 @@ const path = Astro.url.pathname
           <div
             class={featureV3 ? 'tab-row' : undefined}
             style={featureV3 ? undefined : 'display:flex;gap:8px;flex-wrap:wrap;align-items:center'}
-            role="group"
+            role="tablist"
             aria-label={serverT('profile.stats.scopeLabel')}
           >
             <button
               id="scope-all"
               class={featureV3 ? 'tab active' : 'btn btn-primary'}
               type="button"
+              role="tab"
               data-scope="all"
-              aria-pressed="true">{serverT('profile.scope.all')}</button
+              aria-selected="true"
+              aria-controls="stats-panel"
+              tabindex="0">{serverT('profile.scope.all')}</button
             >
             <button
               id="scope-30d"
               class={featureV3 ? 'tab' : 'btn'}
               type="button"
+              role="tab"
               data-scope="30d"
-              aria-pressed="false"
+              aria-selected="false"
+              aria-controls="stats-panel"
+              tabindex="-1"
               >{serverT('profile.scope.30d')}</button
             >
             <button
@@ -320,11 +326,14 @@ const path = Astro.url.pathname
         <div
           id="participations-message"
           class={featureV3 ? 'status-text' : undefined}
+          role="status"
+          aria-live="polite"
           style={featureV3 ? undefined : 'min-height:1.1em;font-size:0.9rem'}
         ></div>
         <div
           id="participations-list"
           class={featureV3 ? 'stack' : undefined}
+          role="list"
           style={featureV3 ? undefined : 'display:grid;gap:12px'}
         ></div>
       </section>
@@ -827,6 +836,14 @@ const path = Astro.url.pathname
           }
         }
 
+        function buildSkeletonCard() {
+          const wrapper = document.createElement('div')
+          wrapper.className = 'card card-skeleton'
+          wrapper.style.minHeight = '104px'
+          wrapper.setAttribute('role', 'listitem')
+          return wrapper
+        }
+
         function renderParticipations(scope) {
           if (!participationsList) return
           if (featureV3) {
@@ -964,6 +981,7 @@ const path = Astro.url.pathname
 
             card.appendChild(actions)
             participationsList.appendChild(card)
+            card.setAttribute('role', 'listitem')
           }
         }
 
@@ -982,7 +1000,6 @@ const path = Astro.url.pathname
                 button.classList.add('btn-primary')
                 button.classList.remove('btn')
               }
-              button.setAttribute('aria-pressed', 'true')
             } else {
               if (isTab) {
                 button.classList.remove('active')
@@ -990,8 +1007,10 @@ const path = Astro.url.pathname
                 button.classList.remove('btn-primary')
                 button.classList.add('btn')
               }
-              button.setAttribute('aria-pressed', 'false')
             }
+            button.setAttribute('aria-pressed', isActive ? 'true' : 'false')
+            button.setAttribute('aria-selected', isActive ? 'true' : 'false')
+            button.setAttribute('tabindex', isActive ? '0' : '-1')
           }
         }
 
@@ -1049,10 +1068,24 @@ const path = Astro.url.pathname
           scopeAllBtn.addEventListener('click', function () {
             applyScope('all')
           })
+          scopeAllBtn.addEventListener('keydown', function (event) {
+            if (event.key === 'ArrowRight') {
+              event.preventDefault()
+              if (scope30dBtn) scope30dBtn.focus()
+              applyScope('30d')
+            }
+          })
         }
         if (scope30dBtn) {
           scope30dBtn.addEventListener('click', function () {
             applyScope('30d')
+          })
+          scope30dBtn.addEventListener('keydown', function (event) {
+            if (event.key === 'ArrowLeft') {
+              event.preventDefault()
+              if (scopeAllBtn) scopeAllBtn.focus()
+              applyScope('all')
+            }
           })
         }
 

@@ -14,6 +14,9 @@ const { lang, serverT } = Astro.props as { lang: string; serverT: (k: string) =>
           id="user-menu-trigger"
           data-role="menu-trigger"
           type="button"
+          aria-label={serverT('nav.menu.profile')}
+          aria-haspopup="menu"
+          aria-expanded="false"
           style="display:flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #e5e7eb;border-radius:999px;background:#fff;font-size:0.875rem;cursor:pointer"
         >
           <img
