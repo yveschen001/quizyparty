@@ -3,9 +3,7 @@ import { setupServerI18n } from '../../../lib/server-i18n'
 import SeoMeta from '../../../components/SeoMeta.astro'
 import AppHeader from '../../../components/layout/AppHeader.astro'
 import '../../../styles/base.css'
-import EmptyState from '../../../components/ui/EmptyState.astro'
-import LoadingState from '../../../components/ui/LoadingState.astro'
-import ErrorState from '../../../components/ui/ErrorState.astro'
+// 移除大型 Loading / Error 卡片，改為輕量訊息列
 
 const { lang, serverT } = await setupServerI18n(Astro.params.lang)
 const title = serverT('profile.sections.participations')
@@ -53,25 +51,6 @@ const path = Astro.url.pathname
         />
       </div>
       <div id="message" class="status-text" role="status" aria-live="polite"></div>
-      <LoadingState id="joined-loading" lang={lang} serverT={serverT} titleKey="common.loading" />
-      <EmptyState
-        id="joined-empty"
-        lang={lang}
-        serverT={serverT}
-        titleKey="common.empty.joined.title"
-        descKey="common.empty.joined.desc"
-        actionHref={`/${lang}/`}
-        actionKey="common.empty.joined.action"
-      />
-      <ErrorState
-        id="joined-error"
-        lang={lang}
-        serverT={serverT}
-        titleKey="common.error.title"
-        descKey="common.error.desc"
-        retryLabelKey="common.error.retry"
-        onRetryId="joined-retry"
-      />
       <div id="list" class={featureV3 ? 'stack' : 'legacy-section'} role="list"></div>
     <div id="joined-pager-bottom" class="mt-3"></div>
 </main>
@@ -95,19 +74,8 @@ const path = Astro.url.pathname
         const message = document.getElementById('message')
         const list = document.getElementById('list')
         const searchInput = document.getElementById('joined-search')
-        // 修正 SSR 可能回退英文：載入後以 client i18n 覆寫 Loading/Error/Search 的文案
+        // 修正 SSR 可能回退英文：載入後以 client i18n 覆寫搜尋 placeholder
         try {
-          const loadTitle = document.querySelector('#joined-loading h3')
-          if (loadTitle) loadTitle.textContent = window.t('common.loading')
-          const errWrap = document.getElementById('joined-error')
-          if (errWrap) {
-            const h = errWrap.querySelector('h3')
-            const p = errWrap.querySelector('p')
-            const btn = document.getElementById('joined-retry')
-            if (h) h.textContent = window.t('common.error.title')
-            if (p) p.textContent = window.t('common.error.desc')
-            if (btn) btn.textContent = window.t('common.error.retry')
-          }
           if (searchInput) {
             searchInput.placeholder = window.t('questionSets.library.searchPlaceholder')
           }
@@ -162,17 +130,9 @@ const path = Astro.url.pathname
             return d.toISOString()
           }
         }
-        const joinedLoading = document.getElementById('joined-loading')
-        const joinedEmpty = document.getElementById('joined-empty')
-        function toggle(el, show) {
-          if (!el) return
-          el.style.display = show ? '' : 'none'
-        }
         function renderSkeleton() {
           if (!list) return
           list.innerHTML = ''
-          toggle(joinedEmpty, false)
-          toggle(joinedLoading, true)
           if (featureV3) {
             for (let i = 0; i < 3; i += 1) {
               const skeleton = document.createElement('div')
@@ -193,8 +153,6 @@ const path = Astro.url.pathname
           const ctaLabel = window.t('profile.participations.cta')
           const ctaHref = '/' + lang + '/'
           list.innerHTML = ''
-          toggle(joinedLoading, false)
-          toggle(joinedEmpty, true)
           if (featureV3) {
             const wrapper = document.createElement('div')
             wrapper.className = 'card stack text-center'
@@ -321,21 +279,7 @@ const path = Astro.url.pathname
             }
           } catch (e) {
             console.error('[rooms/joined] load failed', e)
-            try {
-              const err = document.getElementById('joined-error')
-              const retry = document.getElementById('joined-retry')
-              toggle(joinedLoading, false)
-              toggle(joinedEmpty, false)
-              toggle(err, true)
-              if (retry) {
-                retry.onclick = function () {
-                  toggle(err, false)
-                  loadParticipations()
-                }
-              }
-            } catch (e) {
-              showMessage(window.t('errors.networkError'), true)
-            }
+            showMessage(window.t('errors.networkError'), true)
           }
         }
         await loadParticipations()
