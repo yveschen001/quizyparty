@@ -29,7 +29,10 @@
     "questions:build": "node scripts/questions-build.mjs",
     "questions:gen:pivot": "node scripts/questions-generate.mjs pivot en \"general knowledge\" 10",
     "questions:gen:native": "node scripts/questions-generate.mjs native _ \"general knowledge\" 10",
-    "e2e:smoke": "playwright test -g @smoke --reporter=line"
+    "e2e:smoke": "playwright test -g @smoke --reporter=line",
+    "lint:ui": "ESLINT_USE_FLAT_CONFIG=true eslint --config .eslint-ui-audit.config.mjs --ext .ts,.tsx,.js,.jsx,.astro \"src\" \"public/js\" || true",
+    "audit:i18n": "node -e \"console.log('See logs/i18n-lint.txt')\"",
+    "audit:all": "pnpm run lint:ui && pnpm run lint:styles && pnpm run audit:i18n"
   },
   "keywords": [],
   "author": "",

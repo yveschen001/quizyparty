@@ -1,5 +1,7 @@
 # QuizyParty
 
+[![quizyparty-ci](https://github.com/yveschen001/quizyparty/actions/workflows/ci.yml/badge.svg)](https://github.com/yveschen001/quizyparty/actions/workflows/ci.yml)
+
 派對答題遊戲平台，支持多語言、房間協作、單人遊玩，並整合 RevenueCat 訂閱管理。
 
 ## 快速開始
@@ -18,6 +20,7 @@ pnpm install
 ### 環境變數配置
 
 1. 複製 `.env.example` 為 `.env.local`：
+
    ```bash
    cp .env.example .env.local
    ```
@@ -63,17 +66,20 @@ QuizyParty/
 ### 常用命令
 
 #### 開發與構建
+
 - `pnpm dev` - 啟動開發伺服器
 - `pnpm build` - 構建生產版本
 - `pnpm preview` - 預覽構建結果
 
 #### 代碼品質
+
 - `pnpm typecheck` - TypeScript 類型檢查
 - `pnpm lint` - ESLint 檢查
 - `pnpm format` - Prettier 格式化
 - `pnpm format:check` - 檢查格式化
 
 #### i18n 工具
+
 - `pnpm i18n:all` - 掃描、生成鍵值、檢查一致性（本地）
 - `pnpm i18n:all:ci` - CI 版本（使用 pnpm）
 - `pnpm i18n:scan` - 掃描代碼中的 i18n 鍵
@@ -82,13 +88,26 @@ QuizyParty/
 - `pnpm i18n:auto` - 使用 OpenAI 自動翻譯缺失的鍵值
 - `pnpm i18n:csv:export` - 導出 i18n 鍵值為 CSV
 - `pnpm i18n:csv:import` - 從 CSV 導入 i18n 鍵值
+- 產出審計報告（語言代碼 / i18n 使用情況）：
+
+  ```bash
+  mkdir -p logs
+  grep -RIn --exclude-dir='.git' \
+    -e 'zh[_-]Hant' -e 'zh[_-]TW' -e 'zh[_-]tw' -e 'zh[_-]HANT' \
+    -e 'supportedLngs' -e 'useTranslation' -e 't(' \
+    src > logs/i18n-lint.txt
+  ```
+
+  報告輸出位置：`logs/i18n-lint.txt`
 
 #### 題庫管理
+
 - `pnpm questions:build` - 從 CSV 構建題庫 JSON
 - `pnpm questions:gen:pivot` - 生成多語言題庫（以英文為基準）
 - `pnpm questions:gen:native` - 生成單語言題庫
 
 #### SEO 檢查
+
 - `pnpm seo:check` - 檢查 SEO 標籤完整性
 
 ### 開發規範
@@ -216,37 +235,45 @@ curl -X POST http://localhost:4321/api/dev/entitlements/upsert \
 ### 常見問題
 
 #### 1. 房間狀態不同步？
+
 - 目前使用輪詢（每 2 秒），後續會升級為 WebSocket/SSE
 
 #### 2. i18n 鍵值缺失？
+
 - 執行 `pnpm i18n:all` 檢查
 - 使用 `pnpm i18n:auto` 自動翻譯（需要 OpenAI API Key）
 
 #### 3. 題庫載入失敗？
+
 - 確認 `public/data/questions/{lang}.json` 存在
 - 檢查 JSON 格式是否正確
 
 #### 4. 構建失敗？
+
 - 執行 `pnpm typecheck` 檢查類型錯誤
 - 執行 `pnpm lint` 檢查代碼規範
 - 確認所有 i18n 鍵值完整（`pnpm i18n:check`）
 
 #### 5. 用戶登入功能在哪裡？
+
 - **目前未實作**，規劃在第三階段實作
 - 將支援 Google OAuth 和社交網路登入
 - 需要先實作用戶資料庫和 Session 管理
 
 #### 6. 首頁熱門房間展示在哪裡？
+
 - **目前未實作**，規劃在第三階段實作
 - 需要先實作房間持久化（資料庫存儲）
 - 然後才能實現房間列表、排序、搜索功能
 
 #### 7. 個人頁面和答分記錄在哪裡？
+
 - **目前未實作**，規劃在第三階段實作
 - 需要先實作用戶認證系統
 - 然後建立答分記錄數據模型和存儲
 
 #### 8. 美觀的 UI/UX 在哪個階段落地？
+
 - **目前只有基礎樣式**，完整設計系統規劃在第三階段
 - 將包含：設計規範、組件庫、響應式佈局、動畫效果
 - 建議在實作用戶認證和個人頁面時同步完善 UI/UX
@@ -257,13 +284,13 @@ curl -X POST http://localhost:4321/api/dev/entitlements/upsert \
 
 ### 變數分層
 
-- **瀏覽器可見（`PUBLIC_` 前綴）**：純展示/不花錢/無權限（如站台名、功能旗標）。  
+- **瀏覽器可見（`PUBLIC_` 前綴）**：純展示/不花錢/無權限（如站台名、功能旗標）。
 - **伺服器私密（無 `PUBLIC_`）**：OpenAI、Webhook 驗證、Google/Apple 憑證等，**只放後端/CI**。
 
 ### 推薦清單
 
 - `OPENAI_API_KEY`（後端/CI，❌不可暴露）
-- `RC_WEBHOOK_AUTH`（後端/CI；RevenueCat Webhook 會帶 Authorization header，伺服器需驗證）  
+- `RC_WEBHOOK_AUTH`（後端/CI；RevenueCat Webhook 會帶 Authorization header，伺服器需驗證）
 - `RC_ENTITLEMENT_KEY`（例：`vip`，✨可暴露）
 - `RC_IOS_PUBLIC_API_KEY` / `RC_ANDROID_PUBLIC_API_KEY`（RC 的「公開」SDK key，✅可打包）
 - `GOOGLE_SA_JSON`（Google Play 服務帳戶 JSON，後端/CI，❌）
@@ -274,12 +301,10 @@ curl -X POST http://localhost:4321/api/dev/entitlements/upsert \
 
 ### `.env` 與部署
 
-- 版本控制：提交 `.env.example`（示例值），**勿提交** `.env.local`。  
-- GitHub Actions：在 repo **Settings → Secrets and variables → Actions → New repository secret** 新增上述變數；Workflow 用 `${{ secrets.VAR_NAME }}` 注入。  
+- 版本控制：提交 `.env.example`（示例值），**勿提交** `.env.local`。
+- GitHub Actions：在 repo **Settings → Secrets and variables → Actions → New repository secret** 新增上述變數；Workflow 用 `${{ secrets.VAR_NAME }}` 注入。
 
 （備註：RevenueCat v1 GET /subscribers 仍是後端同步常用作法；v2 能力逐步擴充，但官方建議 webhook 後打 REST 拉齊資料依然適用。
 community.revenuecat.com
 +1
 ）
-
-

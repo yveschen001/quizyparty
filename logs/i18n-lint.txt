@@ -1,0 +1,781 @@
+src/middleware.ts:21:    const hasUidApi = context.cookies.get('qp_uid')
+src/middleware.ts:24:      context.cookies.set('qp_uid', uid, {
+src/middleware.ts:31:    return next()
+src/middleware.ts:39:    const hasUid = context.cookies.get('qp_uid')
+src/middleware.ts:42:      context.cookies.set('qp_uid', uid, {
+src/middleware.ts:51:  const maybeLang = pathname.split('/')[1]
+src/middleware.ts:56:  const hasUid = context.cookies.get('qp_uid')
+src/middleware.ts:59:    context.cookies.set('qp_uid', uid, {
+src/middleware.ts:66:  return next()
+src/server/room/template-memory.ts:13:      templates.set(template.id, template)
+src/server/room/template-memory.ts:15:    get(id: string) {
+src/server/room/template-memory.ts:16:      return templates.get(id) || null
+src/server/room/template-memory.ts:31:        .sort((a, b) => b.createdAt - a.createdAt)
+src/server/room/template-memory.ts:35:    findByQuestionSet(userId: string, questionSetId: string) {
+src/server/room/template-memory.ts:44:      const tpl = templates.get(id)
+src/server/room/template-memory.ts:46:      templates.set(id, { ...tpl, ...updates, updatedAt: Date.now() })
+src/server/room/analytics.ts:84:    leaderboardMap.set(entry.userId, {
+src/server/room/analytics.ts:99:      perQuestionMap.set(index, {
+src/server/room/analytics.ts:110:    const existing = perQuestionMap.get(index)
+src/server/room/analytics.ts:125:    uniqueResponders: new Set(serialized.uniqueResponders || []),
+src/server/room/analytics.ts:152:    .sort((a, b) => {
+src/server/room/analytics.ts:211:  const entry = leaderboard.get(memberId) || {
+src/server/room/analytics.ts:244:  leaderboard.set(memberId, entry)
+src/server/room/template.ts:21:  get(id: string): RoomTemplate | null
+src/server/room/template.ts:28:  findByQuestionSet(userId: string, questionSetId: string): RoomTemplate | null
+src/server/room/template-sqlite.ts:102:    get(id: string) {
+src/server/room/template-sqlite.ts:103:      const row = getStmt.get(id)
+src/server/room/template-sqlite.ts:130:      const countRow = countStmt.get(params) as { count: number }
+src/server/room/template-sqlite.ts:149:    findByQuestionSet(userId: string, questionSetId: string) {
+src/server/room/template-sqlite.ts:150:      const row = getByQuestionSetStmt.get(userId, questionSetId)
+src/server/room/template-sqlite.ts:154:      const existing = getStmt.get(id)
+src/server/room/sqlite.ts:10:  get(id: string): Room | null
+src/server/room/sqlite.ts:12:  list(params: {
+src/server/room/sqlite.ts:130:      const row = getStmt.get(id) as any
+src/server/room/sqlite.ts:143:          map.set(uid, choice)
+src/server/room/sqlite.ts:145:        answers.set(Number(qIndex), map)
+src/server/room/sqlite.ts:173:      const room = getStmt.get(id) as any
+src/server/room/choice-orders.ts:24:  let questionOrders = orders.get(qIndex)
+src/server/room/choice-orders.ts:27:    orders.set(qIndex, questionOrders)
+src/server/room/choice-orders.ts:30:  const existing = questionOrders.get(memberId)
+src/server/room/choice-orders.ts:36:  questionOrders.set(memberId, newOrder)
+src/server/room/choice-orders.ts:63:      userMap.set(userId, arr)
+src/server/room/choice-orders.ts:65:    orders.set(Number(qIndexKey), userMap)
+src/server/room/template-sync.ts:25:export function syncRoomTemplateFromQuestionSet(options: SyncOptions): string {
+src/server/room/template-sync.ts:28:  const existing = store.findByQuestionSet(userId, questionSet.id)
+src/server/room/memory.ts:9:      rooms.set(room.id, room)
+src/server/room/memory.ts:13:      return rooms.get(id) || null
+src/server/room/memory.ts:17:      const room = rooms.get(id)
+src/server/room/memory.ts:46:        arr.sort((a, b) => {
+src/server/room/memory.ts:51:        arr.sort((a, b) => {
+src/server/room/store.ts:71:async function loadQuestionsFromSet(setId: string): Promise<Question[]> {
+src/server/room/store.ts:72:  const set = questionSetStore().get(setId)
+src/server/room/store.ts:79:    const q = store.get(questionId)
+src/server/room/store.ts:114:  const questions = await loadQuestionsFromSet(questionSetId)
+src/server/room/store.ts:130:    members: new Set([hostId]),
+src/server/room/store.ts:144:  const r = store.get(id)
+src/server/room/store.ts:152:  const r = getRoomStore().get(id)
+src/server/room/store.ts:167:      const existingOrder = r.choiceOrders.get(effectiveIndex)?.has(memberId)
+src/server/room/store.ts:197:  const r = store.get(id)
+src/server/room/store.ts:222:  const r = store.get(id)
+src/server/room/store.ts:224:  if (!r.answers.has(qIndex)) r.answers.set(qIndex, new Map())
+src/server/room/store.ts:225:  const answersForQuestion = r.answers.get(qIndex)!
+src/server/room/store.ts:229:  const previousChoice = answersForQuestion.get(memberId)
+src/server/room/store.ts:234:  answersForQuestion.set(memberId, choice)
+src/server/room/store.ts:235:  r.answers.set(qIndex, answersForQuestion)
+src/server/room/store.ts:261:  return getRoomStore().list(params)
+src/server/user/sqlite.ts:55:      const row = getStmt.get(id) as any
+src/server/user/sqlite.ts:70:      const row = getByEmailStmt.get(email) as any
+src/server/user/sqlite.ts:85:      const row = getByProviderStmt.get(provider, providerId) as any
+src/server/user/sqlite.ts:100:      const user = getStmt.get(id) as any
+src/server/user/types.ts:14:  get(id: string): User | null
+src/server/user/memory.ts:8:      users.set(user.id, user)
+src/server/user/memory.ts:12:      return users.get(id) || null
+src/server/user/memory.ts:30:      const user = users.get(id)
+src/server/question/ai-usage.ts:27:  const m = String(now.getUTCMonth() + 1).padStart(2, '0')
+src/server/question/ai-usage.ts:28:  const d = String(now.getUTCDate()).padStart(2, '0')
+src/server/question/ai-usage.ts:34:  const existing = usageStore.get(key)
+src/server/question/ai-usage.ts:39:  usageStore.set(key, fresh)
+src/server/question/ai-usage.ts:56:export function getUsageSnapshot(key: string, isVip: boolean): UsageSnapshot {
+src/server/question/ai-usage.ts:91:  return getUsageSnapshot(key, isVip)
+src/server/question/ai-usage.ts:100:  return getUsageSnapshot(key, isVip)
+src/server/question/sqlite.ts:150:      const row = getStmt.get(id) as any
+src/server/question/sqlite.ts:165:        const setRow = setStmt.get(setId) as any
+src/server/question/sqlite.ts:188:        const q = getStmt.get(questionId) as any
+src/server/question/sqlite.ts:192:      return questions.sort((a, b) => {
+src/server/question/sqlite.ts:200:      const existing = getStmt.get(id) as any
+src/server/question/sqlite.ts:378:      const row = getStmt.get(id) as any
+src/server/question/sqlite.ts:379:      return row ? rowToQuestionSet(row) : null
+src/server/question/sqlite.ts:388:      const existing = getStmt.get(id) as any
+src/server/question/sqlite.ts:392:        ...rowToQuestionSet(existing),
+src/server/question/types.ts:45:  get(id: string): Question | null
+src/server/question/types.ts:47:  getBySet(setId: string): Question[]
+src/server/question/types.ts:54:  get(id: string): QuestionSet | null
+src/server/question/ai-shared.ts:24:  const record = entStore().get(appUserId)
+src/server/question/memory.ts:9:      questions.set(question.id, question)
+src/server/question/memory.ts:13:      return questions.get(id) || null
+src/server/question/memory.ts:19:        .sort((a, b) => b.createdAt - a.createdAt)
+src/server/question/memory.ts:24:      const set = questionSets.get(setId)
+src/server/question/memory.ts:27:        .map((id) => questions.get(id))
+src/server/question/memory.ts:29:        .sort((a, b) => {
+src/server/question/memory.ts:38:      const question = questions.get(id)
+src/server/question/memory.ts:53:      questionSets.set(set.id, set)
+src/server/question/memory.ts:57:      return questionSets.get(id) || null
+src/server/question/memory.ts:63:        .sort((a, b) => b.createdAt - a.createdAt)
+src/server/question/memory.ts:68:      const set = questionSets.get(id)
+src/server/score/sqlite.ts:126:      const row = getUserStatsStmt.get(userId) as any
+src/server/score/memory.ts:9:      records.set(record.id, record)
+src/server/score/memory.ts:27:      const rooms = new Set(userRecords.map((r) => r.roomId))
+src/server/score/memory.ts:43:        .sort((a, b) => b.answeredAt - a.answeredAt)
+src/server/score/memory.ts:54:        const summary = roomMap.get(record.roomId) || {
+src/server/score/memory.ts:64:        roomMap.set(record.roomId, summary)
+src/server/score/memory.ts:77:        .sort((a, b) => b.lastAnsweredAt - a.lastAnsweredAt)
+src/server/score/memory.ts:95:        const existing = userScores.get(record.userId) || {
+src/server/score/memory.ts:112:        userScores.set(record.userId, existing)
+src/server/score/memory.ts:134:        const existing = userStats.get(record.userId) || { correct: 0, answered: 0, totalTimeMs: 0 }
+src/server/score/memory.ts:140:        userStats.set(record.userId, existing)
+src/server/score/memory.ts:152:        .sort((a, b) => {
+src/server/store/sqlite.ts:40:      const row = getStmt.get(id) as any
+src/server/store/types.ts:9:  upsert(rec: EntRecord): void
+src/server/store/types.ts:10:  get(appUserId: string): EntRecord | null
+src/server/store/memory.ts:6:    upsert: (rec) => m.set(rec.appUserId, rec),
+src/server/store/memory.ts:7:    get: (id) => m.get(id) ?? null,
+src/utils/format.ts:3:    return new Intl.NumberFormat(lang).format(value ?? 0);
+src/utils/format.ts:9:export function formatPercent(value: number, lang: string, digits = 1): string {
+src/utils/format.ts:12:    return new Intl.NumberFormat(lang, { style: 'percent', minimumFractionDigits: digits, maximumFractionDigits: digits }).format(safe);
+src/utils/format.ts:23:    return new Intl.DateTimeFormat(lang, opts).format(date as Date);
+src/styles/tokens.css:77:  background: linear-gradient(
+src/styles/tokens.css:253:  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+src/styles/tokens.css:280:  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+src/styles/base.css:40::lang(zh-Hant),
+src/styles/base.css:164:  clip: rect(0, 0, 0, 0);
+src/components/layout/AppHeader.astro:49:      await import('/js/i18n.js')
+src/components/layout/AppHeader.astro:50:      const { setupUserMenu } = await import('/js/user-menu.js')
+src/components/layout/AppHeader.astro:57:          return window.t(key)
+src/components/layout/AppHeader.astro:102:            '/api/auth/google/login?redirect=' + encodeURIComponent(window.location.pathname)
+src/components/ManageSubscription.astro:6:const ua = Astro.request.headers.get('user-agent') || ''
+src/components/ManageSubscription.astro:7:const isIOS = /iPhone|iPad|iPod/i.test(ua)
+src/components/ManageSubscription.astro:8:const isAndroid = /Android/i.test(ua)
+src/components/ManageSubscription.astro:13:const label = await tt((lang as Lang) || 'en', 'paywall.manage')
+src/components/create/RoomFooterCTA.astro:6:  <div class="grid" style="display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
+src/lib/locale.ts:10:  'zh-tw': 'zh-hant',
+src/lib/locale.ts:35:  const cookie = req.headers.get('cookie') || ''
+src/lib/locale.ts:38:    const v = decodeURIComponent(m[1])
+src/lib/locale.ts:41:  const al = req.headers.get('accept-language')
+src/lib/locale.ts:44:    .split(',')
+src/lib/locale.ts:45:    .map((v) => v.trim().split(';q='))
+src/lib/locale.ts:46:    .sort((a, b) => parseFloat(b[1] || '1') - parseFloat(a[1] || '1'))
+src/lib/locale.ts:57:  res.headers.set(
+src/lib/locale.ts:59:    `${COOKIE_NAME}=${encodeURIComponent(lang)}; Path=/; Expires=${expires}; SameSite=lax`,
+src/lib/seo.ts:10:  const segs = p.split('/').filter(Boolean)
+src/lib/auth.ts:33:  sessions.set(sessionId, {
+src/lib/auth.ts:43:  const session = sessions.get(sessionId)
+src/lib/auth.ts:70:  return userStore().get(session.userId)
+src/lib/intl.ts:4:  new Intl.NumberFormat(lang, { maximumFractionDigits: 2, ...opts })
+src/lib/intl.ts:7:  new Intl.DateTimeFormat(lang, { year: 'numeric', month: 'short', day: '2-digit', ...opts })
+src/i18n/t.ts:10:export async function t(lang: Lang, key: I18nKey, vars?: Record<string, unknown>): Promise<string> {
+src/i18n/t.ts:20:  return async (key: I18nKey, vars?: Record<string, unknown>) => t(lang, key, vars)
+src/i18n/routerLang.ts:29:  const segments = window.location.pathname.split('/').filter(Boolean)
+src/i18n/routerLang.ts:35:    segments.unshift(target)
+src/i18n/instance.server.ts:11:  await instance.init(createI18nOptions(lang))
+src/i18n/instance.server.ts:12:  instances.set(lang, instance)
+src/i18n/instance.server.ts:17:  const instance = instances.get(safeLang)
+src/i18n/instance.server.ts:22:    instance.t(key as any, vars as any) as unknown as string
+src/i18n/config.ts:21:  'zh-hant': 'zh_TW',
+src/i18n/config.ts:42:    supportedLngs: SUPPORTED_LANGS as unknown as string[],
+src/i18n/config.ts:62:  const fromPath = window.location.pathname.split('/').filter(Boolean)[0]
+src/i18n/config.ts:66:  if (candidate === 'zh-tw' || candidate === 'zh-hk') return 'zh-hant'
+src/i18n/instance.client.ts:12:  await clientInstance.init(createI18nOptions(initialLang))
+src/i18n/instance.client.ts:19:    clientInstance!.t(key as any, vars as any) as string
+src/pages/api/auth/google/login.ts:77:    const redirectUrl = url.searchParams.get('redirect') || '/'
+src/pages/api/auth/google/login.ts:82:    cookies.set('oauth_state', fullState, {
+src/pages/api/auth/google/login.ts:101:    return redirect(googleAuthUrl, 302)
+src/pages/api/auth/google/callback.ts:37:  const code = url.searchParams.get('code')
+src/pages/api/auth/google/callback.ts:38:  const state = url.searchParams.get('state')
+src/pages/api/auth/google/callback.ts:39:  const error = url.searchParams.get('error')
+src/pages/api/auth/google/callback.ts:42:    return redirect('/?error=oauth_failed', 302)
+src/pages/api/auth/google/callback.ts:46:    return redirect('/?error=invalid_request', 302)
+src/pages/api/auth/google/callback.ts:50:  const storedState = cookies.get('oauth_state')?.value
+src/pages/api/auth/google/callback.ts:53:    return redirect('/?error=state_mismatch', 302)
+src/pages/api/auth/google/callback.ts:57:  const stateParts = state.split('|')
+src/pages/api/auth/google/callback.ts:81:      return redirect('/?error=token_exchange_failed', 302)
+src/pages/api/auth/google/callback.ts:93:      return redirect('/?error=user_info_failed', 302)
+src/pages/api/auth/google/callback.ts:139:    const res = redirect(redirectUrl + '?success=logged_in', 302)
+src/pages/api/auth/google/callback.ts:146:    return redirect('/?error=oauth_error', 302)
+src/pages/api/auth/me.ts:6:  const cookie = request.headers.get('cookie') || ''
+src/pages/api/auth/logout.ts:6:  const cookie = request.headers.get('cookie') || ''
+src/pages/api/auth/logout.ts:13:  const res = redirect('/?success=logged_out', 302)
+src/pages/api/room-templates/[id].ts:9:  const set = questionSetStore().get(template.questionSetId)
+src/pages/api/room-templates/[id].ts:31:  const cookie = request.headers.get('cookie') || ''
+src/pages/api/room-templates/[id].ts:42:  const template = store.get(id)
+src/pages/api/room-templates/[id].ts:57:  const cookie = request.headers.get('cookie') || ''
+src/pages/api/room-templates/[id].ts:68:  const template = store.get(id)
+src/pages/api/room-templates/[id].ts:95:      const set = questionSetStore().get(template.questionSetId)
+src/pages/api/room-templates/[id].ts:111:    const set = questionSetStore().get(body.questionSetId)
+src/pages/api/room-templates/[id].ts:129:  const updated = store.get(id)
+src/pages/api/room-templates/[id].ts:137:  const cookie = request.headers.get('cookie') || ''
+src/pages/api/room-templates/[id].ts:148:  const template = store.get(id)
+src/pages/api/room-templates/index.ts:15:  const set = questionSets.get(template.questionSetId)
+src/pages/api/room-templates/index.ts:38:  const cookie = request.headers.get('cookie') || ''
+src/pages/api/room-templates/index.ts:47:  const statusParam = (url.searchParams.get('status') || 'all') as RoomTemplateStatus | 'all'
+src/pages/api/room-templates/index.ts:48:  const limit = Math.min(Math.max(Number(url.searchParams.get('limit') || '10'), 1), 50)
+src/pages/api/room-templates/index.ts:49:  const offset = Math.max(Number(url.searchParams.get('offset') || '0'), 0)
+src/pages/api/room-templates/index.ts:66:  const cookie = request.headers.get('cookie') || ''
+src/pages/api/room-templates/index.ts:97:  const questionSet = qSetStore.get(questionSetId)
+src/pages/api/room-templates/index.ts:117:  const existing = store.findByQuestionSet(user.id, questionSetId)
+src/pages/api/room-templates/index.ts:126:    const updated = store.get(existing.id)
+src/pages/api/question-sets/[id].ts:21:    const set = questionSetStore().get(setId)
+src/pages/api/question-sets/[id].ts:30:    const questions = questionStore().getBySet(setId)
+src/pages/api/question-sets/[id].ts:68:  const cookie = request.headers.get('cookie') || ''
+src/pages/api/question-sets/[id].ts:96:  const existing = store.get(setId)
+src/pages/api/question-sets/[id].ts:117:    const q = questionsStore.get(qId)
+src/pages/api/question-sets/[id].ts:195:  const updatedSet = store.get(setId)
+src/pages/api/question-sets/[id].ts:197:    syncRoomTemplateFromQuestionSet({
+src/pages/api/question-sets/create.ts:12:  const cookie = request.headers.get('cookie') || ''
+src/pages/api/question-sets/create.ts:48:    const q = store.get(String(qId))
+src/pages/api/question-sets/create.ts:118:    const createdSet = questionSetStore().get(setId)
+src/pages/api/question-sets/create.ts:120:      syncRoomTemplateFromQuestionSet({
+src/pages/api/question-sets/list.ts:17:    const cookie = request.headers.get('cookie') || ''
+src/pages/api/question-sets/list.ts:27:    const userId = url.searchParams.get('userId') || user.id
+src/pages/api/question-sets/list.ts:36:    const limit = Math.min(Number(url.searchParams.get('limit') || 50), 100)
+src/pages/api/question-sets/list.ts:37:    const offset = Math.max(Number(url.searchParams.get('offset') || 0), 0)
+src/pages/api/scores/history.ts:7:  const cookie = request.headers.get('cookie') || ''
+src/pages/api/scores/history.ts:17:  const userId = url.searchParams.get('userId') || user.id
+src/pages/api/scores/history.ts:25:  const limit = Math.min(Number(url.searchParams.get('limit') || 50), 100)
+src/pages/api/scores/history.ts:26:  const offset = Math.max(Number(url.searchParams.get('offset') || 0), 0)
+src/pages/api/scores/record.ts:8:  const cookie = request.headers.get('cookie') || ''
+src/pages/api/scores/stats.ts:7:  const cookie = request.headers.get('cookie') || ''
+src/pages/api/scores/stats.ts:17:  const userId = url.searchParams.get('userId') || user.id
+src/pages/api/scores/leaderboard.ts:7:  const limit = Math.min(Number(url.searchParams.get('limit') || 100), 200)
+src/pages/api/scores/leaderboard.ts:13:      const user = userStore().get(entry.userId)
+src/pages/api/scores/rooms.ts:7:  const cookie = request.headers.get('cookie') || ''
+src/pages/api/scores/rooms.ts:17:  const userId = url.searchParams.get('userId') || user.id
+src/pages/api/scores/rooms.ts:25:  const limit = Math.min(Number(url.searchParams.get('limit') || 50), 100)
+src/pages/api/scores/rooms.ts:26:  const offset = Math.max(Number(url.searchParams.get('offset') || 0), 0)
+src/pages/api/dev/entitlements/upsert.ts:11:  const auth = request.headers.get('authorization') || ''
+src/pages/api/dev/entitlements/upsert.ts:25:  entStore().upsert({ appUserId, active, managementUrl, updatedAt: Date.now() })
+src/pages/api/rooms/index.ts:6:  const cookie = request.headers.get('cookie') ?? ''
+src/pages/api/rooms/index.ts:54:  const cookie = request.headers.get('cookie') ?? ''
+src/pages/api/rooms/index.ts:62:  const lang = String(url.searchParams.get('lang') || 'en')
+src/pages/api/rooms/index.ts:63:  const questionSetId = String(url.searchParams.get('questionSetId') || '')
+src/pages/api/rooms/index.ts:64:  const requestedRoomIdRaw = String(url.searchParams.get('roomId') || '').trim()
+src/pages/api/rooms/index.ts:65:  const replaceExisting = url.searchParams.get('replaceExisting') === 'true'
+src/pages/api/rooms/list.ts:6:  const limit = Math.min(Number(url.searchParams.get('limit') || 20), 100)
+src/pages/api/rooms/list.ts:7:  const offset = Math.max(Number(url.searchParams.get('offset') || 0), 0)
+src/pages/api/rooms/list.ts:8:  const sortBy = (url.searchParams.get('sortBy') || 'created') as 'created' | 'members'
+src/pages/api/rooms/list.ts:9:  const order = (url.searchParams.get('order') || 'desc') as 'asc' | 'desc'
+src/pages/api/rooms/list.ts:10:  const lang = url.searchParams.get('lang') || undefined
+src/pages/api/rooms/list.ts:11:  const hoursParam = Number(url.searchParams.get('hours') || '')
+src/pages/api/rooms/[id]/state.ts:7:  const cookieHeader = request.headers.get('cookie') || ''
+src/pages/api/rooms/[id]/ranking.ts:31:  const limitParam = Number(url.searchParams.get('limit') || 100)
+src/pages/api/rooms/[id]/ranking.ts:33:  const includeCurrent = url.searchParams.get('includeCurrent') !== 'false'
+src/pages/api/rooms/[id]/ranking.ts:35:  const cookie = request.headers.get('cookie') || ''
+src/pages/api/rooms/[id]/ranking.ts:67:    .sort((a, b) => {
+src/pages/api/rooms/[id]/ranking.ts:91:      currentUserSummary = mapRankingEntry(found, users.get(found.userId) || null)
+src/pages/api/rooms/[id]/ranking.ts:111:    const profile = users.get(id)
+src/pages/api/rooms/[id]/ranking.ts:113:      userCache.set(id, profile)
+src/pages/api/rooms/[id]/ranking.ts:118:    mapRankingEntry(entry, userCache.get(entry.userId) || null),
+src/pages/api/rooms/[id]/ranking.ts:122:    ? enrichCurrentUser(currentUserSummary, userCache.get(currentUserSummary.userId) || null)
+src/pages/api/rooms/[id]/advance.ts:7:  const cookie = request.headers.get('cookie') ?? ''
+src/pages/api/rooms/[id]/join.ts:7:  const cookie = request.headers.get('cookie') ?? ''
+src/pages/api/rooms/[id]/index.ts:14:  const cookie = request.headers.get('cookie') ?? ''
+src/pages/api/rooms/[id]/index.ts:24:  const room = store.get(id)
+src/pages/api/rooms/[id]/leaderboard.ts:14:  const seed = encodeURIComponent(userId || 'guest')
+src/pages/api/rooms/[id]/leaderboard.ts:20:  const cookie = request.headers.get('cookie') ?? ''
+src/pages/api/rooms/[id]/leaderboard.ts:28:      const user = userRepo.get(entry.userId)
+src/pages/api/rooms/[id]/leaderboard.ts:31:        `玩家 #${String(entry.userId).slice(-4).padStart(4, '0')}`
+src/pages/api/rooms/[id]/leaderboard.ts:46:    .sort((a, b) => {
+src/pages/api/rooms/[id]/answer.ts:10:  const cookie = request.headers.get('cookie') ?? ''
+src/pages/api/rooms/[id]/answer.ts:65:      const roomStoreModule = await import('../../../../server/room/store')
+src/pages/api/rooms/[id]/answer.ts:66:      const fullRoom = roomStoreModule.getRoomStore().get(id)
+src/pages/api/rc/apple/status.ts:14:    .setIssuedAt(now)
+src/pages/api/rc/apple/status.ts:24:    const otid = url.searchParams.get('originalTransactionId')
+src/pages/api/rc/apple/status.ts:29:    const data = await resp.text()
+src/pages/api/rc/customer.ts:8:  const cookie = request.headers.get('cookie') ?? ''
+src/pages/api/rc/customer.ts:10:  const appUserId = url.searchParams.get('appUserId') || cookieUid || ''
+src/pages/api/rc/customer.ts:19:  const cached = store.get(appUserId)
+src/pages/api/rc/customer.ts:41:    `https://api.revenuecat.com/v1/subscribers/${encodeURIComponent(appUserId)}`,
+src/pages/api/rc/customer.ts:59:  store.upsert({ appUserId, active, managementUrl, updatedAt: now })
+src/pages/api/rc/google/revoke.ts:58:    const data = await resp.text()
+src/pages/api/rc/google/voided.ts:43:    const pkg = url.searchParams.get('packageName')
+src/pages/api/rc/google/voided.ts:45:    const start = url.searchParams.get('startTimeMillis') ?? `${Date.now() - 30 * 24 * 3600_000}`
+src/pages/api/rc/google/voided.ts:46:    const end = url.searchParams.get('endTimeMillis') ?? `${Date.now()}`
+src/pages/api/rc/google/voided.ts:51:    const data = await resp.text()
+src/pages/api/rc/webhook.ts:5:  const auth = request.headers.get('authorization') || ''
+src/pages/api/rc/webhook.ts:25:        `https://api.revenuecat.com/v1/subscribers/${encodeURIComponent(appUserId)}`,
+src/pages/api/rc/webhook.ts:37:        entStore().upsert({ appUserId, active, managementUrl, updatedAt: Date.now() })
+src/pages/api/questions/improve.ts:59:  const cookieHeader = request.headers.get('cookie') || ''
+src/pages/api/questions/improve.ts:81:  const usageSnapshot = getUsageSnapshot(usageKey, isVip)
+src/pages/api/questions/improve.ts:112:    .map((id) => store.get(id))
+src/pages/api/questions/improve.ts:216:      const original = store.get(id)
+src/pages/api/questions/[id].ts:7:  const cookie = request.headers.get('cookie') || ''
+src/pages/api/questions/[id].ts:36:  const question = store.get(id)
+src/pages/api/questions/limits.ts:9:  const cookieHeader = request.headers.get('cookie') || ''
+src/pages/api/questions/limits.ts:21:  const limits = getUsageSnapshot(usageKey, isVip)
+src/pages/api/questions/generate.ts:67:  const cookieHeader = request.headers.get('cookie') || ''
+src/pages/api/questions/generate.ts:89:  const usageSnapshot = getUsageSnapshot(usageKey, isVip)
+src/pages/api/questions/create.ts:8:  const cookie = request.headers.get('cookie') || ''
+src/pages/api/questions/list.ts:23:    const cookie = request.headers.get('cookie') || ''
+src/pages/api/questions/list.ts:43:    const userId = url.searchParams.get('userId') || user.id
+src/pages/api/questions/list.ts:52:    const limit = Math.min(Number(url.searchParams.get('limit') || 50), 100)
+src/pages/api/questions/list.ts:53:    const offset = Math.max(Number(url.searchParams.get('offset') || 0), 0)
+src/pages/api/questions/list.ts:54:    const search = (url.searchParams.get('q') || '').toLowerCase().trim()
+src/pages/[lang]/create-room.astro:297:        await import('/js/i18n.js')
+src/pages/[lang]/create-room.astro:303:          const segments = url.pathname.split('/').filter(Boolean)
+src/pages/[lang]/create-room.astro:358:        const presetSetId = urlParams.get('setId')
+src/pages/[lang]/create-room.astro:359:        const presetTemplateId = urlParams.get('templateId')
+src/pages/[lang]/create-room.astro:364:        const defaultCountHint = window.t('createRoom.builder.countHint')
+src/pages/[lang]/create-room.astro:402:        const aiLoadingMessages = new Set([
+src/pages/[lang]/create-room.astro:403:          window.t('createRoom.ai.generating'),
+src/pages/[lang]/create-room.astro:404:          window.t('createRoom.ai.optimizing'),
+src/pages/[lang]/create-room.astro:448:            const button = event.target && event.target.closest('[data-action]')
+src/pages/[lang]/create-room.astro:492:        function createEmptySlot() {
+src/pages/[lang]/create-room.astro:523:            showToast(text, isError ? 'error' : 'success')
+src/pages/[lang]/create-room.astro:533:        function showToast(text, type) {
+src/pages/[lang]/create-room.astro:536:          const toast = document.createElement('div')
+src/pages/[lang]/create-room.astro:546:          window.setTimeout(function () {
+src/pages/[lang]/create-room.astro:549:            window.setTimeout(function () {
+src/pages/[lang]/create-room.astro:582:              const errorText = await res.text().catch(function () {
+src/pages/[lang]/create-room.astro:603:              const errorText = await res.text().catch(function () {
+src/pages/[lang]/create-room.astro:649:              .t('createRoom.ai.generateQuota')
+src/pages/[lang]/create-room.astro:658:              .t('createRoom.ai.optimizeQuota')
+src/pages/[lang]/create-room.astro:664:        function applyAiLimitsSnapshot(snapshot) {
+src/pages/[lang]/create-room.astro:710:        function setCountHint(count) {
+src/pages/[lang]/create-room.astro:713:            countHintEl.textContent = window.t('createRoom.builder.vipHint')
+src/pages/[lang]/create-room.astro:729:              btn.setAttribute('title', window.t('createRoom.builder.vipLocked'))
+src/pages/[lang]/create-room.astro:748:            showGlobalMessage(window.t('createRoom.builder.vipLocked'), true)
+src/pages/[lang]/create-room.astro:802:              applyAiLimitsSnapshot(json.limits)
+src/pages/[lang]/create-room.astro:822:          setCountHint(expectedCount)
+src/pages/[lang]/create-room.astro:830:          if (slot.savedId) return window.t('createRoom.builder.status.saved')
+src/pages/[lang]/create-room.astro:831:          return window.t('createRoom.builder.status.draft')
+src/pages/[lang]/create-room.astro:839:            const card = document.createElement('div')
+src/pages/[lang]/create-room.astro:866:                window.t('questions.form.choicePlaceholder').replace('{count}', String(i + 1)) +
+src/pages/[lang]/create-room.astro:876:              window.t('createRoom.builder.questionLabel').replace('{index}', String(index + 1)) +
+src/pages/[lang]/create-room.astro:887:              window.t('questions.form.questionPlaceholder') +
+src/pages/[lang]/create-room.astro:896:              window.t('questions.form.keywords') +
+src/pages/[lang]/create-room.astro:901:              window.t('questions.form.keywordsPlaceholder') +
+src/pages/[lang]/create-room.astro:906:              window.t('createRoom.builder.saveQuestion') +
+src/pages/[lang]/create-room.astro:909:              window.t('createRoom.builder.import') +
+src/pages/[lang]/create-room.astro:912:              window.t('createRoom.builder.clear') +
+src/pages/[lang]/create-room.astro:939:            .split(/[\s,]+/)
+src/pages/[lang]/create-room.astro:968:            const card = event.target && event.target.closest('[data-index]')
+src/pages/[lang]/create-room.astro:979:            const card = target && target.closest('[data-index]')
+src/pages/[lang]/create-room.astro:989:            const button = event.target && event.target.closest('[data-action]')
+src/pages/[lang]/create-room.astro:991:            const card = button.closest('[data-index]')
+src/pages/[lang]/create-room.astro:1001:                const confirmed = window.confirm(window.t('createRoom.builder.clearConfirm'))
+src/pages/[lang]/create-room.astro:1004:              slots[index] = createEmptySlot()
+src/pages/[lang]/create-room.astro:1016:          if (autoSaveTimer) window.clearTimeout(autoSaveTimer)
+src/pages/[lang]/create-room.astro:1017:          autoSaveTimer = window.setTimeout(function () {
+src/pages/[lang]/create-room.astro:1018:            saveCurrentQuestionSet('draft', true)
+src/pages/[lang]/create-room.astro:1027:            slot.message = window.t('createRoom.builder.validationQuestion')
+src/pages/[lang]/create-room.astro:1039:            slot.message = window.t('createRoom.builder.validationChoices')
+src/pages/[lang]/create-room.astro:1057:            setSlotMessage(index, window.t('createRoom.builder.savingQuestion'), false)
+src/pages/[lang]/create-room.astro:1070:                throw new Error(json.error || window.t('questions.error'))
+src/pages/[lang]/create-room.astro:1083:                throw new Error(json.error || window.t('questions.error'))
+src/pages/[lang]/create-room.astro:1090:            slot.message = window.t('createRoom.builder.saveSuccessQuestion')
+src/pages/[lang]/create-room.astro:1097:            const message = e && e.message ? String(e.message) : window.t('questions.error')
+src/pages/[lang]/create-room.astro:1105:        async function saveCurrentQuestionSet(status, auto) {
+src/pages/[lang]/create-room.astro:1117:                .t('createRoom.builder.publishMismatch')
+src/pages/[lang]/create-room.astro:1126:              showGlobalMessage(window.t('createRoom.builder.needQuestions'), true)
+src/pages/[lang]/create-room.astro:1149:            showSaveStatus(window.t('createRoom.builder.autoSaving'), false)
+src/pages/[lang]/create-room.astro:1151:            showSaveStatus(window.t('createRoom.builder.saving'), false)
+src/pages/[lang]/create-room.astro:1165:              throw new Error(json.error || window.t('questionSets.createError'))
+src/pages/[lang]/create-room.astro:1176:                  ? window.t('createRoom.builder.publishSuccess')
+src/pages/[lang]/create-room.astro:1177:                  : window.t('createRoom.builder.saveSuccess')
+src/pages/[lang]/create-room.astro:1180:            showSaveStatus(window.t('createRoom.builder.saveSuccess'), false)
+src/pages/[lang]/create-room.astro:1193:              e && e.message ? String(e.message) : window.t('questionSets.createError')
+src/pages/[lang]/create-room.astro:1235:        function updateQuestionCount(newCount) {
+src/pages/[lang]/create-room.astro:1237:            setCountHint(newCount)
+src/pages/[lang]/create-room.astro:1247:                .t('createRoom.builder.confirmReduce')
+src/pages/[lang]/create-room.astro:1257:              slots.push(createEmptySlot())
+src/pages/[lang]/create-room.astro:1264:          setCountHint(newCount)
+src/pages/[lang]/create-room.astro:1275:            updateQuestionCount(value)
+src/pages/[lang]/create-room.astro:1287:            saveCurrentQuestionSet('draft', false)
+src/pages/[lang]/create-room.astro:1297:                  showGlobalMessage(window.t('createRoom.builder.publishValidate'), true)
+src/pages/[lang]/create-room.astro:1302:            saveCurrentQuestionSet('published', false)
+src/pages/[lang]/create-room.astro:1343:            window.clearTimeout(libraryState.searchTimer)
+src/pages/[lang]/create-room.astro:1344:            libraryState.searchTimer = window.setTimeout(function () {
+src/pages/[lang]/create-room.astro:1352:            const item = event.target && event.target.closest('[data-question-id]')
+src/pages/[lang]/create-room.astro:1361:              slots[activeSlotIndex] = createEmptySlot()
+src/pages/[lang]/create-room.astro:1378:            slot.message = window.t('createRoom.builder.imported')
+src/pages/[lang]/create-room.astro:1401:          if (libraryState.search) params.set('q', libraryState.search)
+src/pages/[lang]/create-room.astro:1413:              libraryState.items = libraryState.items.concat(items)
+src/pages/[lang]/create-room.astro:1428:            const empty = document.createElement('p')
+src/pages/[lang]/create-room.astro:1433:              ? window.t('room.loading')
+src/pages/[lang]/create-room.astro:1434:              : window.t('questionSets.library.empty')
+src/pages/[lang]/create-room.astro:1438:              const item = document.createElement('div')
+src/pages/[lang]/create-room.astro:1460:                window.t('questionSets.choiceCount').replace('{count}', String(choices.length)) +
+src/pages/[lang]/create-room.astro:1471:              ? window.t('questionSets.library.loading')
+src/pages/[lang]/create-room.astro:1473:                  .t('questionSets.library.selected')
+src/pages/[lang]/create-room.astro:1529:            encodeURIComponent(window.location.pathname + window.location.search)
+src/pages/[lang]/create-room.astro:1543:              : window.t('createRoom.form.defaultOwner')
+src/pages/[lang]/create-room.astro:1555:            hint.textContent = window.t('createRoom.form.defaultNameHint')
+src/pages/[lang]/create-room.astro:1559:        async function loadExistingSet(setId) {
+src/pages/[lang]/create-room.astro:1575:              const slot = createEmptySlot()
+src/pages/[lang]/create-room.astro:1593:              slots.push(createEmptySlot())
+src/pages/[lang]/create-room.astro:1616:            window.t('room.loading') +
+src/pages/[lang]/create-room.astro:1627:                  window.t('createRoom.loginRequired') +
+src/pages/[lang]/create-room.astro:1654:                window.t('createRoom.list.empty') +
+src/pages/[lang]/create-room.astro:1666:                card = document.createElement('div')
+src/pages/[lang]/create-room.astro:1685:                  tpl && tpl.title ? tpl.title : window.t('questionSets.untitled'),
+src/pages/[lang]/create-room.astro:1696:                  window.t('questionSets.questionCount').replace('{count}', String(questionCount)) +
+src/pages/[lang]/create-room.astro:1709:                  window.t('createRoom.card.editQuestions') +
+src/pages/[lang]/create-room.astro:1717:                      window.t('createRoom.card.unpublish') +
+src/pages/[lang]/create-room.astro:1724:                      window.t('createRoom.card.publish') +
+src/pages/[lang]/create-room.astro:1731:                  window.t('createRoom.card.delete') +
+src/pages/[lang]/create-room.astro:1741:              '<p style="color:#d00;padding:16px">' + window.t('errors.networkError') + '</p>'
+src/pages/[lang]/create-room.astro:1748:            const target = event.target && event.target.closest('[data-action]')
+src/pages/[lang]/create-room.astro:1751:            const card = target.closest('[data-template-card]')
+src/pages/[lang]/create-room.astro:1775:              if (!window.confirm(window.t('createRoom.card.deleteConfirm'))) return
+src/pages/[lang]/create-room.astro:1825:            setAiStatus(window.t('createRoom.ai.promptTooShort'), true)
+src/pages/[lang]/create-room.astro:1826:            showToast(window.t('createRoom.ai.promptTooShort'), 'error')
+src/pages/[lang]/create-room.astro:1833:              setAiStatus(window.t('createRoom.ai.promptBlocked'), true)
+src/pages/[lang]/create-room.astro:1834:              showToast(window.t('createRoom.ai.promptBlocked'), 'error')
+src/pages/[lang]/create-room.astro:1846:            setAiStatus(window.t('createRoom.builder.vipLocked'), true)
+src/pages/[lang]/create-room.astro:1853:            setAiStatus(window.t('createRoom.ai.limitExceeded'), true)
+src/pages/[lang]/create-room.astro:1854:            showToast(window.t('createRoom.ai.limitExceeded'), 'error')
+src/pages/[lang]/create-room.astro:1860:            setAiStatus(window.t('createRoom.ai.noBlankSlots'), true)
+src/pages/[lang]/create-room.astro:1861:            showToast(window.t('createRoom.ai.noBlankSlots'), 'error')
+src/pages/[lang]/create-room.astro:1867:                .t('createRoom.ai.notEnoughBlankSlots')
+src/pages/[lang]/create-room.astro:1872:            showToast(
+src/pages/[lang]/create-room.astro:1874:                .t('createRoom.ai.notEnoughBlankSlots')
+src/pages/[lang]/create-room.astro:1886:          setAiStatus(window.t('createRoom.ai.generating'), false)
+src/pages/[lang]/create-room.astro:1910:              applyAiLimitsSnapshot(json.limits)
+src/pages/[lang]/create-room.astro:1914:              let message = window.t('createRoom.ai.error')
+src/pages/[lang]/create-room.astro:1916:                message = window.t('createRoom.ai.limitExceeded')
+src/pages/[lang]/create-room.astro:1920:                message = window.t('createRoom.ai.countExceeded').replace('{max}', String(maxValue))
+src/pages/[lang]/create-room.astro:1922:                message = window.t('createRoom.ai.promptTooShort')
+src/pages/[lang]/create-room.astro:1925:              showToast(message, 'error')
+src/pages/[lang]/create-room.astro:1931:              setAiStatus(window.t('createRoom.ai.error'), true)
+src/pages/[lang]/create-room.astro:1932:              showToast(window.t('createRoom.ai.error'), 'error')
+src/pages/[lang]/create-room.astro:1941:              const slot = slots[slotIndex] || createEmptySlot()
+src/pages/[lang]/create-room.astro:1960:              slot.message = window.t('createRoom.ai.cardGenerated')
+src/pages/[lang]/create-room.astro:1966:            setAiStatus(window.t('createRoom.ai.successHint'), false)
+src/pages/[lang]/create-room.astro:1967:            showToast(
+src/pages/[lang]/create-room.astro:1969:                .t('createRoom.ai.generateSuccess')
+src/pages/[lang]/create-room.astro:1973:            await saveCurrentQuestionSet('draft', true)
+src/pages/[lang]/create-room.astro:1976:            setAiStatus(window.t('createRoom.ai.error'), true)
+src/pages/[lang]/create-room.astro:1977:            showToast(window.t('createRoom.ai.error'), 'error')
+src/pages/[lang]/create-room.astro:1990:            setAiImproveStatus(window.t('createRoom.ai.limitExceededImprove'), true)
+src/pages/[lang]/create-room.astro:1991:            showToast(window.t('createRoom.ai.limitExceededImprove'), 'error')
+src/pages/[lang]/create-room.astro:2004:            setAiImproveStatus(window.t('createRoom.ai.optimizeEmpty'), true)
+src/pages/[lang]/create-room.astro:2005:            showToast(window.t('createRoom.ai.optimizeEmpty'), 'error')
+src/pages/[lang]/create-room.astro:2012:          setAiImproveStatus(window.t('createRoom.ai.optimizing'), false)
+src/pages/[lang]/create-room.astro:2028:              applyAiLimitsSnapshot(json.limits)
+src/pages/[lang]/create-room.astro:2032:              let message = window.t('createRoom.ai.error')
+src/pages/[lang]/create-room.astro:2034:                message = window.t('createRoom.ai.limitExceededImprove')
+src/pages/[lang]/create-room.astro:2036:                message = window.t('createRoom.ai.optimizeEmpty')
+src/pages/[lang]/create-room.astro:2039:              showToast(message, 'error')
+src/pages/[lang]/create-room.astro:2045:              setAiImproveStatus(window.t('createRoom.ai.error'), true)
+src/pages/[lang]/create-room.astro:2046:              showToast(window.t('createRoom.ai.error'), 'error')
+src/pages/[lang]/create-room.astro:2074:              slot.message = window.t('createRoom.ai.optimizeCard')
+src/pages/[lang]/create-room.astro:2080:              window.t('createRoom.ai.optimizeSuccess').replace('{count}', String(updated.length)),
+src/pages/[lang]/create-room.astro:2083:            showToast(
+src/pages/[lang]/create-room.astro:2084:              window.t('createRoom.ai.optimizeSuccess').replace('{count}', String(updated.length)),
+src/pages/[lang]/create-room.astro:2087:            await saveCurrentQuestionSet('draft', true)
+src/pages/[lang]/create-room.astro:2090:            setAiImproveStatus(window.t('createRoom.ai.error'), true)
+src/pages/[lang]/create-room.astro:2091:            showToast(window.t('createRoom.ai.error'), 'error')
+src/pages/[lang]/create-room.astro:2140:          slots.push(createEmptySlot())
+src/pages/[lang]/create-room.astro:2147:          await loadExistingSet(state.questionSetId)
+src/pages/[lang]/my-participations.astro:57:        await import('/js/i18n.js')
+src/pages/[lang]/my-participations.astro:76:          const segments = url.pathname.split('/').filter(Boolean)
+src/pages/[lang]/my-participations.astro:96:            window.t('room.loading') +
+src/pages/[lang]/my-participations.astro:101:              showMessage(window.t('profile.notLoggedIn'), true)
+src/pages/[lang]/my-participations.astro:110:                window.t('profile.participations.empty') +
+src/pages/[lang]/my-participations.astro:117:              const card = document.createElement('div')
+src/pages/[lang]/my-participations.astro:122:              const title = document.createElement('div')
+src/pages/[lang]/my-participations.astro:124:              title.textContent = (item && item.roomTitle) || window.t('questionSets.untitled')
+src/pages/[lang]/my-participations.astro:126:              const meta = document.createElement('div')
+src/pages/[lang]/my-participations.astro:129:              const total = document.createElement('span')
+src/pages/[lang]/my-participations.astro:131:                .t('profile.participations.total')
+src/pages/[lang]/my-participations.astro:134:              const sep = document.createElement('span')
+src/pages/[lang]/my-participations.astro:137:              const accuracySpan = document.createElement('span')
+src/pages/[lang]/my-participations.astro:141:                .t('profile.participations.accuracy')
+src/pages/[lang]/my-participations.astro:145:              const actions = document.createElement('div')
+src/pages/[lang]/my-participations.astro:149:              const replay = document.createElement('a')
+src/pages/[lang]/my-participations.astro:152:              replay.href = '/' + lang + '/room/' + encodeURIComponent(item.roomId)
+src/pages/[lang]/my-participations.astro:153:              replay.textContent = window.t('profile.history.playAgain')
+src/pages/[lang]/my-participations.astro:160:            showMessage(window.t('errors.networkError'), true)
+src/pages/[lang]/profile.astro:248:        await import('/js/i18n.js')
+src/pages/[lang]/profile.astro:249:        const { setupRoomsManager } = await import('/js/rooms-manager.js')
+src/pages/[lang]/profile.astro:258:          fmt = await import('/src/utils/format.ts')
+src/pages/[lang]/profile.astro:262:          const mod = await import('/src/i18n/routerLang.ts')
+src/pages/[lang]/profile.astro:383:            setTimeout(function () {
+src/pages/[lang]/profile.astro:392:          const segments = url.pathname.split('/').filter(Boolean)
+src/pages/[lang]/profile.astro:433:          if (fmt && fmt.formatPercent) return fmt.formatPercent(value || 0, lang, 1)
+src/pages/[lang]/profile.astro:441:            return new Intl.NumberFormat(lang).format(value || 0)
+src/pages/[lang]/profile.astro:460:            return new Intl.DateTimeFormat(lang, {
+src/pages/[lang]/profile.astro:466:            }).format(date)
+src/pages/[lang]/profile.astro:568:              showStatsMessage(window.t('profile.notLoggedIn'), true)
+src/pages/[lang]/profile.astro:575:            showStatsMessage(window.t('profile.notLoggedIn'), true)
+src/pages/[lang]/profile.astro:579:            showStatsMessage(window.t('errors.networkError'), true)
+src/pages/[lang]/profile.astro:601:              '/api/scores/stats?userId=' + encodeURIComponent(currentUser.id),
+src/pages/[lang]/profile.astro:615:              '/api/scores/history?userId=' + encodeURIComponent(currentUser.id) + '&limit=100',
+src/pages/[lang]/profile.astro:630:              '/api/scores/rooms?userId=' + encodeURIComponent(currentUser.id) + '&limit=100',
+src/pages/[lang]/profile.astro:695:                    .t('profile.stats.percentile')
+src/pages/[lang]/profile.astro:702:            showStatsMessage(hasStats ? '' : window.t('empty.noData'), false)
+src/pages/[lang]/profile.astro:707:          const wrapper = document.createElement('div')
+src/pages/[lang]/profile.astro:723:              window.t('room.loading') +
+src/pages/[lang]/profile.astro:739:                window.t('profile.participations.empty') +
+src/pages/[lang]/profile.astro:744:                window.t('profile.participations.cta') +
+src/pages/[lang]/profile.astro:750:                window.t('profile.participations.empty') +
+src/pages/[lang]/profile.astro:760:            const card = document.createElement('div')
+src/pages/[lang]/profile.astro:772:            const title = document.createElement('div')
+src/pages/[lang]/profile.astro:783:            const heading = document.createElement('h3')
+src/pages/[lang]/profile.astro:791:              item.roomTitle || window.t('profile.roomIdLabel') + ' ' + item.roomId
+src/pages/[lang]/profile.astro:794:            const time = document.createElement('span')
+src/pages/[lang]/profile.astro:806:            const meta = document.createElement('div')
+src/pages/[lang]/profile.astro:817:            const countSpan = document.createElement('span')
+src/pages/[lang]/profile.astro:819:              .t('profile.participations.total')
+src/pages/[lang]/profile.astro:823:            const accuracySpan = document.createElement('span')
+src/pages/[lang]/profile.astro:825:              .t('profile.participations.accuracy')
+src/pages/[lang]/profile.astro:831:            const actions = document.createElement('div')
+src/pages/[lang]/profile.astro:840:            const replay = document.createElement('a')
+src/pages/[lang]/profile.astro:845:            replay.href = '/' + lang + '/room/' + encodeURIComponent(item.roomId)
+src/pages/[lang]/profile.astro:846:            replay.textContent = window.t('profile.history.playAgain')
+src/pages/[lang]/profile.astro:900:              return window.t(key)
+src/pages/[lang]/profile.astro:913:            emptyText: window.t('profile.created.emptyScope'),
+src/pages/[lang]/profile.astro:940:              event.preventDefault()
+src/pages/[lang]/profile.astro:952:              event.preventDefault()
+src/pages/[lang]/room/[id].astro:84:        await import('/js/i18n.js')
+src/pages/[lang]/room/[id].astro:85:        const { setupUserMenu } = await import('/js/user-menu.js')
+src/pages/[lang]/room/[id].astro:92:        const roomId = location.pathname.split('/').pop()
+src/pages/[lang]/room/[id].astro:103:            return window.t(key)
+src/pages/[lang]/room/[id].astro:132:              '/api/auth/google/login?redirect=' + encodeURIComponent(window.location.pathname)
+src/pages/[lang]/room/[id].astro:138:              '/api/auth/google/login?redirect=' + encodeURIComponent(window.location.pathname)
+src/pages/[lang]/room/[id].astro:197:            window.t('room.invalidRoomId') +
+src/pages/[lang]/room/[id].astro:201:            window.t('room.backToHome') +
+src/pages/[lang]/room/[id].astro:292:        function formatPercent(value) {
+src/pages/[lang]/room/[id].astro:303:          const title = window.t('room.heroes.title')
+src/pages/[lang]/room/[id].astro:304:          const subtitle = window.t('room.heroes.subtitle')
+src/pages/[lang]/room/[id].astro:305:          const emptyText = window.t('room.heroes.empty')
+src/pages/[lang]/room/[id].astro:306:          const viewText = window.t('room.heroes.viewBoard')
+src/pages/[lang]/room/[id].astro:307:          const joinPrompt = window.t('room.heroes.joinPrompt')
+src/pages/[lang]/room/[id].astro:308:          const joinAction = window.t('room.heroes.joinAction')
+src/pages/[lang]/room/[id].astro:379:              const accuracyText = formatPercent(entry.accuracy)
+src/pages/[lang]/room/[id].astro:431:          const accuracyText = formatPercent(entry.accuracy)
+src/pages/[lang]/room/[id].astro:475:          const title = window.t('room.leaderboard.title')
+src/pages/[lang]/room/[id].astro:476:          const closeText = window.t('room.leaderboard.close')
+src/pages/[lang]/room/[id].astro:477:          const scoreLabel = window.t('room.leaderboard.score')
+src/pages/[lang]/room/[id].astro:478:          const rankLabel = window.t('room.leaderboard.rank')
+src/pages/[lang]/room/[id].astro:479:          const playerLabel = window.t('room.leaderboard.player')
+src/pages/[lang]/room/[id].astro:480:          const answeredLabel = window.t('room.leaderboard.totalAnswered')
+src/pages/[lang]/room/[id].astro:481:          const accuracyLabel = window.t('room.leaderboard.accuracy')
+src/pages/[lang]/room/[id].astro:482:          const avgTimeLabel = window.t('room.leaderboard.averageTime')
+src/pages/[lang]/room/[id].astro:483:          const fastestLabel = window.t('room.leaderboard.fastestTime')
+src/pages/[lang]/room/[id].astro:484:          const loadingText = window.t('room.leaderboard.loading')
+src/pages/[lang]/room/[id].astro:485:          const outOfRangeText = window.t('room.leaderboard.outOfRange')
+src/pages/[lang]/room/[id].astro:486:          const currentRankTemplate = window.t('room.leaderboard.outOfTop')
+src/pages/[lang]/room/[id].astro:508:              (leaderboardLoading ? loadingText : window.t('room.heroes.empty')) +
+src/pages/[lang]/room/[id].astro:601:        async function init() {
+src/pages/[lang]/room/[id].astro:607:            errorMsg = window.t('errors.joinRoomFailed')
+src/pages/[lang]/room/[id].astro:616:                  errorMsg = window.t('errors.roomFullUpgrade')
+src/pages/[lang]/room/[id].astro:618:                  errorMsg = window.t('errors.roomFull')
+src/pages/[lang]/room/[id].astro:627:            errorMsg = window.t('errors.roomNotFound')
+src/pages/[lang]/room/[id].astro:650:              window.t('room.backToHome') +
+src/pages/[lang]/room/[id].astro:657:            app.innerHTML = '<p style="padding:16px">' + window.t('room.loading') + '</p>'
+src/pages/[lang]/room/[id].astro:676:            '<p style="padding:16px;opacity:0.7">' + window.t('room.waitingHost') + '</p>'
+src/pages/[lang]/room/[id].astro:683:            const summaryTitle = window.t('room.summary.title')
+src/pages/[lang]/room/[id].astro:684:            const summarySubtitle = window.t('room.summary.subtitle')
+src/pages/[lang]/room/[id].astro:692:            const totalAnswersLabel = window.t('room.summary.totalAnswersLabel')
+src/pages/[lang]/room/[id].astro:693:            const uniquePlayersLabel = window.t('room.summary.uniquePlayersLabel')
+src/pages/[lang]/room/[id].astro:694:            const averageAccuracyLabel = window.t('room.summary.averageAccuracyLabel')
+src/pages/[lang]/room/[id].astro:695:            const leaderboardTitle = window.t('room.summary.tableTitle')
+src/pages/[lang]/room/[id].astro:696:            const loadingLeaderboardText = window.t('room.summary.loadingLeaderboard')
+src/pages/[lang]/room/[id].astro:697:            const yourRankingTitle = window.t('room.summary.yourRanking')
+src/pages/[lang]/room/[id].astro:698:            const joinPrompt = window.t('room.heroes.joinPrompt')
+src/pages/[lang]/room/[id].astro:699:            const joinAction = window.t('room.heroes.joinAction')
+src/pages/[lang]/room/[id].astro:715:                window.t('room.leaderboard.rank') +
+src/pages/[lang]/room/[id].astro:718:                window.t('room.leaderboard.player') +
+src/pages/[lang]/room/[id].astro:721:                window.t('room.leaderboard.score') +
+src/pages/[lang]/room/[id].astro:724:                window.t('room.leaderboard.totalAnswered') +
+src/pages/[lang]/room/[id].astro:727:                window.t('room.leaderboard.accuracy') +
+src/pages/[lang]/room/[id].astro:730:                window.t('room.leaderboard.averageTime') +
+src/pages/[lang]/room/[id].astro:733:                window.t('room.leaderboard.fastestTime') +
+src/pages/[lang]/room/[id].astro:745:                "<p class='room-summary-empty'>" + window.t('room.heroes.empty') + '</p>'
+src/pages/[lang]/room/[id].astro:817:                  ? "<span class='choice-selected'>" + window.t('room.choiceSelected') + '</span>'
+src/pages/[lang]/room/[id].astro:819:                const titleText = window.t('room.choiceNumberLabel').replace('{index}', number)
+src/pages/[lang]/room/[id].astro:840:              .t('room.progressLabel')
+src/pages/[lang]/room/[id].astro:844:              .t('room.remainingLabel')
+src/pages/[lang]/room/[id].astro:846:            const timerLabel = window.t('room.timerLabel')
+src/pages/[lang]/room/[id].astro:886:          const roomIdLabel = window.t('room.roomIdLabel')
+src/pages/[lang]/room/[id].astro:891:            ? window.t('room.viewResults')
+src/pages/[lang]/room/[id].astro:892:            : window.t('room.nextQuestion')
+src/pages/[lang]/room/[id].astro:899:              window.t('room.backToHome') +
+src/pages/[lang]/room/[id].astro:912:            window.t('room.members') +
+src/pages/[lang]/room/[id].astro:994:            const badge = document.createElement('span')
+src/pages/[lang]/room/[id].astro:996:            badge.textContent = window.t('room.choiceSelected')
+src/pages/[lang]/room/[id].astro:1053:            event.preventDefault()
+src/pages/[lang]/room/[id].astro:1061:            event.preventDefault()
+src/pages/[lang]/room/[id].astro:1067:            event.preventDefault()
+src/pages/[lang]/room/[id].astro:1076:          const next = e.target.closest('#next')
+src/pages/[lang]/room/[id].astro:1079:            next.textContent = window.t('room.nextQuestionLoading')
+src/pages/[lang]/room/[id].astro:1086:              next.textContent = window.t('room.nextQuestionRetry')
+src/pages/[lang]/room/[id].astro:1090:          const btn = e.target.closest('button[data-choice]')
+src/pages/[lang]/room/[id].astro:1105:        await init()
+src/pages/[lang]/index.astro:109:        await import('/js/i18n.js')
+src/pages/[lang]/index.astro:110:        const { setupUserMenu, getStoredRoomLanguages } = await import('/js/user-menu.js')
+src/pages/[lang]/index.astro:123:          window.t('home.hero.title'),
+src/pages/[lang]/index.astro:127:          window.t('home.hero.subtitle'),
+src/pages/[lang]/index.astro:138:            return window.t(key)
+src/pages/[lang]/index.astro:201:            showError(window.t('errors.roomIdRequired'))
+src/pages/[lang]/index.astro:211:              let errorText = window.t('errors.joinRoomFailed')
+src/pages/[lang]/index.astro:215:                  errorText = window.t('errors.roomFullUpgrade')
+src/pages/[lang]/index.astro:217:                  errorText = window.t('errors.roomFull')
+src/pages/[lang]/index.astro:226:            showError(e.message || window.t('errors.unknown'))
+src/pages/[lang]/index.astro:265:                  map.set(String(item.roomId), item)
+src/pages/[lang]/index.astro:280:            window.t('room.loading') +
+src/pages/[lang]/index.astro:300:              params.set('lang', activeLang)
+src/pages/[lang]/index.astro:302:            if (hours) params.set('hours', String(hours))
+src/pages/[lang]/index.astro:347:              window.t('errors.networkError') +
+src/pages/[lang]/index.astro:355:              window.t('home.rooms.empty') +
+src/pages/[lang]/index.astro:360:          const roomLabel = window.t('home.rooms.roomLabel')
+src/pages/[lang]/index.astro:364:              const summary = userRoomSummaryMap.get(roomId)
+src/pages/[lang]/index.astro:367:                ? window.t('home.rooms.answered')
+src/pages/[lang]/index.astro:368:                : window.t('home.rooms.notAnswered')
+src/pages/[lang]/index.astro:379:                  window.t('profile.correctShort') +
+src/pages/[lang]/index.astro:405:                window.t('home.rooms.members') +
+src/pages/[lang]/index.astro:408:                window.t('home.rooms.accuracy') +
+src/pages/[lang]/index.astro:413:                window.t('home.rooms.totalAttempts') +
+src/pages/[lang]/index.astro:425:                window.t('home.rooms.join') +
+src/pages/[lang]/index.astro:508:              '/api/auth/google/login?redirect=' + encodeURIComponent(window.location.pathname)
+src/pages/[lang]/my-rooms.astro:106:        await import('/js/i18n.js')
+src/pages/[lang]/my-rooms.astro:107:        const { setupUserMenu } = await import('/js/user-menu.js')
+src/pages/[lang]/my-rooms.astro:108:        const { setupRoomsManager } = await import('/js/rooms-manager.js')
+src/pages/[lang]/my-rooms.astro:130:            return window.t(key)
+src/pages/[lang]/my-rooms.astro:168:                window.t('profile.notLoggedIn') +
+src/pages/[lang]/my-rooms.astro:183:              window.t('profile.notLoggedIn') +
+src/pages/[lang]/my-rooms.astro:190:              window.t('errors.networkError') +
+src/pages/[lang]/my-rooms.astro:199:              '/api/auth/google/login?redirect=' + encodeURIComponent(window.location.pathname)
+src/pages/[lang]/my-rooms.astro:218:            return window.t(key)
+src/pages/[lang]/my-rooms.astro:224:          emptyText: window.t('myRooms.empty'),
+src/pages/[lang]/my-rooms.astro:227:            label: window.t('profile.sections.createRoom'),
+src/pages/[lang]/rooms/joined.astro:48:        await import('/js/i18n.js')
+src/pages/[lang]/rooms/joined.astro:56:          fmt = await import('/src/utils/format.ts')
+src/pages/[lang]/rooms/joined.astro:83:            return new Intl.NumberFormat(lang).format(value || 0)
+src/pages/[lang]/rooms/joined.astro:90:          if (fmt && fmt.formatPercent) return fmt.formatPercent(Number(value || 0), lang, 1)
+src/pages/[lang]/rooms/joined.astro:101:            return new Intl.DateTimeFormat(lang, {
+src/pages/[lang]/rooms/joined.astro:105:            }).format(d)
+src/pages/[lang]/rooms/joined.astro:115:              const skeleton = document.createElement('div')
+src/pages/[lang]/rooms/joined.astro:125:            window.t('room.loading') +
+src/pages/[lang]/rooms/joined.astro:130:          const ctaLabel = window.t('profile.participations.cta')
+src/pages/[lang]/rooms/joined.astro:134:            const wrapper = document.createElement('div')
+src/pages/[lang]/rooms/joined.astro:137:            const text = document.createElement('p')
+src/pages/[lang]/rooms/joined.astro:139:            text.textContent = window.t('profile.participations.empty')
+src/pages/[lang]/rooms/joined.astro:140:            const link = document.createElement('a')
+src/pages/[lang]/rooms/joined.astro:149:          const legacyWrapper = document.createElement('div')
+src/pages/[lang]/rooms/joined.astro:153:          const legacyText = document.createElement('p')
+src/pages/[lang]/rooms/joined.astro:155:          legacyText.textContent = window.t('profile.participations.empty')
+src/pages/[lang]/rooms/joined.astro:156:          const legacyLink = document.createElement('a')
+src/pages/[lang]/rooms/joined.astro:170:              showMessage(window.t('profile.notLoggedIn'), true)
+src/pages/[lang]/rooms/joined.astro:176:            items.sort(function (a, b) {
+src/pages/[lang]/rooms/joined.astro:190:              const card = document.createElement('div')
+src/pages/[lang]/rooms/joined.astro:198:              const title = document.createElement('div')
+src/pages/[lang]/rooms/joined.astro:207:              const t1 = document.createElement('div')
+src/pages/[lang]/rooms/joined.astro:213:              t1.textContent = item.roomTitle || window.t('questionSets.untitled')
+src/pages/[lang]/rooms/joined.astro:214:              const t2 = document.createElement('span')
+src/pages/[lang]/rooms/joined.astro:225:              const meta = document.createElement('div')
+src/pages/[lang]/rooms/joined.astro:230:                  window.t('profile.participations.total').replace(
+src/pages/[lang]/rooms/joined.astro:235:                  window.t('profile.participations.accuracy').replace(
+src/pages/[lang]/rooms/joined.astro:240:                  window.t('profile.participations.lastPlayed').replace(
+src/pages/[lang]/rooms/joined.astro:249:                  window.t('profile.participations.total').replace(
+src/pages/[lang]/rooms/joined.astro:255:                    .t('profile.participations.accuracy')
+src/pages/[lang]/rooms/joined.astro:258:                  window.t('profile.participations.lastPlayed').replace(
+src/pages/[lang]/rooms/joined.astro:264:              const actions = document.createElement('div')
+src/pages/[lang]/rooms/joined.astro:272:              const replay = document.createElement('a')
+src/pages/[lang]/rooms/joined.astro:277:              replay.href = '/' + lang + '/room/' + encodeURIComponent(item.roomId)
+src/pages/[lang]/rooms/joined.astro:278:              replay.textContent = window.t('profile.history.playAgain')
+src/pages/[lang]/rooms/joined.astro:281:                window.t('profile.history.playAgain') +
+src/pages/[lang]/rooms/joined.astro:283:                  (item.roomTitle || window.t('questionSets.untitled')),
+src/pages/[lang]/rooms/joined.astro:293:            showMessage(window.t('errors.networkError'), true)
+src/pages/[lang]/rooms/joined.astro:299:            const link = event.target && event.target.closest('[data-action="replay"]')
+src/pages/[lang]/rooms/joined.astro:303:            event.preventDefault()
+src/pages/[lang]/rooms/joined.astro:311:                showMessage(window.t('errors.networkError'), true)
+src/pages/[lang]/rooms/joined.astro:316:                showMessage(window.t('errors.networkError'), true)
+src/pages/[lang]/rooms/created.astro:95:        await import('/js/i18n.js')
+src/pages/[lang]/rooms/created.astro:96:        const { setupRoomsManager } = await import('/js/rooms-manager.js')
+src/pages/[lang]/rooms/created.astro:147:            tab.button.setAttribute('aria-label', window.t(labelKey) + ' ' + safe)
+src/pages/[lang]/rooms/created.astro:153:            params.set('status', status)
+src/pages/[lang]/rooms/created.astro:154:            params.set('limit', '1')
+src/pages/[lang]/rooms/created.astro:155:            params.set('offset', '0')
+src/pages/[lang]/rooms/created.astro:183:            return window.t(key)
+src/pages/[lang]/rooms/created.astro:190:          emptyText: window.t('profile.created.emptyScope'),
+src/pages/[lang]/rooms/created.astro:193:            label: window.t('profile.sections.createRoom'),
+src/pages/[lang]/question-sets.astro:266:        await import('/js/i18n.js')
+src/pages/[lang]/question-sets.astro:267:        const { setupUserMenu } = await import('/js/user-menu.js')
+src/pages/[lang]/question-sets.astro:297:            return window.t(key)
+src/pages/[lang]/question-sets.astro:342:        const initialSetId = urlParams.get('setId')
+src/pages/[lang]/question-sets.astro:343:        const initialTemplateId = urlParams.get('templateId')
+src/pages/[lang]/question-sets.astro:350:          window.location.href = '/api/auth/google/login?redirect=' + encodeURIComponent(redirect)
+src/pages/[lang]/question-sets.astro:376:            .split(/[,\s]+/)
+src/pages/[lang]/question-sets.astro:409:            const empty = document.createElement('p')
+src/pages/[lang]/question-sets.astro:410:            empty.textContent = window.t('questionSets.drafts.empty')
+src/pages/[lang]/question-sets.astro:416:              const item = document.createElement('div')
+src/pages/[lang]/question-sets.astro:428:                  .t('questionSets.choiceCount')
+src/pages/[lang]/question-sets.astro:440:                window.t('questionSets.drafts.edit') +
+src/pages/[lang]/question-sets.astro:445:                window.t('questionSets.drafts.remove') +
+src/pages/[lang]/question-sets.astro:454:              .t('questionSets.drafts.count')
+src/pages/[lang]/question-sets.astro:460:        function getTargetCount() {
+src/pages/[lang]/question-sets.astro:462:          const value = parseInt(expectedCountSelect.value, 10)
+src/pages/[lang]/question-sets.astro:473:          const target = getTargetCount()
+src/pages/[lang]/question-sets.astro:484:              .t('questionSets.summary.mismatch')
+src/pages/[lang]/question-sets.astro:489:              .t('questionSets.summary.overLimit')
+src/pages/[lang]/question-sets.astro:497:            const target = getTargetCount()
+src/pages/[lang]/question-sets.astro:499:              .t('questionSets.summary.total')
+src/pages/[lang]/question-sets.astro:508:          if (autoSaveTimer) window.clearTimeout(autoSaveTimer)
+src/pages/[lang]/question-sets.astro:509:          autoSaveTimer = window.setTimeout(function () {
+src/pages/[lang]/question-sets.astro:510:            submitQuestionSet('draft', true)
+src/pages/[lang]/question-sets.astro:518:            const empty = document.createElement('p')
+src/pages/[lang]/question-sets.astro:522:            empty.textContent = window.t('questionSets.library.empty')
+src/pages/[lang]/question-sets.astro:526:              const item = document.createElement('div')
+src/pages/[lang]/question-sets.astro:547:                  .t('questionSets.choiceCount')
+src/pages/[lang]/question-sets.astro:561:                selectedExisting.set(questionId, question)
+src/pages/[lang]/question-sets.astro:579:                checkbox.dispatchEvent(new Event('change'))
+src/pages/[lang]/question-sets.astro:586:              ? window.t('questionSets.library.loading')
+src/pages/[lang]/question-sets.astro:588:                  .t('questionSets.library.selected')
+src/pages/[lang]/question-sets.astro:612:          if (libraryState.search) params.set('q', libraryState.search)
+src/pages/[lang]/question-sets.astro:624:              libraryState.items = libraryState.items.concat(items)
+src/pages/[lang]/question-sets.astro:655:        async function loadExistingSet(setId) {
+src/pages/[lang]/question-sets.astro:708:              showBuilderMessage(window.t('questionSets.builder.invalid'), true)
+src/pages/[lang]/question-sets.astro:719:            showBuilderMessage(window.t('questionSets.builder.saved'), false)
+src/pages/[lang]/question-sets.astro:734:              showBuilderMessage(window.t('questionSets.builder.invalid'), true)
+src/pages/[lang]/question-sets.astro:745:            showBuilderMessage(window.t('questionSets.builder.updated'), false)
+src/pages/[lang]/question-sets.astro:823:            window.clearTimeout(searchTimer)
+src/pages/[lang]/question-sets.astro:825:            searchTimer = window.setTimeout(function () {
+src/pages/[lang]/question-sets.astro:847:              throw new Error(json.error || window.t('questions.error'))
+src/pages/[lang]/question-sets.astro:866:            throw new Error(json.error || window.t('questions.error'))
+src/pages/[lang]/question-sets.astro:878:        async function submitQuestionSet(status, isAuto) {
+src/pages/[lang]/question-sets.astro:881:          const target = getTargetCount()
+src/pages/[lang]/question-sets.astro:884:            showSummaryMessage(window.t('questionSets.summary.validate'), true)
+src/pages/[lang]/question-sets.astro:889:            if (!auto) showSummaryMessage(window.t('questionSets.summary.invalidTarget'), true)
+src/pages/[lang]/question-sets.astro:894:            showSummaryMessage(window.t('questionSets.summary.publishMismatch'), true)
+src/pages/[lang]/question-sets.astro:905:            showSummaryMessage(window.t('questionSets.createInProgress'), false)
+src/pages/[lang]/question-sets.astro:942:              throw new Error(json.error || window.t('questionSets.createError'))
+src/pages/[lang]/question-sets.astro:951:              showSummaryMessage(window.t('questionSets.createSuccess'), false)
+src/pages/[lang]/question-sets.astro:969:              showSummaryMessage(e.message || window.t('questionSets.createError'), true)
+src/pages/[lang]/question-sets.astro:983:            submitQuestionSet('draft', false)
+src/pages/[lang]/question-sets.astro:989:            submitQuestionSet('published', false)
+src/pages/[lang]/question-sets.astro:997:            window.t('room.loading') +
+src/pages/[lang]/question-sets.astro:1010:                window.t('questionSets.empty') +
+src/pages/[lang]/question-sets.astro:1016:                window.t('questions.create') +
+src/pages/[lang]/question-sets.astro:1019:                window.t('questionSets.create') +
+src/pages/[lang]/question-sets.astro:1023:                window.t('questionSets.createHint') +
+src/pages/[lang]/question-sets.astro:1038:              const div = document.createElement('div')
+src/pages/[lang]/question-sets.astro:1049:                (set.title || window.t('questionSets.untitled')) +
+src/pages/[lang]/question-sets.astro:1053:                  .t('questionSets.questionCount')
+src/pages/[lang]/question-sets.astro:1060:                window.t('questionSets.select') +
+src/pages/[lang]/question-sets.astro:1075:              '<p style="color:#d00;padding:16px">' + window.t('errors.networkError') + '</p>'
+src/pages/[lang]/question-sets.astro:1109:          await loadExistingSet(initialSetId)
+src/pages/[lang]/create-question.astro:211:        await import('/js/i18n.js')
+src/pages/[lang]/create-question.astro:212:        const { setupUserMenu } = await import('/js/user-menu.js')
+src/pages/[lang]/create-question.astro:219:            return window.t(key)
+src/pages/[lang]/create-question.astro:245:          window.location.href = '/api/auth/google/login?redirect=' + encodeURIComponent(redirect)
+src/pages/[lang]/create-question.astro:324:            const div = document.createElement('div')
+src/pages/[lang]/create-question.astro:329:              .t('questions.form.choicePlaceholder')
+src/pages/[lang]/create-question.astro:373:              showManualMsg(window.t('errors.questionRequired'), true)
+src/pages/[lang]/create-question.astro:405:              showManualMsg(window.t('questions.form.minChoices'), true)
+src/pages/[lang]/create-question.astro:410:              showManualMsg(window.t('questions.form.selectCorrectRequired'), true)
+src/pages/[lang]/create-question.astro:415:              showManualMsg(window.t('questions.form.correctAnswerInvalid'), true)
+src/pages/[lang]/create-question.astro:420:            showManualMsg(window.t('room.loading'), false)
+src/pages/[lang]/create-question.astro:449:                  throw new Error(window.t('errors.notAuthenticated'))
+src/pages/[lang]/create-question.astro:451:                let errorMsg = json.error || window.t('questions.error')
+src/pages/[lang]/create-question.astro:454:                  errorMsg = window.t('errors.notAuthenticated')
+src/pages/[lang]/create-question.astro:456:                  errorMsg = window.t('questions.form.minChoices')
+src/pages/[lang]/create-question.astro:458:                  errorMsg = window.t('questions.form.correctAnswerInvalid')
+src/pages/[lang]/create-question.astro:467:                throw new Error(window.t('questions.error'))
+src/pages/[lang]/create-question.astro:470:              showManualMsg(window.t('questions.success'), false)
+src/pages/[lang]/create-question.astro:493:                      showManualMsg(window.t('questions.success') + '，已自動建立題目集', false)
+src/pages/[lang]/create-question.astro:501:              setTimeout(function () {
+src/pages/[lang]/create-question.astro:505:              showManualMsg(e.message || window.t('questions.error'), true)
+src/pages/[lang]/create-question.astro:532:              showAIMsg(window.t('questions.ai.keywordsRequired'), true)
+src/pages/[lang]/create-question.astro:538:              submitAI.textContent = window.t('questions.ai.generating')
+src/pages/[lang]/create-question.astro:540:            showAIMsg(window.t('questions.ai.generating'), false)
+src/pages/[lang]/create-question.astro:557:                  throw new Error(window.t('errors.notAuthenticated'))
+src/pages/[lang]/create-question.astro:559:                let errorMsg = json.error || window.t('questions.error')
+src/pages/[lang]/create-question.astro:562:                  errorMsg = window.t('errors.notAuthenticated')
+src/pages/[lang]/create-question.astro:564:                  errorMsg = window.t('questions.ai.configRequired')
+src/pages/[lang]/create-question.astro:574:                window.t('questions.ai.generateSuccess').replace('{count}', String(generatedCount)),
+src/pages/[lang]/create-question.astro:602:                            .t('questions.ai.generateSuccess')
+src/pages/[lang]/create-question.astro:614:              setTimeout(function () {
+src/pages/[lang]/create-question.astro:618:              showAIMsg(e.message || window.t('questions.error'), true)
+src/pages/[lang]/create-question.astro:622:                submitAI.textContent = window.t('questions.ai.generate')
