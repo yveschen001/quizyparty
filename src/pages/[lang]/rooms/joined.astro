@@ -43,7 +43,24 @@ const path = Astro.url.pathname
         <span aria-hidden="true">/</span>
         <span class="caption">{title}</span>
       </nav>
-      <h1 class="h1 no-margin">{title}</h1>
+      <h1 id="joined-title" class="h1 no-margin">{title}</h1>
+      <div id="joined-tabs" class="tab-row" role="tablist" aria-label={serverT('common.controls.sort.label')}>
+        <button class="tab active" role="tab" data-sort="lastPlayed" aria-selected="true" tabindex="0">
+          {serverT('common.controls.sort.lastPlayed')}
+        </button>
+        <button class="tab" role="tab" data-sort="answered" aria-selected="false" tabindex="-1">
+          {serverT('common.controls.sort.answered')}
+        </button>
+        <button class="tab" role="tab" data-sort="accuracy" aria-selected="false" tabindex="-1">
+          {serverT('common.controls.sort.accuracy')}
+        </button>
+        <button class="tab" role="tab" data-sort="title" aria-selected="false" tabindex="-1">
+          {serverT('common.controls.sort.title')}
+        </button>
+        <button class="tab" role="tab" data-sort="updated" aria-selected="false" tabindex="-1">
+          {serverT('common.controls.sort.updated')}
+        </button>
+      </div>
       <div id="message" class="status-text" role="status" aria-live="polite"></div>
       <LoadingState id="joined-loading" lang={lang} serverT={serverT} titleKey="common.loading" />
       <EmptyState
@@ -69,7 +86,6 @@ const path = Astro.url.pathname
 </main>
     <script type="module" src="/js/i18n.js"></script>
     <script src="/js/i18n-compat.js" is:inline></script>
-    <script src="/js/rooms-filters.js" is:inline></script>
     <script src="/js/qp-cache.js" is:inline></script>
     <script src="/js/rooms-pagination.js" is:inline></script>
     <script src="/js/room-card-template.js" is:inline></script>
@@ -87,6 +103,7 @@ const path = Astro.url.pathname
         } catch (e) {}
         const message = document.getElementById('message')
         const list = document.getElementById('list')
+        const tabsContainer = document.getElementById('joined-tabs')
         function showMessage(text, isError) {
           if (!message) return
           if (!text) {
@@ -201,6 +218,42 @@ const path = Astro.url.pathname
           legacyWrapper.appendChild(legacyLink)
           list.appendChild(legacyWrapper)
         }
+        function getSortFromUrl(){
+          try { const q=new URLSearchParams(location.search); return q.get('sort')||'lastPlayed' } catch { return 'lastPlayed' }
+        }
+        function setSortInUrl(v){
+          try { const u=new URL(location.href); u.searchParams.set('sort', v); history.replaceState(null,'',u.toString()) } catch {}
+        }
+        function updateSortTabs(active){
+          if (!tabsContainer) return
+          const buttons = Array.prototype.slice.call(tabsContainer.querySelectorAll('[data-sort]'))
+          buttons.forEach(function(btn){
+            const isActive = (btn.getAttribute('data-sort')||'') === active
+            if (isActive) { btn.classList.add('active'); btn.setAttribute('aria-selected','true'); btn.setAttribute('tabindex','0') }
+            else { btn.classList.remove('active'); btn.setAttribute('aria-selected','false'); btn.setAttribute('tabindex','-1') }
+          })
+        }
+        if (tabsContainer){
+          tabsContainer.addEventListener('click', function(e){
+            const btn = e.target && e.target.closest('[data-sort]')
+            if (!btn) return
+            const next = btn.getAttribute('data-sort')||'lastPlayed'
+            setSortInUrl(next); updateSortTabs(next); loadParticipations()
+          })
+          tabsContainer.addEventListener('keydown', function(e){
+            const btns = Array.prototype.slice.call(tabsContainer.querySelectorAll('[data-sort]'))
+            const active = getSortFromUrl()
+            let idx = btns.findIndex(function(b){ return (b.getAttribute('data-sort')||'')===active })
+            if (idx < 0) idx = 0
+            if (e.key === 'ArrowRight') { e.preventDefault(); idx = Math.min(idx+1, btns.length-1) }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); idx = Math.max(idx-1, 0) }
+            else return
+            const next = btns[idx].getAttribute('data-sort')||'lastPlayed'
+            setSortInUrl(next); updateSortTabs(next); loadParticipations(); btns[idx].focus()
+          })
+          updateSortTabs(getSortFromUrl())
+        }
+
         async function loadParticipations() {
           if (!list) return
           renderSkeleton()
@@ -213,28 +266,22 @@ const path = Astro.url.pathname
             }
             const json = await res.json()
             let items = Array.isArray(json.rooms) ? json.rooms : []
-            // 依 URL sort 控制排序（存在 RoomsFilters 時套用）
+            // 依 URL sort 控制排序（本頁內建 tabs）
             try {
               const q = new URLSearchParams(location.search)
               const sort = q.get('sort') || 'lastPlayed'
-              if (window.RoomsFilters) {
-                const mapped = items.map(function (it) {
-                  return {
-                    _orig: it,
-                    title: it && it.roomTitle,
-                    lastPlayedAt: it && it.lastAnsweredAt,
-                    answered: it && it.totalAnswered,
-                    accuracy:
-                      typeof it.accuracy === 'number'
-                        ? it.accuracy
-                        : typeof it.correctRate === 'number'
-                        ? it.correctRate
-                        : 0,
-                  }
-                })
-                const sorted = window.RoomsFilters.sortJoined(mapped, sort)
-                items = sorted.map(function (x) {
-                  return x._orig
+              if (sort === 'answered') {
+                items.sort(function(a,b){ return (Number(b?.totalAnswered||0) - Number(a?.totalAnswered||0)) })
+              } else if (sort === 'accuracy') {
+                function getAcc(x){ return typeof x?.accuracy==='number'?x.accuracy:(typeof x?.correctRate==='number'?x.correctRate:0) }
+                items.sort(function(a,b){ return getAcc(b) - getAcc(a) })
+              } else if (sort === 'title') {
+                items.sort(function(a,b){ return String(a?.roomTitle||'').localeCompare(String(b?.roomTitle||'')) })
+              } else if (sort === 'updated') {
+                items.sort(function(a,b){
+                  const aTime = new Date(a?.updatedAt||a?.lastAnsweredAt||0).getTime()
+                  const bTime = new Date(b?.updatedAt||b?.lastAnsweredAt||0).getTime()
+                  return bTime - aTime
                 })
               } else {
                 items.sort(function (a, b) {
@@ -301,13 +348,10 @@ const path = Astro.url.pathname
           }
         }
         await loadParticipations()
-        ;(function initJoinedControls(){
-          try {
-            if (window.RoomsFilters) {
-              window.RoomsFilters.renderJoinedControls(document.getElementById('joined-controls'))
-            }
-          } catch (e) {}
-        })()
+        try {
+          const titleEl = document.getElementById('joined-title')
+          if (titleEl) titleEl.textContent = window.t('profile.sections.participations')
+        } catch (e) {}
         if (list) {
           list.addEventListener('click', function (event) {
             const link = event.target && event.target.closest('[data-action="replay"]')
