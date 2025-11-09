@@ -42,6 +42,7 @@ const path = Astro.url.pathname
               data-scope="all"
               aria-selected="true"
               aria-controls="stats-panel"
+              aria-label={serverT('profile.scope.all')}
               tabindex="0">{serverT('profile.scope.all')}</button
             >
             <button
@@ -52,6 +53,7 @@ const path = Astro.url.pathname
               data-scope="30d"
               aria-selected="false"
               aria-controls="stats-panel"
+              aria-label={serverT('profile.scope.30d')}
               tabindex="-1"
               >{serverT('profile.scope.30d')}</button
             >

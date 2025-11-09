@@ -32,7 +32,8 @@
     "e2e:smoke": "playwright test -g @smoke --reporter=line",
     "lint:ui": "ESLINT_USE_FLAT_CONFIG=true eslint --config .eslint-ui-audit.config.mjs --ext .ts,.tsx,.js,.jsx,.astro \"src\" \"public/js\" || true",
     "audit:i18n": "node -e \"console.log('See logs/i18n-lint.txt')\"",
-    "audit:all": "pnpm run lint:ui && pnpm run lint:styles && pnpm run audit:i18n"
+    "audit:report": "node scripts/update-missing-zh-hant.mjs",
+    "audit:all": "pnpm run lint:ui && pnpm run lint:styles && pnpm run audit:i18n && pnpm run audit:report || true"
   },
   "keywords": [],
   "author": "",

@@ -1,12 +1,13 @@
-src/middleware.ts:21:    const hasUidApi = context.cookies.get('qp_uid')
-src/middleware.ts:24:      context.cookies.set('qp_uid', uid, {
-src/middleware.ts:31:    return next()
-src/middleware.ts:39:    const hasUid = context.cookies.get('qp_uid')
-src/middleware.ts:42:      context.cookies.set('qp_uid', uid, {
-src/middleware.ts:51:  const maybeLang = pathname.split('/')[1]
-src/middleware.ts:56:  const hasUid = context.cookies.get('qp_uid')
-src/middleware.ts:59:    context.cookies.set('qp_uid', uid, {
-src/middleware.ts:66:  return next()
+src/middleware.ts:22:    const hasUidApi = context.cookies.get('qp_uid')
+src/middleware.ts:25:      context.cookies.set('qp_uid', uid, {
+src/middleware.ts:32:    return next()
+src/middleware.ts:40:    const hasUid = context.cookies.get('qp_uid')
+src/middleware.ts:43:      context.cookies.set('qp_uid', uid, {
+src/middleware.ts:52:  const segments = pathname.split('/').filter(Boolean)
+src/middleware.ts:67:      return Response.redirect(redirectUrl.toString(), 301)
+src/middleware.ts:71:  const hasUid = context.cookies.get('qp_uid')
+src/middleware.ts:74:    context.cookies.set('qp_uid', uid, {
+src/middleware.ts:81:  return next()
 src/server/room/template-memory.ts:13:      templates.set(template.id, template)
 src/server/room/template-memory.ts:15:    get(id: string) {
 src/server/room/template-memory.ts:16:      return templates.get(id) || null
@@ -155,8 +156,12 @@ src/lib/intl.ts:4:  new Intl.NumberFormat(lang, { maximumFractionDigits: 2, ...o
 src/lib/intl.ts:7:  new Intl.DateTimeFormat(lang, { year: 'numeric', month: 'short', day: '2-digit', ...opts })
 src/i18n/t.ts:10:export async function t(lang: Lang, key: I18nKey, vars?: Record<string, unknown>): Promise<string> {
 src/i18n/t.ts:20:  return async (key: I18nKey, vars?: Record<string, unknown>) => t(lang, key, vars)
-src/i18n/routerLang.ts:29:  const segments = window.location.pathname.split('/').filter(Boolean)
-src/i18n/routerLang.ts:35:    segments.unshift(target)
+src/i18n/routerLang.ts:30:  const segments = window.location.pathname.split('/').filter(Boolean)
+src/i18n/routerLang.ts:36:    segments.unshift(normalized)
+src/i18n/aliases.ts:6:  zh_TW: 'zh-hant',
+src/i18n/aliases.ts:7:  'zh-tw': 'zh-hant',
+src/i18n/aliases.ts:8:  'zh-Hant': 'zh-hant',
+src/i18n/aliases.ts:9:  zh_Hant: 'zh-hant',
 src/i18n/instance.server.ts:11:  await instance.init(createI18nOptions(lang))
 src/i18n/instance.server.ts:12:  instances.set(lang, instance)
 src/i18n/instance.server.ts:17:  const instance = instances.get(safeLang)
@@ -476,47 +481,47 @@ src/pages/[lang]/my-participations.astro:149:              const replay = docume
 src/pages/[lang]/my-participations.astro:152:              replay.href = '/' + lang + '/room/' + encodeURIComponent(item.roomId)
 src/pages/[lang]/my-participations.astro:153:              replay.textContent = window.t('profile.history.playAgain')
 src/pages/[lang]/my-participations.astro:160:            showMessage(window.t('errors.networkError'), true)
-src/pages/[lang]/profile.astro:248:        await import('/js/i18n.js')
-src/pages/[lang]/profile.astro:249:        const { setupRoomsManager } = await import('/js/rooms-manager.js')
-src/pages/[lang]/profile.astro:258:          fmt = await import('/src/utils/format.ts')
-src/pages/[lang]/profile.astro:262:          const mod = await import('/src/i18n/routerLang.ts')
-src/pages/[lang]/profile.astro:383:            setTimeout(function () {
-src/pages/[lang]/profile.astro:392:          const segments = url.pathname.split('/').filter(Boolean)
-src/pages/[lang]/profile.astro:433:          if (fmt && fmt.formatPercent) return fmt.formatPercent(value || 0, lang, 1)
-src/pages/[lang]/profile.astro:441:            return new Intl.NumberFormat(lang).format(value || 0)
-src/pages/[lang]/profile.astro:460:            return new Intl.DateTimeFormat(lang, {
-src/pages/[lang]/profile.astro:466:            }).format(date)
-src/pages/[lang]/profile.astro:568:              showStatsMessage(window.t('profile.notLoggedIn'), true)
-src/pages/[lang]/profile.astro:575:            showStatsMessage(window.t('profile.notLoggedIn'), true)
-src/pages/[lang]/profile.astro:579:            showStatsMessage(window.t('errors.networkError'), true)
-src/pages/[lang]/profile.astro:601:              '/api/scores/stats?userId=' + encodeURIComponent(currentUser.id),
-src/pages/[lang]/profile.astro:615:              '/api/scores/history?userId=' + encodeURIComponent(currentUser.id) + '&limit=100',
-src/pages/[lang]/profile.astro:630:              '/api/scores/rooms?userId=' + encodeURIComponent(currentUser.id) + '&limit=100',
-src/pages/[lang]/profile.astro:695:                    .t('profile.stats.percentile')
-src/pages/[lang]/profile.astro:702:            showStatsMessage(hasStats ? '' : window.t('empty.noData'), false)
-src/pages/[lang]/profile.astro:707:          const wrapper = document.createElement('div')
-src/pages/[lang]/profile.astro:723:              window.t('room.loading') +
-src/pages/[lang]/profile.astro:739:                window.t('profile.participations.empty') +
-src/pages/[lang]/profile.astro:744:                window.t('profile.participations.cta') +
-src/pages/[lang]/profile.astro:750:                window.t('profile.participations.empty') +
-src/pages/[lang]/profile.astro:760:            const card = document.createElement('div')
-src/pages/[lang]/profile.astro:772:            const title = document.createElement('div')
-src/pages/[lang]/profile.astro:783:            const heading = document.createElement('h3')
-src/pages/[lang]/profile.astro:791:              item.roomTitle || window.t('profile.roomIdLabel') + ' ' + item.roomId
-src/pages/[lang]/profile.astro:794:            const time = document.createElement('span')
-src/pages/[lang]/profile.astro:806:            const meta = document.createElement('div')
-src/pages/[lang]/profile.astro:817:            const countSpan = document.createElement('span')
-src/pages/[lang]/profile.astro:819:              .t('profile.participations.total')
-src/pages/[lang]/profile.astro:823:            const accuracySpan = document.createElement('span')
-src/pages/[lang]/profile.astro:825:              .t('profile.participations.accuracy')
-src/pages/[lang]/profile.astro:831:            const actions = document.createElement('div')
-src/pages/[lang]/profile.astro:840:            const replay = document.createElement('a')
-src/pages/[lang]/profile.astro:845:            replay.href = '/' + lang + '/room/' + encodeURIComponent(item.roomId)
-src/pages/[lang]/profile.astro:846:            replay.textContent = window.t('profile.history.playAgain')
-src/pages/[lang]/profile.astro:900:              return window.t(key)
-src/pages/[lang]/profile.astro:913:            emptyText: window.t('profile.created.emptyScope'),
-src/pages/[lang]/profile.astro:940:              event.preventDefault()
-src/pages/[lang]/profile.astro:952:              event.preventDefault()
+src/pages/[lang]/profile.astro:250:        await import('/js/i18n.js')
+src/pages/[lang]/profile.astro:251:        const { setupRoomsManager } = await import('/js/rooms-manager.js')
+src/pages/[lang]/profile.astro:260:          fmt = await import('/src/utils/format.ts')
+src/pages/[lang]/profile.astro:264:          const mod = await import('/src/i18n/routerLang.ts')
+src/pages/[lang]/profile.astro:385:            setTimeout(function () {
+src/pages/[lang]/profile.astro:394:          const segments = url.pathname.split('/').filter(Boolean)
+src/pages/[lang]/profile.astro:435:          if (fmt && fmt.formatPercent) return fmt.formatPercent(value || 0, lang, 1)
+src/pages/[lang]/profile.astro:443:            return new Intl.NumberFormat(lang).format(value || 0)
+src/pages/[lang]/profile.astro:462:            return new Intl.DateTimeFormat(lang, {
+src/pages/[lang]/profile.astro:468:            }).format(date)
+src/pages/[lang]/profile.astro:570:              showStatsMessage(window.t('profile.notLoggedIn'), true)
+src/pages/[lang]/profile.astro:577:            showStatsMessage(window.t('profile.notLoggedIn'), true)
+src/pages/[lang]/profile.astro:581:            showStatsMessage(window.t('errors.networkError'), true)
+src/pages/[lang]/profile.astro:603:              '/api/scores/stats?userId=' + encodeURIComponent(currentUser.id),
+src/pages/[lang]/profile.astro:617:              '/api/scores/history?userId=' + encodeURIComponent(currentUser.id) + '&limit=100',
+src/pages/[lang]/profile.astro:632:              '/api/scores/rooms?userId=' + encodeURIComponent(currentUser.id) + '&limit=100',
+src/pages/[lang]/profile.astro:697:                    .t('profile.stats.percentile')
+src/pages/[lang]/profile.astro:704:            showStatsMessage(hasStats ? '' : window.t('empty.noData'), false)
+src/pages/[lang]/profile.astro:709:          const wrapper = document.createElement('div')
+src/pages/[lang]/profile.astro:725:              window.t('room.loading') +
+src/pages/[lang]/profile.astro:741:                window.t('profile.participations.empty') +
+src/pages/[lang]/profile.astro:746:                window.t('profile.participations.cta') +
+src/pages/[lang]/profile.astro:752:                window.t('profile.participations.empty') +
+src/pages/[lang]/profile.astro:762:            const card = document.createElement('div')
+src/pages/[lang]/profile.astro:774:            const title = document.createElement('div')
+src/pages/[lang]/profile.astro:785:            const heading = document.createElement('h3')
+src/pages/[lang]/profile.astro:793:              item.roomTitle || window.t('profile.roomIdLabel') + ' ' + item.roomId
+src/pages/[lang]/profile.astro:796:            const time = document.createElement('span')
+src/pages/[lang]/profile.astro:808:            const meta = document.createElement('div')
+src/pages/[lang]/profile.astro:819:            const countSpan = document.createElement('span')
+src/pages/[lang]/profile.astro:821:              .t('profile.participations.total')
+src/pages/[lang]/profile.astro:825:            const accuracySpan = document.createElement('span')
+src/pages/[lang]/profile.astro:827:              .t('profile.participations.accuracy')
+src/pages/[lang]/profile.astro:833:            const actions = document.createElement('div')
+src/pages/[lang]/profile.astro:842:            const replay = document.createElement('a')
+src/pages/[lang]/profile.astro:847:            replay.href = '/' + lang + '/room/' + encodeURIComponent(item.roomId)
+src/pages/[lang]/profile.astro:848:            replay.textContent = window.t('profile.history.playAgain')
+src/pages/[lang]/profile.astro:902:              return window.t(key)
+src/pages/[lang]/profile.astro:915:            emptyText: window.t('profile.created.emptyScope'),
+src/pages/[lang]/profile.astro:942:              event.preventDefault()
+src/pages/[lang]/profile.astro:954:              event.preventDefault()
 src/pages/[lang]/room/[id].astro:84:        await import('/js/i18n.js')
 src/pages/[lang]/room/[id].astro:85:        const { setupUserMenu } = await import('/js/user-menu.js')
 src/pages/[lang]/room/[id].astro:92:        const roomId = location.pathname.split('/').pop()
