@@ -107,52 +107,11 @@ const path = Astro.url.pathname
         </div>
       </section>
 
-      <section id="v2-cards" class="stack-lg is-hidden">
-        <div class="card-grid">
-          <a
-            class="card card-link stack"
-            href={`/${lang}/rooms/created`}
-            role="link"
-            aria-label={serverT('profile.cards.created.title')}
-          >
-            <div class={featureV3 ? 'flex-between' : undefined}>
-              <h3 class="h3 no-margin">
-                {serverT('profile.cards.created.title')}
-              </h3>
-              {featureV3 && <span class="caption text-muted" aria-hidden="true">›</span>}
-            </div>
-            <p class:list={['p', 'text-muted', 'text-opacity-80']}>
-              {serverT('profile.cards.created.desc')}
-            </p>
-            <div>
-              <span class="btn btn-primary" aria-hidden="true">{serverT('common.viewAll')}</span>
-            </div>
-          </a>
-          <a
-            class="card card-link stack"
-            href={`/${lang}/rooms/joined`}
-            role="link"
-            aria-label={serverT('profile.cards.joined.title')}
-          >
-            <div class={featureV3 ? 'flex-between' : undefined}>
-              <h3 class="h3 no-margin">
-                {serverT('profile.cards.joined.title')}
-              </h3>
-              {featureV3 && <span class="caption text-muted" aria-hidden="true">›</span>}
-            </div>
-            <p class:list={['p', 'text-muted', 'text-opacity-80']}>
-              {serverT('profile.cards.joined.desc')}
-            </p>
-            <div>
-              <span class="btn btn-primary" aria-hidden="true">{serverT('common.viewAll')}</span>
-            </div>
-          </a>
-        </div>
-      </section>
+      {/** 入口卡片已移除（改由上方選單進入） */}
 
       <section
         id="v1-created"
-        class={featureV3 ? 'stack-lg is-hidden' : 'legacy-section'}
+        class={featureV3 ? 'stack-lg' : 'legacy-section'}
       >
         <div class="flex-between">
           <h2 class="h2 no-margin">
@@ -193,7 +152,7 @@ const path = Astro.url.pathname
 
       <section
         id="v1-joined"
-        class={featureV3 ? 'stack-lg is-hidden' : 'legacy-section'}
+        class={featureV3 ? 'stack-lg' : 'legacy-section'}
       >
         <div class="flex-between">
           <h2 class="h2 no-margin">
@@ -313,18 +272,10 @@ const path = Astro.url.pathname
         const createdMessage = document.getElementById('created-message')
         const participationsList = document.getElementById('participations-list')
         const participationsMessage = document.getElementById('participations-message')
-        const v2Cards = document.getElementById('v2-cards')
         const v1Created = document.getElementById('v1-created')
         const v1Joined = document.getElementById('v1-joined')
 
-        // V2 卡片入口顯示控制
-        if (featureV3) {
-          if (v2Cards) v2Cards.classList.remove('is-hidden')
-          if (v1Created) v1Created.classList.add('is-hidden')
-          if (v1Joined) v1Joined.classList.add('is-hidden')
-        } else {
-          if (v2Cards) v2Cards.classList.add('is-hidden')
-        }
+        // 入口卡片已移除；保留 v1 區塊常駐顯示
 
         function setStatSkeleton(active) {
           if (!featureV3) return
