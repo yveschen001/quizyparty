@@ -95,6 +95,23 @@ const path = Astro.url.pathname
         const message = document.getElementById('message')
         const list = document.getElementById('list')
         const searchInput = document.getElementById('joined-search')
+        // 修正 SSR 可能回退英文：載入後以 client i18n 覆寫 Loading/Error/Search 的文案
+        try {
+          const loadTitle = document.querySelector('#joined-loading h3')
+          if (loadTitle) loadTitle.textContent = window.t('common.loading')
+          const errWrap = document.getElementById('joined-error')
+          if (errWrap) {
+            const h = errWrap.querySelector('h3')
+            const p = errWrap.querySelector('p')
+            const btn = document.getElementById('joined-retry')
+            if (h) h.textContent = window.t('common.error.title')
+            if (p) p.textContent = window.t('common.error.desc')
+            if (btn) btn.textContent = window.t('common.error.retry')
+          }
+          if (searchInput) {
+            searchInput.placeholder = window.t('questionSets.library.searchPlaceholder')
+          }
+        } catch (e) {}
         function showMessage(text, isError) {
           if (!message) return
           if (!text) {
