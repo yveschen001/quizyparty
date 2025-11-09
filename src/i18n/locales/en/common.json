@@ -508,6 +508,9 @@
       "prev": "Prev",
       "next": "Next",
       "indicator": "Page {{page}} / {{pages}}"
+    },
+    "cache": {
+      "refreshing": "Refreshing…"
     }
   }
 }

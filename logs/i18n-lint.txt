@@ -651,44 +651,44 @@ src/pages/[lang]/my-rooms.astro:190:              window.t('errors.networkError'
 src/pages/[lang]/my-rooms.astro:199:              '/api/auth/google/login?redirect=' + encodeURIComponent(window.location.pathname)
 src/pages/[lang]/my-rooms.astro:218:            return window.t(key)
 src/pages/[lang]/my-rooms.astro:224:          emptyText: window.t('myRooms.empty'),
-src/pages/[lang]/rooms/joined.astro:76:        await import('/js/i18n.js')
-src/pages/[lang]/rooms/joined.astro:84:          fmt = await import('/src/utils/format.ts')
-src/pages/[lang]/rooms/joined.astro:111:            return new Intl.NumberFormat(lang).format(value || 0)
-src/pages/[lang]/rooms/joined.astro:118:          if (fmt && fmt.formatPercent) return fmt.formatPercent(Number(value || 0), lang, 1)
-src/pages/[lang]/rooms/joined.astro:129:            return new Intl.DateTimeFormat(lang, {
-src/pages/[lang]/rooms/joined.astro:133:            }).format(d)
-src/pages/[lang]/rooms/joined.astro:151:              const skeleton = document.createElement('div')
-src/pages/[lang]/rooms/joined.astro:161:            window.t('room.loading') +
-src/pages/[lang]/rooms/joined.astro:166:          const ctaLabel = window.t('profile.participations.cta')
-src/pages/[lang]/rooms/joined.astro:172:            const wrapper = document.createElement('div')
-src/pages/[lang]/rooms/joined.astro:175:            const text = document.createElement('p')
-src/pages/[lang]/rooms/joined.astro:177:            text.textContent = window.t('profile.participations.empty')
-src/pages/[lang]/rooms/joined.astro:178:            const link = document.createElement('a')
-src/pages/[lang]/rooms/joined.astro:187:          const legacyWrapper = document.createElement('div')
-src/pages/[lang]/rooms/joined.astro:191:          const legacyText = document.createElement('p')
-src/pages/[lang]/rooms/joined.astro:193:          legacyText.textContent = window.t('profile.participations.empty')
-src/pages/[lang]/rooms/joined.astro:194:          const legacyLink = document.createElement('a')
-src/pages/[lang]/rooms/joined.astro:208:              showMessage(window.t('profile.notLoggedIn'), true)
-src/pages/[lang]/rooms/joined.astro:217:              const sort = q.get('sort') || 'lastPlayed'
-src/pages/[lang]/rooms/joined.astro:238:                items.sort(function (a, b) {
-src/pages/[lang]/rooms/joined.astro:254:              const card = document.createElement('div')
-src/pages/[lang]/rooms/joined.astro:267:              const href = '/' + lang + '/room/' + encodeURIComponent(item.roomId || '')
-src/pages/[lang]/rooms/joined.astro:272:                title: item.roomTitle || window.t('questionSets.untitled'),
-src/pages/[lang]/rooms/joined.astro:297:              showMessage(window.t('errors.networkError'), true)
-src/pages/[lang]/rooms/joined.astro:311:            const link = event.target && event.target.closest('[data-action="replay"]')
-src/pages/[lang]/rooms/joined.astro:315:            event.preventDefault()
-src/pages/[lang]/rooms/joined.astro:323:                showMessage(window.t('errors.networkError'), true)
-src/pages/[lang]/rooms/joined.astro:328:                showMessage(window.t('errors.networkError'), true)
-src/pages/[lang]/rooms/created.astro:128:        await import('/js/i18n.js')
-src/pages/[lang]/rooms/created.astro:129:        const { setupRoomsManager } = await import('/js/rooms-manager.js')
-src/pages/[lang]/rooms/created.astro:165:          const emptyScope = window.t('profile.created.emptyScope')
-src/pages/[lang]/rooms/created.astro:221:            tab.button.setAttribute('aria-label', window.t(labelKey) + ' ' + safe)
-src/pages/[lang]/rooms/created.astro:227:            params.set('status', status)
-src/pages/[lang]/rooms/created.astro:228:            params.set('limit', '1')
-src/pages/[lang]/rooms/created.astro:229:            params.set('offset', '0')
-src/pages/[lang]/rooms/created.astro:257:            return window.t(key)
-src/pages/[lang]/rooms/created.astro:264:          emptyText: window.t('profile.created.emptyScope'),
-src/pages/[lang]/rooms/created.astro:267:            label: window.t('profile.sections.createRoom'),
+src/pages/[lang]/rooms/joined.astro:77:        await import('/js/i18n.js')
+src/pages/[lang]/rooms/joined.astro:85:          fmt = await import('/src/utils/format.ts')
+src/pages/[lang]/rooms/joined.astro:112:            return new Intl.NumberFormat(lang).format(value || 0)
+src/pages/[lang]/rooms/joined.astro:119:          if (fmt && fmt.formatPercent) return fmt.formatPercent(Number(value || 0), lang, 1)
+src/pages/[lang]/rooms/joined.astro:130:            return new Intl.DateTimeFormat(lang, {
+src/pages/[lang]/rooms/joined.astro:134:            }).format(d)
+src/pages/[lang]/rooms/joined.astro:152:              const skeleton = document.createElement('div')
+src/pages/[lang]/rooms/joined.astro:162:            window.t('room.loading') +
+src/pages/[lang]/rooms/joined.astro:167:          const ctaLabel = window.t('profile.participations.cta')
+src/pages/[lang]/rooms/joined.astro:173:            const wrapper = document.createElement('div')
+src/pages/[lang]/rooms/joined.astro:176:            const text = document.createElement('p')
+src/pages/[lang]/rooms/joined.astro:178:            text.textContent = window.t('profile.participations.empty')
+src/pages/[lang]/rooms/joined.astro:179:            const link = document.createElement('a')
+src/pages/[lang]/rooms/joined.astro:188:          const legacyWrapper = document.createElement('div')
+src/pages/[lang]/rooms/joined.astro:192:          const legacyText = document.createElement('p')
+src/pages/[lang]/rooms/joined.astro:194:          legacyText.textContent = window.t('profile.participations.empty')
+src/pages/[lang]/rooms/joined.astro:195:          const legacyLink = document.createElement('a')
+src/pages/[lang]/rooms/joined.astro:209:              showMessage(window.t('profile.notLoggedIn'), true)
+src/pages/[lang]/rooms/joined.astro:218:              const sort = q.get('sort') || 'lastPlayed'
+src/pages/[lang]/rooms/joined.astro:239:                items.sort(function (a, b) {
+src/pages/[lang]/rooms/joined.astro:255:              const card = document.createElement('div')
+src/pages/[lang]/rooms/joined.astro:268:              const href = '/' + lang + '/room/' + encodeURIComponent(item.roomId || '')
+src/pages/[lang]/rooms/joined.astro:273:                title: item.roomTitle || window.t('questionSets.untitled'),
+src/pages/[lang]/rooms/joined.astro:298:              showMessage(window.t('errors.networkError'), true)
+src/pages/[lang]/rooms/joined.astro:312:            const link = event.target && event.target.closest('[data-action="replay"]')
+src/pages/[lang]/rooms/joined.astro:316:            event.preventDefault()
+src/pages/[lang]/rooms/joined.astro:324:                showMessage(window.t('errors.networkError'), true)
+src/pages/[lang]/rooms/joined.astro:329:                showMessage(window.t('errors.networkError'), true)
+src/pages/[lang]/rooms/created.astro:129:        await import('/js/i18n.js')
+src/pages/[lang]/rooms/created.astro:130:        const { setupRoomsManager } = await import('/js/rooms-manager.js')
+src/pages/[lang]/rooms/created.astro:166:          const emptyScope = window.t('profile.created.emptyScope')
+src/pages/[lang]/rooms/created.astro:222:            tab.button.setAttribute('aria-label', window.t(labelKey) + ' ' + safe)
+src/pages/[lang]/rooms/created.astro:228:            params.set('status', status)
+src/pages/[lang]/rooms/created.astro:229:            params.set('limit', '1')
+src/pages/[lang]/rooms/created.astro:230:            params.set('offset', '0')
+src/pages/[lang]/rooms/created.astro:258:            return window.t(key)
+src/pages/[lang]/rooms/created.astro:265:          emptyText: window.t('profile.created.emptyScope'),
+src/pages/[lang]/rooms/created.astro:268:            label: window.t('profile.sections.createRoom'),
 src/pages/[lang]/question-sets.astro:145:        await import('/js/i18n.js')
 src/pages/[lang]/question-sets.astro:146:        const { setupUserMenu } = await import('/js/user-menu.js')
 src/pages/[lang]/question-sets.astro:175:          t: function(key) { return window.t(key) },

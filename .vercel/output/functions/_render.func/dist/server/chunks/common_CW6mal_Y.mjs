@@ -1,5 +1,5 @@
 const paywall = {"title":"升級 VIP","desc":"解鎖専屬題庫、去廣告、更多權益。","cta":"立即升級","restore":"恢復購買","manage":"管理訂閱"};
-const common = {"pager":{"perPage":"1ページあたり","pageSize":"表示件数","prev":"前へ","next":"次へ","indicator":"{{page}} / {{pages}} ページ"}};
+const common = {"pager":{"perPage":"1ページあたり","pageSize":"表示件数","prev":"前へ","next":"次へ","indicator":"{{page}} / {{pages}} ページ"},"cache":{"refreshing":"更新中…"}};
 const common$1 = {
   "seo.siteName": "QuizyParty",
   "nav.home": "ホーム",

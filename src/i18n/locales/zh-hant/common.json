@@ -511,6 +511,9 @@
       "prev": "上一頁",
       "next": "下一頁",
       "indicator": "第 {{page}} / {{pages}} 頁"
+    },
+    "cache": {
+      "refreshing": "資料更新中…"
     }
   }
 }

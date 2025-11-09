@@ -348,6 +348,9 @@
       "prev": "前へ",
       "next": "次へ",
       "indicator": "{{page}} / {{pages}} ページ"
+    },
+    "cache": {
+      "refreshing": "更新中…"
     }
   }
 }

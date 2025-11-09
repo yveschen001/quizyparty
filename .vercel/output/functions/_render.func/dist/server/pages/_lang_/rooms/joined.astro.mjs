@@ -1,5 +1,5 @@
 import { e as createAstro, f as createComponent, r as renderTemplate, h as addAttribute, p as renderComponent, ah as renderHead } from '../../../chunks/astro/server_BigfXiJV.mjs';
-import { s as setupServerI18n } from '../../../chunks/server-i18n_BukGsr0e.mjs';
+import { s as setupServerI18n } from '../../../chunks/server-i18n_B2pBwWF0.mjs';
 import { $ as $$SeoMeta } from '../../../chunks/SeoMeta_mSwdbQaA.mjs';
 import { $ as $$AppHeader } from '../../../chunks/AppHeader_Ceo4wj6R.mjs';
 /* empty css                                       */
@@ -20,7 +20,7 @@ const $$Joined = createComponent(async ($$result, $$props, $$slots) => {
   const desc = serverT("profile.sections.participations");
   const siteOrigin = Astro2.site && Astro2.site.origin || "https://quizyparty.com";
   const path = Astro2.url.pathname;
-  return renderTemplate(_a || (_a = __template(["<html", '> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">', "", "</head> <body", '> <a href="#main" class="sr-only">', "</a> ", ' <main id="main"', '> <div id="joined-controls" class="mb-3"></div> <div id="joined-pager-top" class="mb-2"></div> <nav', ' class="caption breadcrumb"> <a', ' class="caption"', ">", '</a> <span aria-hidden="true">/</span> <span class="caption">', '</span> </nav> <h1 class="h1 no-margin">', '</h1> <div id="message" class="status-text" role="status" aria-live="polite"></div> ', " ", " ", ' <div id="list"', ` role="list"></div> <div id="joined-pager-bottom" class="mt-3"></div> </main> <script type="module" src="/js/i18n.js"></script> <script src="/js/rooms-filters.js"></script> <script src="/js/rooms-pagination.js"></script> <script src="/js/room-card-template.js"></script> <script type="module">
+  return renderTemplate(_a || (_a = __template(["<html", '> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">', "", "</head> <body", '> <a href="#main" class="sr-only">', "</a> ", ' <main id="main"', '> <div id="joined-controls" class="mb-3" style="position:sticky;top:0;z-index:5;background:var(--surface,#fff)"></div> <div id="joined-pager-top" class="mb-2"></div> <nav', ' class="caption breadcrumb"> <a', ' class="caption"', ">", '</a> <span aria-hidden="true">/</span> <span class="caption">', '</span> </nav> <h1 class="h1 no-margin">', '</h1> <div id="message" class="status-text" role="status" aria-live="polite"></div> ', " ", " ", ' <div id="list"', ` role="list"></div> <div id="joined-pager-bottom" class="mt-3"></div> </main> <script type="module" src="/js/i18n.js"></script> <script src="/js/rooms-filters.js"></script> <script src="/js/qp-cache.js"></script> <script src="/js/rooms-pagination.js"></script> <script src="/js/room-card-template.js"></script> <script type="module">
       ;(async function () {
         await import('/js/i18n.js')
         const lang = document.documentElement.getAttribute('lang') || 'en'

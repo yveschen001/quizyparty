@@ -1,5 +1,5 @@
 const paywall = {"title":"升級 VIP","desc":"解鎖專屬題庫、去廣告、更多權益。","cta":"立即升級","restore":"恢復購買","manage":"管理訂閱"};
-const common = {"pager":{"perPage":"每頁","pageSize":"每頁數量","prev":"上一頁","next":"下一頁","indicator":"第 {{page}} / {{pages}} 頁"}};
+const common = {"pager":{"perPage":"每頁","pageSize":"每頁數量","prev":"上一頁","next":"下一頁","indicator":"第 {{page}} / {{pages}} 頁"},"cache":{"refreshing":"資料更新中…"}};
 const common$1 = {
   "a11y.skipToContent": "跳至主要內容",
   "auth.error": "認證錯誤",

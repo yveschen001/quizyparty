@@ -379,6 +379,9 @@
       "prev": "上一页",
       "next": "下一页",
       "indicator": "第 {{page}} / {{pages}} 页"
+    },
+    "cache": {
+      "refreshing": "数据更新中…"
     }
   }
 }
