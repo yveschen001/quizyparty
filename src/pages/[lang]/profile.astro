@@ -259,6 +259,10 @@ const path = Astro.url.pathname
         try {
           fmt = await import('/src/utils/format.ts')
         } catch (e) {}
+        let metricsLib = null
+        try {
+          metricsLib = await import('/src/lib/metrics.ts')
+        } catch (e) {}
         let setLangFn = null
         try {
           const mod = await import('/src/i18n/routerLang.ts')
@@ -283,6 +287,13 @@ const path = Astro.url.pathname
         const statsMessageEl = document.getElementById('stats-message')
         const scopeAllBtn = document.getElementById('scope-all')
         const scope30dBtn = document.getElementById('scope-30d')
+        const scopeToggleEnabled = (lang !== 'zh-hant')
+        if (!scopeToggleEnabled) {
+          try {
+            const tabRow = scopeAllBtn ? scopeAllBtn.closest('.tab-row') : null
+            if (tabRow) tabRow.style.display = 'none'
+          } catch (e) {}
+        }
         const createdList = document.getElementById('created-list')
         const createdPagination = document.getElementById('created-pagination')
         const createdMessage = document.getElementById('created-message')
@@ -869,6 +880,7 @@ const path = Astro.url.pathname
         }
 
         function updateScopeButtons(scope) {
+          if (!scopeToggleEnabled) return
           const buttons = [scopeAllBtn, scope30dBtn]
           for (let i = 0; i < buttons.length; i += 1) {
             const button = buttons[i]
@@ -949,6 +961,7 @@ const path = Astro.url.pathname
 
         // URL range 讀取與同步
         function getInitialScope() {
+          if (!scopeToggleEnabled) return 'all'
           try {
             const q = new URLSearchParams(location.search)
             const v = q.get('range')
@@ -969,7 +982,7 @@ const path = Astro.url.pathname
         currentScope = getInitialScope()
         updateScopeButtons(currentScope)
 
-        if (scopeAllBtn) {
+        if (scopeToggleEnabled && scopeAllBtn) {
           scopeAllBtn.addEventListener('click', function () {
             setScopeInUrl('all')
             applyScope('all')
@@ -982,7 +995,7 @@ const path = Astro.url.pathname
             }
           })
         }
-        if (scope30dBtn) {
+        if (scopeToggleEnabled && scope30dBtn) {
           scope30dBtn.addEventListener('click', function () {
             setScopeInUrl('30d')
             applyScope('30d')
