@@ -55,6 +55,7 @@ const path = Astro.url.pathname
       <div id="list" class={featureV3 ? 'stack' : 'legacy-section'} role="list"></div>
     </main>
     <script type="module" src="/js/i18n.js"></script>
+    <script src="/js/room-card-template.js" is:inline></script>
     <script type="module">
       ;(async function () {
         await import('/js/i18n.js')

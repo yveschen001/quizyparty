@@ -319,7 +319,25 @@
     card.setAttribute('data-template-card', 'true')
     var innerHtml = ''
     var rawTitle = template && template.title ? template.title : t('questionSets.untitled')
-    var safeTitle = escapeHtml(rawTitle)
+    // 若共用模板可用且為新版樣式，採用共用模板輸出，避免雙層卡片樣式
+    if (featureV3 && window.RoomCardTemplate && typeof window.RoomCardTemplate.roomCardHTML === 'function') {
+      // 避免巢狀卡片：外層容器移除 card 樣式，讓模板內部輸出一張卡片
+      card.className = ''
+      var status = template && template.status === 'draft' ? 'draft' : 'public'
+      var href = '/' + lang + '/create-room?setId=' + encodeURIComponent(template.questionSetId || '') + '&templateId=' + encodeURIComponent(template.id || '')
+      card.innerHTML = window.RoomCardTemplate.roomCardHTML({
+        kind: 'created',
+        status: status,
+        id: template && template.id ? String(template.id) : '',
+        title: rawTitle,
+        updatedAt: template && template.updatedAt ? template.updatedAt : '',
+        participants: undefined,
+        capacity: undefined,
+        href: href,
+        lang: lang
+      })
+      return card
+    }
     innerHtml += buildMetaHtml(template, lang, t, featureV3)
     innerHtml += buildBuilderActions(template, t, featureV3, rawTitle)
     card.innerHTML = innerHtml
