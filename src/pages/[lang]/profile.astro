@@ -966,7 +966,7 @@ const path = Astro.url.pathname
           } catch (e) {}
         }
 
-        let currentScope = getInitialScope()
+        currentScope = getInitialScope()
         updateScopeButtons(currentScope)
 
         if (scopeAllBtn) {
