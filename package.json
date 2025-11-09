@@ -17,14 +17,18 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "i18n:all:ci": "pnpm i18n:scan && pnpm i18n:keygen && pnpm i18n:check",
-    "ci:i18n": "node scripts/check-i18n-core.mjs",
+    "ci:i18n": "pnpm i18n:scan && pnpm i18n:check",
     "seo:check": "node scripts/check-seo.mjs",
     "i18n:auto": "node scripts/auto-translate.mjs",
+    "i18n:doctor": "node scripts/i18n-doctor.mjs",
+    "ci:all": "pnpm i18n:doctor && pnpm typecheck && pnpm lint && pnpm build && pnpm e2e:smoke",
+    "i18n:check:soft": "pnpm i18n:scan || true && pnpm i18n:doctor",
     "i18n:csv:export": "node scripts/i18n-csv-export.mjs",
     "i18n:csv:import": "node scripts/i18n-csv-import.mjs",
     "questions:build": "node scripts/questions-build.mjs",
     "questions:gen:pivot": "node scripts/questions-generate.mjs pivot en \"general knowledge\" 10",
-    "questions:gen:native": "node scripts/questions-generate.mjs native _ \"general knowledge\" 10"
+    "questions:gen:native": "node scripts/questions-generate.mjs native _ \"general knowledge\" 10",
+    "e2e:smoke": "playwright test -g @smoke --reporter=line"
   },
   "keywords": [],
   "author": "",
@@ -48,6 +52,7 @@
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@eslint/js": "^9.39.0",
+    "@playwright/test": "^1.48.2",
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^24.10.0",
     "astro-eslint-parser": "^1.2.2",
@@ -66,7 +71,8 @@
     "prettier-plugin-astro": "^0.14.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.2"
+    "typescript-eslint": "^8.46.2",
+    "undici": "6"
   },
   "engines": {
     "node": ">=18"

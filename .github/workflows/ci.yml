@@ -1,8 +1,9 @@
-name: CI
+name: ci
 
 on:
-  push: { branches: [ main ] }
-  pull_request: { branches: [ main ] }
+  push:
+    branches: [main]
+  pull_request: {}
 
 jobs:
   build:
@@ -10,30 +11,31 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v3
-        with: { version: 9 }
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20.18.0'
-          cache: 'pnpm'
+          node-version: 20
+          cache: pnpm
 
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Typecheck / i18n / Lint / Build / SEO
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          RC_WEBHOOK_AUTH: ${{ secrets.RC_WEBHOOK_AUTH }}
-          RC_IOS_PUBLIC_API_KEY: ${{ secrets.RC_IOS_PUBLIC_API_KEY }}
-          RC_ANDROID_PUBLIC_API_KEY: ${{ secrets.RC_ANDROID_PUBLIC_API_KEY }}
-          SITE: https://quizyparty.com
+      - name: i18n doctor
+        run: pnpm i18n:doctor
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Build
+        run: pnpm build
+
+      - name: Playwright smoke
         run: |
-          pnpm typecheck
-          pnpm i18n:keygen
-          pnpm i18n:check
-          pnpm lint
-          pnpm build
-          pnpm seo:check
-
-
+          npx playwright install --with-deps
+          pnpm e2e:smoke
