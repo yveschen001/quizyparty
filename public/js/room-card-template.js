@@ -58,6 +58,8 @@
       ctas =
         '<a class="btn btn-secondary" data-action="edit" data-template-id="' +
         esc(p.id) +
+        '" data-room-id="' +
+        esc(p.id) +
         '" aria-label="' +
         esc(t('common.card.cta.edit') + ' · ' + p.title) +
         '">' +
@@ -67,12 +69,16 @@
         publishAction +
         '" data-template-id="' +
         esc(p.id) +
+        '" data-room-id="' +
+        esc(p.id) +
         '" aria-label="' +
         esc(publishLabel + ' · ' + p.title) +
         '">' +
         esc(publishLabel) +
         '</button>' +
         '<button class="btn btn-danger" data-action="delete" data-template-id="' +
+        esc(p.id) +
+        '" data-room-id="' +
         esc(p.id) +
         '" aria-label="' +
         esc(t('common.card.cta.delete') + ' · ' + p.title) +

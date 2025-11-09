@@ -1,6 +1,6 @@
 import { e as createAstro, f as createComponent, r as renderTemplate, h as addAttribute, ah as renderHead } from '../../chunks/astro/server_BigfXiJV.mjs';
 import 'clsx';
-import { s as setupServerI18n } from '../../chunks/server-i18n_BKH6atwt.mjs';
+import { s as setupServerI18n } from '../../chunks/server-i18n_BOCxxfYe.mjs';
 /* empty css                                    */
 export { renderers } from '../../renderers.mjs';
 

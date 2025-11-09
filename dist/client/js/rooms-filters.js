@@ -27,7 +27,10 @@
     const status = q.get('status') || 'all'
     const wrap = el('div', { class: 'stack gap-2', 'data-testid': 'created-controls' })
     const row = el('div', { class: 'flex gap-2 items-center' })
-    const s1 = el('select', { 'aria-label': t('common.controls.status') })
+    const s1 = el('select', {
+      'aria-label': t('common.controls.status'),
+      'aria-controls': 'created-list',
+    })
     ;[
       ['all', t('common.controls.status.all')],
       ['public', t('common.card.status.public')],
@@ -39,7 +42,10 @@
       if (v === status) o.selected = true
       s1.appendChild(o)
     })
-    const s2 = el('select', { 'aria-label': t('common.controls.sort') })
+    const s2 = el('select', {
+      'aria-label': t('common.controls.sort'),
+      'aria-controls': 'created-list',
+    })
     ;[
       ['updated', t('common.controls.sort.updated')],
       ['title', t('common.controls.sort.title')],
@@ -53,9 +59,32 @@
     })
     s1.addEventListener('change', function () {
       setQuery({ status: s1.value })
+      s1.focus()
     })
     s2.addEventListener('change', function () {
       setQuery({ sort: s2.value })
+      s2.focus()
+    })
+    ;[s1, s2].forEach(function (sel) {
+      sel.addEventListener('keydown', function (e) {
+        const options = sel.options
+        if (!options || !options.length) return
+        let idx = sel.selectedIndex
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+          e.preventDefault()
+          idx = Math.min(idx + 1, options.length - 1)
+          sel.selectedIndex = idx
+          sel.dispatchEvent(new Event('change'))
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+          e.preventDefault()
+          idx = Math.max(idx - 1, 0)
+          sel.selectedIndex = idx
+          sel.dispatchEvent(new Event('change'))
+        } else if (e.key === 'Enter') {
+          e.preventDefault()
+          sel.dispatchEvent(new Event('change'))
+        }
+      })
     })
     row.appendChild(s1)
     row.appendChild(s2)
@@ -70,7 +99,10 @@
     const q = qs()
     const sort = q.get('sort') || 'lastPlayed'
     const wrap = el('div', { class: 'stack gap-2', 'data-testid': 'joined-controls' })
-    const s2 = el('select', { 'aria-label': t('common.controls.sort') })
+    const s2 = el('select', {
+      'aria-label': t('common.controls.sort'),
+      'aria-controls': 'list',
+    })
     ;[
       ['lastPlayed', t('common.controls.sort.lastPlayed')],
       ['answered', t('common.controls.sort.answered')],
@@ -85,6 +117,26 @@
     })
     s2.addEventListener('change', function () {
       setQuery({ sort: s2.value })
+      s2.focus()
+    })
+    s2.addEventListener('keydown', function (e) {
+      const options = s2.options
+      if (!options || !options.length) return
+      let idx = s2.selectedIndex
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        e.preventDefault()
+        idx = Math.min(idx + 1, options.length - 1)
+        s2.selectedIndex = idx
+        s2.dispatchEvent(new Event('change'))
+      } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        e.preventDefault()
+        idx = Math.max(idx - 1, 0)
+        s2.selectedIndex = idx
+        s2.dispatchEvent(new Event('change'))
+      } else if (e.key === 'Enter') {
+        e.preventDefault()
+        s2.dispatchEvent(new Event('change'))
+      }
     })
     wrap.appendChild(s2)
     mount.innerHTML = ''

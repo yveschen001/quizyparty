@@ -5,6 +5,7 @@ import AppHeader from '../../../components/layout/AppHeader.astro'
 import '../../../styles/base.css'
 import EmptyState from '../../../components/ui/EmptyState.astro'
 import LoadingState from '../../../components/ui/LoadingState.astro'
+import ErrorState from '../../../components/ui/ErrorState.astro'
 
 const { lang, serverT } = await setupServerI18n(Astro.params.lang)
 const title = serverT('profile.sections.participations')
@@ -52,6 +53,15 @@ const path = Astro.url.pathname
         descKey="common.empty.joined.desc"
         actionHref={`/${lang}/`}
         actionKey="common.empty.joined.action"
+      />
+      <ErrorState
+        id="joined-error"
+        lang={lang}
+        serverT={serverT}
+        titleKey="common.error.title"
+        descKey="common.error.desc"
+        retryLabelKey="common.error.retry"
+        onRetryId="joined-retry"
       />
       <div id="list" class={featureV3 ? 'stack' : 'legacy-section'} role="list"></div>
     </main>
@@ -268,7 +278,21 @@ const path = Astro.url.pathname
             }
           } catch (e) {
             console.error('[rooms/joined] load failed', e)
-            showMessage(window.t('errors.networkError'), true)
+            try {
+              const err = document.getElementById('joined-error')
+              const retry = document.getElementById('joined-retry')
+              toggle(joinedLoading, false)
+              toggle(joinedEmpty, false)
+              toggle(err, true)
+              if (retry) {
+                retry.onclick = function () {
+                  toggle(err, false)
+                  loadParticipations()
+                }
+              }
+            } catch (e) {
+              showMessage(window.t('errors.networkError'), true)
+            }
           }
         }
         await loadParticipations()

@@ -693,11 +693,25 @@ const path = Astro.url.pathname
           if (statsPercentileEl) {
             statsPercentileEl.textContent =
               stats && typeof stats.percentilePercent === 'number'
-                ? window
-                    .t('profile.stats.percentile')
-                    .replace('{value}', String(stats.percentilePercent))
+                ? window.t('common.stats.rankPct').replace('{value}', String(stats.percentilePercent))
                 : ''
           }
+          // 更新 aria-label 描述
+          try {
+            const cards = document.querySelectorAll('[data-stat-card]')
+            const labels = [
+              window.t('profile.stats.totalAnswers') + ': ' + (stats.totalAnswered || 0),
+              window.t('profile.stats.accuracy') + ': ' + (stats.accuracy ? formatAccuracy(stats.accuracy) : '0%'),
+              window.t('profile.stats.points') + ': ' + (stats.points || 0),
+              window.t('profile.stats.rank') +
+                ': ' +
+                (stats.rankLabel || '—') +
+                (stats.percentilePercent ? ' (' + window.t('common.stats.rankPct').replace('{value}', String(stats.percentilePercent)) + ')' : ''),
+            ]
+            Array.prototype.forEach.call(cards, function (el, idx) {
+              el.setAttribute('aria-label', labels[idx] || '')
+            })
+          } catch (e) {}
           if (featureV3) {
             const hasStats =
               (stats.totalAnswered || 0) > 0 || (stats.points || 0) > 0 || stats.rankLabel !== '—'
@@ -933,8 +947,31 @@ const path = Astro.url.pathname
           }
         }
 
+        // URL range 讀取與同步
+        function getInitialScope() {
+          try {
+            const q = new URLSearchParams(location.search)
+            const v = q.get('range')
+            return v === '30d' ? '30d' : 'all'
+          } catch (e) {
+            return 'all'
+          }
+        }
+        function setScopeInUrl(next) {
+          try {
+            const u = new URL(location.href)
+            if (next === 'all') u.searchParams.delete('range')
+            else u.searchParams.set('range', next)
+            history.replaceState(null, '', u.toString())
+          } catch (e) {}
+        }
+
+        let currentScope = getInitialScope()
+        updateScopeButtons(currentScope)
+
         if (scopeAllBtn) {
           scopeAllBtn.addEventListener('click', function () {
+            setScopeInUrl('all')
             applyScope('all')
           })
           scopeAllBtn.addEventListener('keydown', function (event) {
@@ -947,6 +984,7 @@ const path = Astro.url.pathname
         }
         if (scope30dBtn) {
           scope30dBtn.addEventListener('click', function () {
+            setScopeInUrl('30d')
             applyScope('30d')
           })
           scope30dBtn.addEventListener('keydown', function (event) {
@@ -958,11 +996,11 @@ const path = Astro.url.pathname
           })
         }
 
-        renderStats('all')
+        renderStats(currentScope)
         if (!featureV3) {
-          renderParticipations('all')
+          renderParticipations(currentScope)
         }
-        applyScope('all')
+        applyScope(currentScope)
       })()
     </script>
   </body>

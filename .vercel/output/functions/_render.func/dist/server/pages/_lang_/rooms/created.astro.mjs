@@ -1,9 +1,9 @@
 import { e as createAstro, f as createComponent, r as renderTemplate, h as addAttribute, p as renderComponent, ah as renderHead } from '../../../chunks/astro/server_BigfXiJV.mjs';
-import { s as setupServerI18n } from '../../../chunks/server-i18n_BKH6atwt.mjs';
+import { s as setupServerI18n } from '../../../chunks/server-i18n_BOCxxfYe.mjs';
 import { $ as $$SeoMeta } from '../../../chunks/SeoMeta_mSwdbQaA.mjs';
 import { $ as $$AppHeader } from '../../../chunks/AppHeader_Ceo4wj6R.mjs';
 /* empty css                                       */
-import { $ as $$EmptyState, a as $$LoadingState } from '../../../chunks/LoadingState_D2mANwfw.mjs';
+import { $ as $$ErrorState, a as $$EmptyState, b as $$LoadingState } from '../../../chunks/ErrorState_CR3IPd8A.mjs';
 export { renderers } from '../../../renderers.mjs';
 
 var __freeze = Object.freeze;
@@ -20,7 +20,7 @@ const $$Created = createComponent(async ($$result, $$props, $$slots) => {
   const desc = serverT("profile.sections.myRooms");
   const siteOrigin = Astro2.site && Astro2.site.origin || "https://quizyparty.com";
   const path = Astro2.url.pathname;
-  return renderTemplate(_a || (_a = __template(["<html", '> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">', "", "</head> <body", '> <a href="#main" class="sr-only">', "</a> ", ' <main id="main"', '> <div id="created-controls" class="mb-3"></div> <nav', ' class="caption breadcrumb"> <a', ' class="caption"', ">", '</a> <span aria-hidden="true">/</span> <span class="caption">', '</span> </nav> <div class="flex-between"> <h1 class="h1 no-margin">', "</h1> <a", "", ">", '</a> </div> <div id="created-tabs" role="tablist"', ' class="tab-row"> <button id="created-tab-published"', ' role="tab" data-status="published" type="button" aria-selected="true" aria-controls="created-list" tabindex="0"> <span>', '</span> <span class="badge" data-count-badge="published">0</span> </button> <button id="created-tab-draft"', ' role="tab" data-status="draft" type="button" aria-selected="false" aria-controls="created-list" tabindex="-1"> <span>', '</span> <span class="badge" data-count-badge="draft">0</span> </button> </div> <div id="created-message" class="status-text" role="status" aria-live="polite"></div> ', " ", ' <div id="created-list" role="tabpanel" aria-labelledby="created-tab-published"', `></div> <div id="created-pagination" class="flex-between is-hidden"></div> </main> <script type="module" src="/js/i18n.js"></script> <script src="/js/room-card-template.js"></script> <script src="/js/rooms-filters.js"></script> <script src="/js/room-templates.js"></script> <script type="module">
+  return renderTemplate(_a || (_a = __template(["<html", '> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">', "", "</head> <body", '> <a href="#main" class="sr-only">', "</a> ", ' <main id="main"', '> <div id="created-controls" class="mb-3"></div> <nav', ' class="caption breadcrumb"> <a', ' class="caption"', ">", '</a> <span aria-hidden="true">/</span> <span class="caption">', '</span> </nav> <div class="flex-between"> <h1 class="h1 no-margin">', "</h1> <a", "", ">", '</a> </div> <div id="created-tabs" role="tablist"', ' class="tab-row"> <button id="created-tab-published"', ' role="tab" data-status="published" type="button" aria-selected="true" aria-controls="created-list" tabindex="0"> <span>', '</span> <span class="badge" data-count-badge="published">0</span> </button> <button id="created-tab-draft"', ' role="tab" data-status="draft" type="button" aria-selected="false" aria-controls="created-list" tabindex="-1"> <span>', '</span> <span class="badge" data-count-badge="draft">0</span> </button> </div> <div id="created-message" class="status-text" role="status" aria-live="polite"></div> ', " ", " ", ' <div id="created-list" role="tabpanel" aria-labelledby="created-tab-published"', `></div> <div id="created-pagination" class="flex-between is-hidden"></div> </main> <script type="module" src="/js/i18n.js"></script> <script src="/js/room-card-template.js"></script> <script src="/js/rooms-filters.js"></script> <script src="/js/room-templates.js"></script> <script type="module">
       ;(async function () {
         await import('/js/i18n.js')
         const { setupRoomsManager } = await import('/js/rooms-manager.js')
@@ -50,18 +50,40 @@ const $$Created = createComponent(async ($$result, $$props, $$slots) => {
           if (!el) return
           el.style.display = show ? '' : 'none'
         }
+        const createdError = document.getElementById('created-error')
+        const createdRetryBtn = document.getElementById('created-retry')
+        function toggle(el, show) {
+          if (!el) return
+          el.style.display = show ? '' : 'none'
+        }
         function showMessage(text, isError) {
           if (!createdMessage) return
           // 最小整合：若為空範圍提示，顯示統一 EmptyState；其他訊息維持舊行為
           const emptyScope = window.t('profile.created.emptyScope')
           if (text && text === emptyScope) {
             toggle(createdLoading, false)
+            toggle(createdError, false)
             toggle(createdEmpty, true)
             createdMessage.innerHTML = ''
             createdMessage.style.color = ''
             return
           } else {
             toggle(createdEmpty, false)
+          }
+          if (isError) {
+            toggle(createdLoading, false)
+            toggle(createdError, true)
+            if (createdRetryBtn) {
+              createdRetryBtn.onclick = function () {
+                toggle(createdError, false)
+                if (mgr && typeof mgr.refresh === 'function') mgr.refresh()
+              }
+            }
+            createdMessage.innerHTML = ''
+            createdMessage.style.color = ''
+            return
+          } else {
+            toggle(createdError, false)
           }
           if (!text) {
             createdMessage.innerHTML = ''
@@ -165,7 +187,7 @@ invalid character '*' looking for beginning of object key string. Please ensure 
 is valid JSON. Also ensure that the argument "code_edit" is a valid patch. Please ensure that you escape
 any control characters in the patch such as newlines. Please ensure that both the keys and values in
 PATCH_ARGS are valid JSON. Also ensure that you pass a single JSON object in the call. (If you are requesting
-multiple actions, please send them in separate calls.)`], ["<html", '> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">', "", "</head> <body", '> <a href="#main" class="sr-only">', "</a> ", ' <main id="main"', '> <div id="created-controls" class="mb-3"></div> <nav', ' class="caption breadcrumb"> <a', ' class="caption"', ">", '</a> <span aria-hidden="true">/</span> <span class="caption">', '</span> </nav> <div class="flex-between"> <h1 class="h1 no-margin">', "</h1> <a", "", ">", '</a> </div> <div id="created-tabs" role="tablist"', ' class="tab-row"> <button id="created-tab-published"', ' role="tab" data-status="published" type="button" aria-selected="true" aria-controls="created-list" tabindex="0"> <span>', '</span> <span class="badge" data-count-badge="published">0</span> </button> <button id="created-tab-draft"', ' role="tab" data-status="draft" type="button" aria-selected="false" aria-controls="created-list" tabindex="-1"> <span>', '</span> <span class="badge" data-count-badge="draft">0</span> </button> </div> <div id="created-message" class="status-text" role="status" aria-live="polite"></div> ', " ", ' <div id="created-list" role="tabpanel" aria-labelledby="created-tab-published"', `></div> <div id="created-pagination" class="flex-between is-hidden"></div> </main> <script type="module" src="/js/i18n.js"></script> <script src="/js/room-card-template.js"></script> <script src="/js/rooms-filters.js"></script> <script src="/js/room-templates.js"></script> <script type="module">
+multiple actions, please send them in separate calls.)`], ["<html", '> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">', "", "</head> <body", '> <a href="#main" class="sr-only">', "</a> ", ' <main id="main"', '> <div id="created-controls" class="mb-3"></div> <nav', ' class="caption breadcrumb"> <a', ' class="caption"', ">", '</a> <span aria-hidden="true">/</span> <span class="caption">', '</span> </nav> <div class="flex-between"> <h1 class="h1 no-margin">', "</h1> <a", "", ">", '</a> </div> <div id="created-tabs" role="tablist"', ' class="tab-row"> <button id="created-tab-published"', ' role="tab" data-status="published" type="button" aria-selected="true" aria-controls="created-list" tabindex="0"> <span>', '</span> <span class="badge" data-count-badge="published">0</span> </button> <button id="created-tab-draft"', ' role="tab" data-status="draft" type="button" aria-selected="false" aria-controls="created-list" tabindex="-1"> <span>', '</span> <span class="badge" data-count-badge="draft">0</span> </button> </div> <div id="created-message" class="status-text" role="status" aria-live="polite"></div> ', " ", " ", ' <div id="created-list" role="tabpanel" aria-labelledby="created-tab-published"', `></div> <div id="created-pagination" class="flex-between is-hidden"></div> </main> <script type="module" src="/js/i18n.js"></script> <script src="/js/room-card-template.js"></script> <script src="/js/rooms-filters.js"></script> <script src="/js/room-templates.js"></script> <script type="module">
       ;(async function () {
         await import('/js/i18n.js')
         const { setupRoomsManager } = await import('/js/rooms-manager.js')
@@ -195,18 +217,40 @@ multiple actions, please send them in separate calls.)`], ["<html", '> <head><me
           if (!el) return
           el.style.display = show ? '' : 'none'
         }
+        const createdError = document.getElementById('created-error')
+        const createdRetryBtn = document.getElementById('created-retry')
+        function toggle(el, show) {
+          if (!el) return
+          el.style.display = show ? '' : 'none'
+        }
         function showMessage(text, isError) {
           if (!createdMessage) return
           // 最小整合：若為空範圍提示，顯示統一 EmptyState；其他訊息維持舊行為
           const emptyScope = window.t('profile.created.emptyScope')
           if (text && text === emptyScope) {
             toggle(createdLoading, false)
+            toggle(createdError, false)
             toggle(createdEmpty, true)
             createdMessage.innerHTML = ''
             createdMessage.style.color = ''
             return
           } else {
             toggle(createdEmpty, false)
+          }
+          if (isError) {
+            toggle(createdLoading, false)
+            toggle(createdError, true)
+            if (createdRetryBtn) {
+              createdRetryBtn.onclick = function () {
+                toggle(createdError, false)
+                if (mgr && typeof mgr.refresh === 'function') mgr.refresh()
+              }
+            }
+            createdMessage.innerHTML = ''
+            createdMessage.style.color = ''
+            return
+          } else {
+            toggle(createdError, false)
           }
           if (!text) {
             createdMessage.innerHTML = ''
@@ -310,7 +354,7 @@ invalid character '*' looking for beginning of object key string. Please ensure 
 is valid JSON. Also ensure that the argument "code_edit" is a valid patch. Please ensure that you escape
 any control characters in the patch such as newlines. Please ensure that both the keys and values in
 PATCH_ARGS are valid JSON. Also ensure that you pass a single JSON object in the call. (If you are requesting
-multiple actions, please send them in separate calls.)`])), addAttribute(lang, "lang"), renderComponent($$result, "SeoMeta", $$SeoMeta, { "lang": lang, "title": title, "description": desc, "path": path, "siteOrigin": siteOrigin }), renderHead(), addAttribute("true" , "data-feature-v3"), serverT("a11y.skipToContent"), renderComponent($$result, "AppHeader", $$AppHeader, { "lang": lang, "serverT": serverT }), addAttribute(["container", "stack-lg" ], "class:list"), addAttribute(serverT("common.breadcrumbs"), "aria-label"), addAttribute(`/${lang}/profile`, "href"), addAttribute(serverT("profile.title"), "aria-label"), serverT("profile.title"), title, title, addAttribute("btn-primary" , "class"), addAttribute(`/${lang}/create-room`, "href"), serverT("profile.sections.createRoom"), addAttribute(serverT("profile.sections.myRooms"), "aria-label"), addAttribute("tab active" , "class"), serverT("myRooms.published"), addAttribute("tab" , "class"), serverT("myRooms.drafts"), renderComponent($$result, "LoadingState", $$LoadingState, { "id": "created-loading", "lang": lang, "serverT": serverT, "titleKey": "common.loading" }), renderComponent($$result, "EmptyState", $$EmptyState, { "id": "created-empty", "lang": lang, "serverT": serverT, "titleKey": "common.empty.created.title", "descKey": "common.empty.created.desc", "actionHref": `/${lang}/create-room`, "actionKey": "common.empty.created.action" }), addAttribute("stack" , "class"));
+multiple actions, please send them in separate calls.)`])), addAttribute(lang, "lang"), renderComponent($$result, "SeoMeta", $$SeoMeta, { "lang": lang, "title": title, "description": desc, "path": path, "siteOrigin": siteOrigin }), renderHead(), addAttribute("true" , "data-feature-v3"), serverT("a11y.skipToContent"), renderComponent($$result, "AppHeader", $$AppHeader, { "lang": lang, "serverT": serverT }), addAttribute(["container", "stack-lg" ], "class:list"), addAttribute(serverT("common.breadcrumbs"), "aria-label"), addAttribute(`/${lang}/profile`, "href"), addAttribute(serverT("profile.title"), "aria-label"), serverT("profile.title"), title, title, addAttribute("btn-primary" , "class"), addAttribute(`/${lang}/create-room`, "href"), serverT("profile.sections.createRoom"), addAttribute(serverT("profile.sections.myRooms"), "aria-label"), addAttribute("tab active" , "class"), serverT("myRooms.published"), addAttribute("tab" , "class"), serverT("myRooms.drafts"), renderComponent($$result, "LoadingState", $$LoadingState, { "id": "created-loading", "lang": lang, "serverT": serverT, "titleKey": "common.loading" }), renderComponent($$result, "EmptyState", $$EmptyState, { "id": "created-empty", "lang": lang, "serverT": serverT, "titleKey": "common.empty.created.title", "descKey": "common.empty.created.desc", "actionHref": `/${lang}/create-room`, "actionKey": "common.empty.created.action" }), renderComponent($$result, "ErrorState", $$ErrorState, { "id": "created-error", "lang": lang, "serverT": serverT, "titleKey": "common.error.title", "descKey": "common.error.desc", "retryLabelKey": "common.error.retry", "onRetryId": "created-retry" }), addAttribute("stack" , "class"));
 }, "/Users/yichen/Downloads/cursor/QuizyParty/src/pages/[lang]/rooms/created.astro", void 0);
 const $$file = "/Users/yichen/Downloads/cursor/QuizyParty/src/pages/[lang]/rooms/created.astro";
 const $$url = "/[lang]/rooms/created";

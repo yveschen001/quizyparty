@@ -1,5 +1,5 @@
 import { e as createAstro, f as createComponent, r as renderTemplate, h as addAttribute, p as renderComponent, ah as renderHead } from '../../chunks/astro/server_BigfXiJV.mjs';
-import { s as setupServerI18n } from '../../chunks/server-i18n_BKH6atwt.mjs';
+import { s as setupServerI18n } from '../../chunks/server-i18n_BOCxxfYe.mjs';
 import { $ as $$SeoMeta } from '../../chunks/SeoMeta_mSwdbQaA.mjs';
 /* empty css                                    */
 import { $ as $$AppHeader } from '../../chunks/AppHeader_Ceo4wj6R.mjs';
@@ -467,11 +467,25 @@ const $$Profile = createComponent(async ($$result, $$props, $$slots) => {
           if (statsPercentileEl) {
             statsPercentileEl.textContent =
               stats && typeof stats.percentilePercent === 'number'
-                ? window
-                    .t('profile.stats.percentile')
-                    .replace('{value}', String(stats.percentilePercent))
+                ? window.t('common.stats.rankPct').replace('{value}', String(stats.percentilePercent))
                 : ''
           }
+          // 更新 aria-label 描述
+          try {
+            const cards = document.querySelectorAll('[data-stat-card]')
+            const labels = [
+              window.t('profile.stats.totalAnswers') + ': ' + (stats.totalAnswered || 0),
+              window.t('profile.stats.accuracy') + ': ' + (stats.accuracy ? formatAccuracy(stats.accuracy) : '0%'),
+              window.t('profile.stats.points') + ': ' + (stats.points || 0),
+              window.t('profile.stats.rank') +
+                ': ' +
+                (stats.rankLabel || '—') +
+                (stats.percentilePercent ? ' (' + window.t('common.stats.rankPct').replace('{value}', String(stats.percentilePercent)) + ')' : ''),
+            ]
+            Array.prototype.forEach.call(cards, function (el, idx) {
+              el.setAttribute('aria-label', labels[idx] || '')
+            })
+          } catch (e) {}
           if (featureV3) {
             const hasStats =
               (stats.totalAnswered || 0) > 0 || (stats.points || 0) > 0 || stats.rankLabel !== '—'
@@ -707,8 +721,31 @@ const $$Profile = createComponent(async ($$result, $$props, $$slots) => {
           }
         }
 
+        // URL range 讀取與同步
+        function getInitialScope() {
+          try {
+            const q = new URLSearchParams(location.search)
+            const v = q.get('range')
+            return v === '30d' ? '30d' : 'all'
+          } catch (e) {
+            return 'all'
+          }
+        }
+        function setScopeInUrl(next) {
+          try {
+            const u = new URL(location.href)
+            if (next === 'all') u.searchParams.delete('range')
+            else u.searchParams.set('range', next)
+            history.replaceState(null, '', u.toString())
+          } catch (e) {}
+        }
+
+        let currentScope = getInitialScope()
+        updateScopeButtons(currentScope)
+
         if (scopeAllBtn) {
           scopeAllBtn.addEventListener('click', function () {
+            setScopeInUrl('all')
             applyScope('all')
           })
           scopeAllBtn.addEventListener('keydown', function (event) {
@@ -721,6 +758,7 @@ const $$Profile = createComponent(async ($$result, $$props, $$slots) => {
         }
         if (scope30dBtn) {
           scope30dBtn.addEventListener('click', function () {
+            setScopeInUrl('30d')
             applyScope('30d')
           })
           scope30dBtn.addEventListener('keydown', function (event) {
@@ -732,11 +770,11 @@ const $$Profile = createComponent(async ($$result, $$props, $$slots) => {
           })
         }
 
-        renderStats('all')
+        renderStats(currentScope)
         if (!featureV3) {
-          renderParticipations('all')
+          renderParticipations(currentScope)
         }
-        applyScope('all')
+        applyScope(currentScope)
       })()
     </script> </body> </html>`])), addAttribute(lang, "lang"), renderComponent($$result, "SeoMeta", $$SeoMeta, { "lang": lang, "title": title, "description": desc, "path": path, "siteOrigin": siteOrigin }), renderHead(), addAttribute("true" , "data-feature-v3"), serverT("a11y.skipToContent"), renderComponent($$result, "AppHeader", $$AppHeader, { "lang": lang, "serverT": serverT }), addAttribute(["container", "stack-lg" ], "class:list"), addAttribute(["stack-lg" ], "class:list"), addAttribute("stack" , "class"), addAttribute(["h1", "no-margin"], "class:list"), title, addAttribute(["p", "text-muted"] , "class:list"), serverT("profile.desc"), addAttribute(serverT("profile.stats.scopeLabel"), "aria-label"), addAttribute("tab active" , "class"), addAttribute(serverT("profile.scope.all"), "aria-label"), serverT("profile.scope.all"), addAttribute("tab" , "class"), addAttribute(serverT("profile.scope.30d"), "aria-label"), serverT("profile.scope.30d"), addAttribute(serverT("profile.settings.open"), "aria-label"), addAttribute(serverT("profile.settings.open"), "title"), serverT("profile.settings.open"), addAttribute("status-text" , "class"), addAttribute("stats-grid stack" , "class"), addAttribute("card stack" , "class"), addAttribute("caption text-muted" , "class"), serverT("profile.stats.totalAnswers"), addAttribute("card stack" , "class"), addAttribute("caption text-muted" , "class"), serverT("profile.stats.accuracy"), addAttribute("card stack" , "class"), addAttribute("caption text-muted" , "class"), serverT("profile.stats.points"), addAttribute("card stack" , "class"), addAttribute("caption text-muted" , "class"), serverT("profile.stats.rank"), addAttribute(`/${lang}/rooms/created`, "href"), addAttribute(serverT("profile.cards.created.title"), "aria-label"), addAttribute("flex-between" , "class"), serverT("profile.cards.created.title"), renderTemplate`<span class="caption text-muted" aria-hidden="true">›</span>`, addAttribute(["p", "text-muted", "text-opacity-80"], "class:list"), serverT("profile.cards.created.desc"), serverT("common.viewAll"), addAttribute(`/${lang}/rooms/joined`, "href"), addAttribute(serverT("profile.cards.joined.title"), "aria-label"), addAttribute("flex-between" , "class"), serverT("profile.cards.joined.title"), renderTemplate`<span class="caption text-muted" aria-hidden="true">›</span>`, addAttribute(["p", "text-muted", "text-opacity-80"], "class:list"), serverT("profile.cards.joined.desc"), serverT("common.viewAll"), addAttribute("stack-lg is-hidden" , "class"), serverT("profile.sections.myRooms"), addAttribute("btn-primary" , "class"), addAttribute(`/${lang}/create-room`, "href"), serverT("profile.sections.createRoom"), addAttribute(serverT("profile.sections.myRooms"), "aria-label"), addAttribute("tab-row" , "class"), addAttribute(void 0 , "style"), addAttribute("tab active" , "class"), serverT("myRooms.published"), addAttribute("tab" , "class"), serverT("myRooms.drafts"), addAttribute("stack" , "class"), addAttribute("stack-lg is-hidden" , "class"), serverT("profile.sections.participations"), addAttribute("status-text" , "class"), addAttribute("stack" , "class"), serverT("profile.settings.title"), addAttribute(serverT("profile.settings.close"), "aria-label"), serverT("languages.label"), serverT("languages.en"), serverT("languages.zhHant"), serverT("languages.zhHans"), serverT("languages.ja"), serverT("common.cancel"), serverT("common.save"));
 }, "/Users/yichen/Downloads/cursor/QuizyParty/src/pages/[lang]/profile.astro", void 0);

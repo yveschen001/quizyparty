@@ -1,0 +1,29 @@
+---
+const {
+  lang,
+  serverT,
+  titleKey,
+  descKey,
+  retryLabelKey,
+  onRetryId,
+  id,
+} = Astro.props as {
+  lang: string
+  serverT: (k: string) => string
+  titleKey: string
+  descKey?: string
+  retryLabelKey?: string
+  onRetryId: string
+  id?: string
+}
+---
+
+<section id={id} role="region" aria-live="polite" class="card stack text-center" data-testid="error-state">
+  <h3 class="h3 no-margin">{serverT(titleKey)}</h3>
+  {descKey && <p class="p text-muted no-margin">{serverT(descKey)}</p>}
+  {retryLabelKey && (
+    <button id={onRetryId} class="btn btn-primary">{serverT(retryLabelKey)}</button>
+  )}
+</section>
+
+

@@ -5,6 +5,7 @@ import AppHeader from '../../../components/layout/AppHeader.astro'
 import '../../../styles/base.css'
 import EmptyState from '../../../components/ui/EmptyState.astro'
 import LoadingState from '../../../components/ui/LoadingState.astro'
+import ErrorState from '../../../components/ui/ErrorState.astro'
 
 const { lang, serverT } = await setupServerI18n(Astro.params.lang)
 const title = serverT('profile.sections.myRooms')
@@ -98,6 +99,15 @@ const path = Astro.url.pathname
         actionHref={`/${lang}/create-room`}
         actionKey="common.empty.created.action"
       />
+      <ErrorState
+        id="created-error"
+        lang={lang}
+        serverT={serverT}
+        titleKey="common.error.title"
+        descKey="common.error.desc"
+        retryLabelKey="common.error.retry"
+        onRetryId="created-retry"
+      />
       <div
         id="created-list"
         role="tabpanel"
@@ -140,18 +150,40 @@ const path = Astro.url.pathname
           if (!el) return
           el.style.display = show ? '' : 'none'
         }
+        const createdError = document.getElementById('created-error')
+        const createdRetryBtn = document.getElementById('created-retry')
+        function toggle(el, show) {
+          if (!el) return
+          el.style.display = show ? '' : 'none'
+        }
         function showMessage(text, isError) {
           if (!createdMessage) return
           // 最小整合：若為空範圍提示，顯示統一 EmptyState；其他訊息維持舊行為
           const emptyScope = window.t('profile.created.emptyScope')
           if (text && text === emptyScope) {
             toggle(createdLoading, false)
+            toggle(createdError, false)
             toggle(createdEmpty, true)
             createdMessage.innerHTML = ''
             createdMessage.style.color = ''
             return
           } else {
             toggle(createdEmpty, false)
+          }
+          if (isError) {
+            toggle(createdLoading, false)
+            toggle(createdError, true)
+            if (createdRetryBtn) {
+              createdRetryBtn.onclick = function () {
+                toggle(createdError, false)
+                if (mgr && typeof mgr.refresh === 'function') mgr.refresh()
+              }
+            }
+            createdMessage.innerHTML = ''
+            createdMessage.style.color = ''
+            return
+          } else {
+            toggle(createdError, false)
           }
           if (!text) {
             createdMessage.innerHTML = ''
