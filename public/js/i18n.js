@@ -68,17 +68,33 @@
     return document.documentElement.getAttribute('lang')
   }
 
-  function normaliseLang(raw) {
-    if (!raw) return DEFAULT_LANG
-    var lower = String(raw).toLowerCase()
-    // 僅允許已支援的語言代碼；其餘一律回退預設
-    if (lower === 'en' || lower === 'zh-hant' || lower === 'zh-hans' || lower === 'ja') return lower
-    // 一些常見別名做轉換
-    if (lower === 'zh-tw' || lower === 'zh_tw' || lower === 'zh-hk') return 'zh-hant'
-    if (lower === 'zh-cn' || lower === 'zh') return 'zh-hans'
-    if (lower.startsWith('en')) return 'en'
-    if (lower.startsWith('ja')) return 'ja'
-    return DEFAULT_LANG
+  const LANG_ALIASES = {
+    // Simplified
+    'zh': 'zh-hans',
+    'zh-cn': 'zh-hans',
+    'zh_hans': 'zh-hans',
+    'zh-hans': 'zh-hans',
+    'zh-cn-u-nu-latn': 'zh-hans',
+    'zh-CN': 'zh-hans',
+    'zh-Hans': 'zh-hans',
+    // Traditional
+    'zh-tw': 'zh-hant',
+    'zh_tw': 'zh-hant',
+    'zh-hant': 'zh-hant',
+    'zh-hk': 'zh-hant',
+    'zh-mo': 'zh-hant',
+    'zh-TW': 'zh-hant',
+    'zh-Hant': 'zh-hant',
+    'zh-HK': 'zh-hant',
+    'zh-MO': 'zh-hant',
+    // Others (pass-through examples)
+    'en': 'en',
+    'ja': 'ja',
+  }
+  function normaliseLang(s){
+    if(!s) return DEFAULT_LANG
+    var raw = String(s).trim()
+    return LANG_ALIASES[raw] || LANG_ALIASES[raw.toLowerCase()] || raw.toLowerCase()
   }
 
   function getActiveLang() {
@@ -98,7 +114,7 @@
     }
   }
 
-  function translate(key) {
+  function translate(key, fallback) {
     if (!key) return ''
     var lang = getActiveLang()
     var texts = cache[lang] || loadLocale(lang)
@@ -107,6 +123,15 @@
     if (value === undefined && lang !== FALLBACK_LANG) {
       var fallbackTexts = cache[FALLBACK_LANG] || loadLocale(FALLBACK_LANG)
       value = fallbackTexts[key]
+    }
+
+    if (value === undefined && fallback) {
+      // Try fallback key in active, then in fallback language
+      value = texts[fallback]
+      if (value === undefined && lang !== FALLBACK_LANG) {
+        var fbTexts = cache[FALLBACK_LANG] || loadLocale(FALLBACK_LANG)
+        value = fbTexts[fallback]
+      }
     }
 
     if (value === undefined) {

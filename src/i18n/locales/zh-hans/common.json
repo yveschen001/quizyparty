@@ -382,6 +382,11 @@
     },
     "cache": {
       "refreshing": "数据更新中…"
+    },
+    "controls": {
+      "sort": {
+        "label": "排序"
+      }
     }
   }
 }

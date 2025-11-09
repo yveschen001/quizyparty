@@ -351,6 +351,11 @@
     },
     "cache": {
       "refreshing": "更新中…"
+    },
+    "controls": {
+      "sort": {
+        "label": "並び替え"
+      }
     }
   }
 }
