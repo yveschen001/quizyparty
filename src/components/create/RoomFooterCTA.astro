@@ -28,8 +28,8 @@ const { lang, serverT } = Astro.props as { lang: string; serverT: (k: string) =>
     if (trigger) {
       trigger.addEventListener('click', function(){
         const btn = document.querySelector('[data-browse-library]')
-        if (btn && typeof (btn as HTMLButtonElement).click === 'function') {
-          ;(btn as HTMLButtonElement).click()
+        if (btn && typeof btn['click'] === 'function') {
+          btn.click()
         }
       })
     }
