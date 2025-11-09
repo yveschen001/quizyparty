@@ -2,7 +2,9 @@
 
 function ensureTranslate(fn) {
   if (typeof fn === 'function') return fn
-  return function(key) { return key }
+  return function (key) {
+    return key
+  }
 }
 
 function markHomeNeedsRefresh() {
@@ -30,7 +32,9 @@ async function ensureLiveRoom(lang, questionSetId, templateId) {
       }),
     })
     if (!res.ok) {
-      const errorText = await res.text().catch(function() { return '' })
+      const errorText = await res.text().catch(function () {
+        return ''
+      })
       console.warn('[rooms-manager] ensureLiveRoom failed', res.status, errorText)
       return false
     }
@@ -49,7 +53,9 @@ async function removeLiveRoom(roomId) {
       credentials: 'include',
     })
     if (!res.ok && res.status !== 404) {
-      const errorText = await res.text().catch(function() { return '' })
+      const errorText = await res.text().catch(function () {
+        return ''
+      })
       console.warn('[rooms-manager] removeLiveRoom failed', res.status, errorText)
       return false
     }
@@ -68,10 +74,19 @@ export function setupRoomsManager(config) {
   const tabs = Array.isArray(config && config.tabs) ? config.tabs : []
   const t = ensureTranslate(config && config.t)
   const lang = config && config.lang ? config.lang : 'en'
-  const pageSize = config && typeof config.pageSize === 'number' && config.pageSize > 0 ? config.pageSize : 10
+  const pageSize =
+    config && typeof config.pageSize === 'number' && config.pageSize > 0 ? config.pageSize : 10
   const notify = typeof config.onNotify === 'function' ? config.onNotify : null
   const editBaseUrl = '/' + lang + '/create-room'
-  const translateStatus = function(status) {
+  const featureV3 =
+    document.body && document.body.dataset
+      ? document.body.dataset.featureV3 === 'true'
+      : false
+  const emptyAction =
+    config && config.emptyAction && typeof config.emptyAction === 'object'
+      ? config.emptyAction
+      : null
+  const translateStatus = function (status) {
     if (status === 'published') return t('roomTemplates.status.published')
     return t('roomTemplates.status.draft')
   }
@@ -88,35 +103,76 @@ export function setupRoomsManager(config) {
       const tab = tabs[i]
       if (!tab || !tab.button) continue
       const isActive = tab.status === status
+      const isDesignTab = tab.button.classList.contains('tab')
       if (isActive) {
-        tab.button.classList.add('btn-primary')
-        tab.button.classList.remove('btn')
+        if (isDesignTab) {
+          tab.button.classList.add('active')
+        } else {
+          tab.button.classList.add('btn-primary')
+          tab.button.classList.remove('btn')
+        }
         tab.button.setAttribute('aria-pressed', 'true')
       } else {
-        tab.button.classList.remove('btn-primary')
-        tab.button.classList.add('btn')
+        if (isDesignTab) {
+          tab.button.classList.remove('active')
+        } else {
+          tab.button.classList.remove('btn-primary')
+          tab.button.classList.add('btn')
+        }
         tab.button.setAttribute('aria-pressed', 'false')
       }
     }
   }
 
   function showLoading() {
-    listEl.innerHTML = '<p style="padding:16px;text-align:center;opacity:0.6">' + t('room.loading') + '</p>'
+    if (featureV3) {
+      listEl.innerHTML =
+        '<div class="card card-skeleton" style="min-height:112px"></div>' +
+        '<div class="card card-skeleton" style="min-height:112px"></div>'
+      return
+    }
+    listEl.innerHTML =
+      '<p style="padding:16px;text-align:center;opacity:0.6">' + t('room.loading') + '</p>'
   }
 
   function showEmpty(status) {
     const text = emptyText || t('roomTemplates.empty')
-    listEl.innerHTML = '<p style="padding:16px;text-align:center;opacity:0.6">' + text.replace('{status}', translateStatus(status)) + '</p>'
+    const rendered = text.replace('{status}', translateStatus(status))
+    if (featureV3) {
+      var html =
+        '<div class="card stack text-center"><p class="p text-muted">' + rendered + '</p>'
+      if (emptyAction && emptyAction.href && emptyAction.label) {
+        html +=
+          '<a class="btn btn-primary" href="' +
+          emptyAction.href +
+          '">' +
+          emptyAction.label +
+          '</a>'
+      }
+      html += '</div>'
+      listEl.innerHTML = html
+      return
+    }
+    listEl.innerHTML =
+      '<p style="padding:16px;text-align:center;opacity:0.6">' + rendered + '</p>'
   }
 
   function buildCard(template) {
     if (window.RoomTemplates && typeof window.RoomTemplates.buildBuilderCard === 'function') {
-      return window.RoomTemplates.buildBuilderCard(template, { lang: lang, t: t })
+      return window.RoomTemplates.buildBuilderCard(template, {
+        lang: lang,
+        t: t,
+        featureV3: featureV3,
+      })
     }
     const card = document.createElement('div')
-    card.style.border = '1px solid #e5e7eb'
-    card.style.borderRadius = '12px'
-    card.style.padding = '16px'
+    if (featureV3) {
+      card.className = 'card'
+    } else {
+      card.style.border = '1px solid #e5e7eb'
+      card.style.borderRadius = '12px'
+      card.style.padding = '16px'
+    }
     card.textContent = template && template.title ? template.title : t('questionSets.untitled')
     return card
   }
@@ -127,7 +183,7 @@ export function setupRoomsManager(config) {
       paginationEl.style.display = 'none'
       paginationEl.innerHTML = ''
       return
-  }
+    }
     const info = window.RoomTemplates.getPagination(total, limit, offset)
     if (!info || info.totalPages <= 1) {
       paginationEl.style.display = 'none'
@@ -145,7 +201,11 @@ export function setupRoomsManager(config) {
   }
 
   function handleError() {
-    listEl.innerHTML = '<p style="padding:16px;text-align:center;color:#d00">' + t('errors.networkError') + '</p>'
+    listEl.innerHTML = featureV3
+      ? '<div class="card"><p class="caption text-center text-danger">' +
+        t('errors.networkError') +
+        '</p></div>'
+      : '<p style="padding:16px;text-align:center;color:#d00">' + t('errors.networkError') + '</p>'
     updatePagination(0, pageSize, 0)
   }
 
@@ -153,7 +213,8 @@ export function setupRoomsManager(config) {
     if (loading) return
     loading = true
     currentStatus = status
-    currentOffset = typeof requestedOffset === 'number' && requestedOffset >= 0 ? requestedOffset : 0
+    currentOffset =
+      typeof requestedOffset === 'number' && requestedOffset >= 0 ? requestedOffset : 0
     setActiveTab(status)
     showLoading()
     try {
@@ -161,9 +222,14 @@ export function setupRoomsManager(config) {
       params.set('status', status)
       params.set('limit', String(pageSize))
       params.set('offset', String(currentOffset))
-      const response = await fetch('/api/room-templates?' + params.toString(), { credentials: 'include' })
+      const response = await fetch('/api/room-templates?' + params.toString(), {
+        credentials: 'include',
+      })
       if (response.status === 401) {
-        listEl.innerHTML = '<p style="padding:16px;text-align:center;opacity:0.6">' + t('profile.notLoggedIn') + '</p>'
+        listEl.innerHTML =
+          '<p style="padding:16px;text-align:center;opacity:0.6">' +
+          t('profile.notLoggedIn') +
+          '</p>'
         updatePagination(0, pageSize, 0)
         loading = false
         return
@@ -177,13 +243,19 @@ export function setupRoomsManager(config) {
       const templates = Array.isArray(json.templates) ? json.templates : []
       currentTotal = typeof json.total === 'number' ? json.total : templates.length
       const limitFromApi = typeof json.limit === 'number' && json.limit > 0 ? json.limit : pageSize
-      const offsetFromApi = typeof json.offset === 'number' && json.offset >= 0 ? json.offset : currentOffset
+      const offsetFromApi =
+        typeof json.offset === 'number' && json.offset >= 0 ? json.offset : currentOffset
       let filtered = templates
       if (filterFn) {
-        filtered = templates.filter(function(item) {
+        filtered = templates.filter(function (item) {
           return filterFn(item)
         })
       }
+      filtered.sort(function (a, b) {
+        const aTime = new Date(a && a.updatedAt ? a.updatedAt : 0).getTime()
+        const bTime = new Date(b && b.updatedAt ? b.updatedAt : 0).getTime()
+        return bTime - aTime
+      })
       listEl.innerHTML = ''
       if (!filtered.length) {
         showEmpty(status)
@@ -211,14 +283,24 @@ export function setupRoomsManager(config) {
     try {
       if (action === 'edit') {
         const targetSetId = setId || templateId
-        window.location.href = editBaseUrl + '?setId=' + encodeURIComponent(targetSetId) + '&templateId=' + encodeURIComponent(templateId)
+        window.location.href =
+          editBaseUrl +
+          '?setId=' +
+          encodeURIComponent(targetSetId) +
+          '&templateId=' +
+          encodeURIComponent(templateId)
         return
       }
       if (action === 'delete') {
         if (!window.confirm(t('profile.rooms.deleteConfirmLabel'))) return
-        const res = await fetch('/api/room-templates/' + templateId, { method: 'DELETE', credentials: 'include' })
+        const res = await fetch('/api/room-templates/' + templateId, {
+          method: 'DELETE',
+          credentials: 'include',
+        })
         if (!res.ok) {
-          const text = await res.text().catch(function() { return '' })
+          const text = await res.text().catch(function () {
+            return ''
+          })
           console.warn('[rooms-manager] delete failed', res.status, text)
           if (notify) notify(t('errors.networkError'), true)
           return
@@ -237,7 +319,9 @@ export function setupRoomsManager(config) {
           body: JSON.stringify({ status: nextStatus }),
         })
         if (!res.ok) {
-          const text = await res.text().catch(function() { return '' })
+          const text = await res.text().catch(function () {
+            return ''
+          })
           console.warn('[rooms-manager] status update failed', res.status, text)
           if (notify) notify(t('errors.networkError'), true)
           return
@@ -266,22 +350,25 @@ export function setupRoomsManager(config) {
     }
   }
 
-  listEl.addEventListener('click', function(event) {
+  listEl.addEventListener('click', function (event) {
     const target = event.target && event.target.closest('[data-action]')
     if (!target) return
     const action = target.getAttribute('data-action')
     if (!action) return
     const card = target.closest('[data-template-card]')
-    const templateId = target.getAttribute('data-template-id') || (card ? card.getAttribute('data-template-id') : '')
+    const templateId =
+      target.getAttribute('data-template-id') || (card ? card.getAttribute('data-template-id') : '')
     const setAttr = target.getAttribute('data-set-id')
-    const cardSetAttr = card ? card.getAttribute('data-set-id') || card.getAttribute('data-question-set-id') : ''
+    const cardSetAttr = card
+      ? card.getAttribute('data-set-id') || card.getAttribute('data-question-set-id')
+      : ''
     const setId = setAttr || cardSetAttr
     const previousStatus = card ? card.getAttribute('data-template-status') || '' : ''
     handleAction(action, templateId, setId, previousStatus)
   })
 
   if (paginationEl) {
-    paginationEl.addEventListener('click', function(event) {
+    paginationEl.addEventListener('click', function (event) {
       const button = event.target && event.target.closest('[data-action]')
       if (!button) return
       const action = button.getAttribute('data-action')
@@ -305,7 +392,7 @@ export function setupRoomsManager(config) {
   for (let i = 0; i < tabs.length; i += 1) {
     const tab = tabs[i]
     if (!tab || !tab.button) continue
-    tab.button.addEventListener('click', function() {
+    tab.button.addEventListener('click', function () {
       const status = tab.status || 'published'
       if (status === currentStatus && !filterFn) {
         return
@@ -318,22 +405,22 @@ export function setupRoomsManager(config) {
   load(currentStatus, 0)
 
   return {
-    refresh: function() {
+    refresh: function () {
       load(currentStatus, currentOffset)
     },
-    switchStatus: function(status) {
+    switchStatus: function (status) {
       currentOffset = 0
       load(status, 0)
     },
-    setFilter: function(fn) {
+    setFilter: function (fn) {
       filterFn = typeof fn === 'function' ? fn : null
       currentOffset = 0
       load(currentStatus, 0)
     },
-    setEmptyText: function(text) {
+    setEmptyText: function (text) {
       emptyText = text || ''
     },
-    getStatus: function() {
+    getStatus: function () {
       return currentStatus
     },
   }

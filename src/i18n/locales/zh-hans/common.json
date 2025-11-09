@@ -326,7 +326,7 @@
   "profile.cards.created.title": "我创建的房间",
   "profile.cards.created.desc": "管理你创建的测验，切换已发布或草稿，快速编辑。",
   "profile.cards.joined.title": "我加入的房间",
-  "profile.cards.joined.desc": "查看你的作答记录与正确率，从这里再玩一次。"
+  "profile.cards.joined.desc": "查看你的作答记录与正确率，从这里再玩一次。",
   "createRoom.ai.builder.vipNotice": "30~60 题的房间属于 VIP 方案，完成编辑后可升级解锁发布。",
   "createRoom.loginRequired": "请先登录以管理房间",
   "profile.created.emptyScope": "该时间范围内没有房间。",
@@ -336,6 +336,8 @@
   "profile.participations.empty": "暂无答题记录。",
   "profile.participations.total": "答题数量：{value}",
   "profile.participations.accuracy": "正确率：{value}",
+  "profile.participations.lastPlayed": "最近作答：{value}",
+  "profile.participations.cta": "去参加一场测验",
   "profile.scope.all": "全部时间",
   "profile.scope.30d": "最近30天",
   "profile.stats.scopeLabel": "统计范围",

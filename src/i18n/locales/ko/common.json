@@ -139,6 +139,8 @@
   "profile.participations.empty": "참여 기록이 없습니다.",
   "profile.participations.total": "문항 수: {value}",
   "profile.participations.accuracy": "정답률: {value}",
+  "profile.participations.lastPlayed": "최근 플레이: {value}",
+  "profile.participations.cta": "퀴즈 둘러보기",
   "profile.scope.all": "전체",
   "profile.scope.30d": "최근 30일",
   "profile.stats.scopeLabel": "통계 기간",
@@ -330,7 +332,7 @@
   "profile.cards.created.title": "내가 만든 방",
   "profile.cards.created.desc": "만든 퀴즈 관리, 공개/초안 전환, 빠른 편집.",
   "profile.cards.joined.title": "내가 참여한 방",
-  "profile.cards.joined.desc": "응답 기록과 정확도 확인, 여기서 다시 플레이."
+  "profile.cards.joined.desc": "응답 기록과 정확도 확인, 여기서 다시 플레이.",
   "questions.form.choicePlaceholder": "선택지 {count}"
 }
 

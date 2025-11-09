@@ -142,6 +142,8 @@
   "profile.participations.empty": "Noch keine Teilnahme.",
   "profile.participations.total": "Beantwortete Fragen: {value}",
   "profile.participations.accuracy": "Genauigkeit: {value}",
+  "profile.participations.lastPlayed": "Zuletzt gespielt: {value}",
+  "profile.participations.cta": "Weitere Quiz entdecken",
   "profile.scope.all": "Gesamter Zeitraum",
   "profile.scope.30d": "Letzte 30 Tage",
   "profile.stats.scopeLabel": "Zeitraum",
@@ -321,7 +323,7 @@
   "profile.cards.created.title": "Meine erstellten Räume",
   "profile.cards.created.desc": "Verwalte deine Quizze, wechsle Veröffentlicht/Entwurf und bearbeite schnell.",
   "profile.cards.joined.title": "Meine beigetretenen Räume",
-  "profile.cards.joined.desc": "Sieh deine Historie und Genauigkeit, spiele erneut."
+  "profile.cards.joined.desc": "Sieh deine Historie und Genauigkeit, spiele erneut.",
   "questions.form.choicePlaceholder": "Antwort {count}"
 }
 

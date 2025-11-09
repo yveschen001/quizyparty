@@ -7,10 +7,11 @@ import '../../../styles/base.css'
 const { lang, serverT } = await setupServerI18n(Astro.params.lang)
 const title = serverT('profile.sections.participations')
 const desc = serverT('profile.sections.participations')
+const featureV3 = (import.meta.env.PUBLIC_FEATURE_QP_V3 ?? 'true') !== 'false'
 
 export const prerender = false
 const siteOrigin =
-  (Astro.site && Astro.site.origin) || import.meta.env.SITE || 'https://quizyparty.com'
+  (Astro.site && Astro.site.origin) || (import.meta.env.SITE ?? 'https://quizyparty.com')
 const path = Astro.url.pathname
 ---
 
@@ -20,30 +21,41 @@ const path = Astro.url.pathname
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <SeoMeta lang={lang} title={title} description={desc} path={path} siteOrigin={siteOrigin} />
   </head>
-  <body>
+  <body data-feature-v3={featureV3 ? 'true' : 'false'}>
     <a href="#main" class="sr-only">{serverT('a11y.skipToContent')}</a>
     <AppHeader lang={lang} serverT={serverT} />
     <main
       id="main"
-      class="container"
-      style="display:grid;gap:16px;padding-top:24px;padding-bottom:48px"
+      class={featureV3 ? 'container stack-lg' : 'container'}
+      style={featureV3 ? undefined : 'display:grid;gap:16px;padding-top:24px;padding-bottom:48px'}
     >
-      <nav aria-label={serverT('common.breadcrumbs')} class="caption" style="display:flex;gap:8px">
-        <a href={`/${lang}/profile`} class="caption" aria-label={serverT('profile.title')}
+      <nav
+        aria-label={serverT('common.breadcrumbs')}
+        class={featureV3 ? 'caption breadcrumb' : 'caption'}
+        style={featureV3 ? undefined : 'display:flex;gap:8px'}
+      >
+        <a
+          href={`/${lang}/profile`}
+          class="caption"
+          aria-label={serverT('profile.title')}
           >{serverT('profile.title')}</a
         >
         <span aria-hidden="true">/</span>
         <span class="caption">{title}</span>
       </nav>
-      <h1 class="h1" style="margin:0">{title}</h1>
-      <div id="message" style="min-height:1.1em;font-size:0.9rem"></div>
-      <div id="list" style="display:grid;gap:12px"></div>
+      <h1 class="h1" style={featureV3 ? undefined : 'margin:0'}>{title}</h1>
+      <div id="message" class={featureV3 ? 'status-text' : undefined} style={featureV3 ? undefined : 'min-height:1.1em;font-size:0.9rem'}></div>
+      <div id="list" class={featureV3 ? 'stack' : undefined} style={featureV3 ? undefined : 'display:grid;gap:12px'}></div>
     </main>
     <script type="module" src="/js/i18n.js"></script>
     <script type="module">
       ;(async function () {
         await import('/js/i18n.js')
         const lang = document.documentElement.getAttribute('lang') || 'en'
+        const featureV3 =
+          document.body && document.body.dataset
+            ? document.body.dataset.featureV3 === 'true'
+            : false
         let fmt = null
         try {
           fmt = await import('/src/utils/format.ts')
@@ -52,31 +64,101 @@ const path = Astro.url.pathname
         const list = document.getElementById('list')
         function showMessage(text, isError) {
           if (!message) return
+          if (!text) {
+            message.innerHTML = ''
+            message.style.color = ''
+            return
+          }
+          if (featureV3) {
+            message.innerHTML =
+              '<div class="card text-center ' +
+              (isError ? 'text-danger' : '') +
+              '">' +
+              text +
+              '</div>'
+            message.style.color = ''
+            return
+          }
           message.textContent = text || ''
           message.style.color = isError ? '#d00' : '#059669'
         }
+        function formatNumber(value) {
+          if (fmt && fmt.formatNumber) return fmt.formatNumber(value || 0, lang)
+          try {
+            return new Intl.NumberFormat(lang).format(value || 0)
+          } catch (e) {
+            return String(value || 0)
+          }
+        }
+
         function formatAccuracy(value) {
           if (fmt && fmt.formatPercent) return fmt.formatPercent(Number(value || 0), lang, 1)
           const percent = Math.round(Number(value || 0) * 1000) / 10
           return percent.toFixed(1) + '%'
         }
         function formatDate(timestamp) {
-          if (fmt && fmt.formatDate) return fmt.formatDate(timestamp, lang, { year: 'numeric', month: 'short', day: 'numeric' })
+          if (fmt && fmt.formatDate)
+            return fmt.formatDate(timestamp, lang, { year: 'numeric', month: 'short', day: 'numeric' })
           if (!timestamp) return ''
           const d = new Date(timestamp)
           if (!d.getTime()) return ''
           try {
-            return d.toLocaleString(lang, { year: 'numeric', month: 'short', day: 'numeric' })
+            return new Intl.DateTimeFormat(lang, {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            }).format(d)
           } catch (e) {
-            return d.toLocaleString()
+            return d.toISOString()
+          }
+        }
+        function renderSkeleton() {
+          if (!list) return
+          if (featureV3) {
+            list.innerHTML =
+              '<div class="card card-skeleton" style="min-height:104px"></div>' +
+              '<div class="card card-skeleton" style="min-height:104px"></div>' +
+              '<div class="card card-skeleton" style="min-height:104px"></div>'
+          } else {
+            list.innerHTML =
+              '<p style="padding:16px;text-align:center;opacity:0.6">' +
+              window.t('room.loading') +
+              '</p>'
+          }
+        }
+        function renderEmpty() {
+          if (!list) return
+          const ctaLabel = window.t('profile.participations.cta')
+          const ctaHref = '/' + lang + '/'
+          if (featureV3) {
+            list.innerHTML =
+              '<div class="card stack text-center">' +
+              '<p class="p text-muted">' +
+              window.t('profile.participations.empty') +
+              '</p>' +
+              '<a class="btn btn-primary" href="' +
+              ctaHref +
+              '">' +
+              ctaLabel +
+              '</a>' +
+              '</div>'
+          } else {
+            list.innerHTML =
+              '<div style="padding:16px;text-align:center;opacity:0.6">' +
+              '<p style="margin-bottom:12px">' +
+              window.t('profile.participations.empty') +
+              '</p>' +
+              '<a class="btn" href="' +
+              ctaHref +
+              '">' +
+              ctaLabel +
+              '</a>' +
+              '</div>'
           }
         }
         async function loadParticipations() {
           if (!list) return
-          list.innerHTML =
-            '<p style=\"padding:16px;text-align:center;opacity:0.6\">' +
-            window.t('room.loading') +
-            '</p>'
+          renderSkeleton()
           try {
             const res = await fetch('/api/scores/rooms?limit=100', { credentials: 'include' })
             if (res.status === 401) {
@@ -86,59 +168,116 @@ const path = Astro.url.pathname
             }
             const json = await res.json()
             const items = Array.isArray(json.rooms) ? json.rooms : []
+            items.sort(function (a, b) {
+              const aTime = new Date(a && a.lastAnsweredAt ? a.lastAnsweredAt : 0).getTime()
+              const bTime = new Date(b && b.lastAnsweredAt ? b.lastAnsweredAt : 0).getTime()
+              return bTime - aTime
+            })
             if (!items.length) {
-              list.innerHTML =
-                '<p style=\"padding:16px;text-align:center;opacity:0.6\">' +
-                window.t('profile.participations.empty') +
-                '</p>'
+              renderEmpty()
               return
             }
+            showMessage('', false)
             list.innerHTML = ''
             for (let i = 0; i < items.length; i += 1) {
               const item = items[i]
               if (!item) continue
               const card = document.createElement('div')
-              card.className = 'card'
-              card.style.padding = '16px'
-              card.style.display = 'grid'
-              card.style.gap = '8px'
+              card.className = featureV3 ? 'card stack' : 'card'
+              if (!featureV3) {
+                card.style.padding = '16px'
+                card.style.display = 'grid'
+                card.style.gap = '8px'
+              }
               const title = document.createElement('div')
-              title.style.display = 'flex'
-              title.style.justifyContent = 'space-between'
-              title.style.alignItems = 'center'
-              title.style.gap = '8px'
+              if (featureV3) {
+                title.className = 'flex-between'
+              } else {
+                title.style.display = 'flex'
+                title.style.justifyContent = 'space-between'
+                title.style.alignItems = 'center'
+                title.style.gap = '8px'
+              }
               const t1 = document.createElement('div')
-              t1.style.fontWeight = '700'
+              if (featureV3) {
+                t1.className = 'h3'
+              } else {
+                t1.style.fontWeight = '700'
+              }
               t1.textContent = item.roomTitle || window.t('questionSets.untitled')
               const t2 = document.createElement('span')
-              t2.style.fontSize = '0.85rem'
-              t2.style.opacity = '0.65'
+              if (featureV3) {
+                t2.className = 'caption text-muted'
+              } else {
+                t2.style.fontSize = '0.85rem'
+                t2.style.opacity = '0.65'
+              }
               t2.textContent = formatDate(item.lastAnsweredAt)
               title.appendChild(t1)
               title.appendChild(t2)
               card.appendChild(title)
               const meta = document.createElement('div')
-              meta.style.fontSize = '0.9rem'
-              meta.style.opacity = '0.75'
-              meta.textContent =
-                window
-                  .t('profile.participations.total')
-                  .replace('{value}', String(item.totalAnswered || 0)) +
-                ' · ' +
-                window
-                  .t('profile.participations.accuracy')
-                  .replace('{value}', formatAccuracy(item.accuracy || 0))
+              if (featureV3) {
+                meta.className = 'meta-row'
+                meta.innerHTML =
+                  '<span>' +
+                  window.t('profile.participations.total').replace(
+                    '{value}',
+                    formatNumber(item.totalAnswered || 0),
+                  ) +
+                  '</span><span>' +
+                  window.t('profile.participations.accuracy').replace(
+                    '{value}',
+                    formatAccuracy(item.accuracy || 0),
+                  ) +
+                  '</span><span>' +
+                  window.t('profile.participations.lastPlayed').replace(
+                    '{value}',
+                    formatDate(item.lastAnsweredAt),
+                  ) +
+                  '</span>'
+              } else {
+                meta.style.fontSize = '0.9rem'
+                meta.style.opacity = '0.75'
+                meta.textContent =
+                  window.t('profile.participations.total').replace(
+                    '{value}',
+                    String(item.totalAnswered || 0),
+                  ) +
+                  ' · ' +
+                  window
+                    .t('profile.participations.accuracy')
+                    .replace('{value}', formatAccuracy(item.accuracy || 0)) +
+                  ' · ' +
+                  window.t('profile.participations.lastPlayed').replace(
+                    '{value}',
+                    formatDate(item.lastAnsweredAt),
+                  )
+              }
               card.appendChild(meta)
               const actions = document.createElement('div')
-              actions.style.display = 'flex'
-              actions.style.gap = '8px'
-              actions.style.flexWrap = 'wrap'
+              if (featureV3) {
+                actions.className = 'actions-row'
+              } else {
+                actions.style.display = 'flex'
+                actions.style.gap = '8px'
+                actions.style.flexWrap = 'wrap'
+              }
               const replay = document.createElement('a')
-              replay.className = 'btn'
-              replay.style.fontSize = '0.85rem'
+              replay.className = featureV3 ? 'btn-primary' : 'btn'
+              if (!featureV3) {
+                replay.style.fontSize = '0.85rem'
+              }
               replay.href = '/' + lang + '/room/' + encodeURIComponent(item.roomId)
               replay.textContent = window.t('profile.history.playAgain')
-              replay.setAttribute('aria-label', window.t('profile.history.playAgain'))
+              replay.setAttribute(
+                'aria-label',
+                window.t('profile.history.playAgain') +
+                  ' · ' +
+                  (item.roomTitle || window.t('questionSets.untitled')),
+              )
+              replay.setAttribute('data-action', 'replay')
+              replay.setAttribute('data-room-id', item.roomId || '')
               actions.appendChild(replay)
               card.appendChild(actions)
               list.appendChild(card)
@@ -149,6 +288,30 @@ const path = Astro.url.pathname
           }
         }
         await loadParticipations()
+        if (list) {
+          list.addEventListener('click', function (event) {
+            const link = event.target && event.target.closest('[data-action="replay"]')
+            if (!link) return
+            const href = link.getAttribute('href')
+            if (!href) return
+            event.preventDefault()
+            link.setAttribute('aria-busy', 'true')
+            fetch(href, { method: 'HEAD', credentials: 'include', redirect: 'manual' })
+              .then(function (res) {
+                if (res.ok || (res.status >= 300 && res.status < 400)) {
+                  window.location.href = href
+                  return
+                }
+                showMessage(window.t('errors.networkError'), true)
+                link.removeAttribute('aria-busy')
+              })
+              .catch(function (error) {
+                console.error('[rooms/joined] replay failed', error)
+                showMessage(window.t('errors.networkError'), true)
+                link.removeAttribute('aria-busy')
+              })
+          })
+        }
       })()
     </script>
   </body>

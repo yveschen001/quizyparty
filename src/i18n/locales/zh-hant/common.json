@@ -286,6 +286,7 @@
   "profile.participations.accuracy": "正確率：{value}",
   "profile.participations.empty": "暫無作答紀錄。",
   "profile.participations.total": "作答題數：{value}",
+  "profile.participations.lastPlayed": "最近作答：{value}",
   "profile.participations.cta": "去參加一場測驗",
   "profile.question": "題目",
   "profile.roomIdLabel": "房間",

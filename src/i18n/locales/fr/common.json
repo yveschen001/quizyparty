@@ -306,7 +306,7 @@
   "profile.cards.created.title": "Salles créées",
   "profile.cards.created.desc": "Gérez vos quiz, basculez Publié/Brouillon, éditez rapidement.",
   "profile.cards.joined.title": "Salles rejointes",
-  "profile.cards.joined.desc": "Consultez votre historique et votre précision, rejouez d'ici."
+  "profile.cards.joined.desc": "Consultez votre historique et votre précision, rejouez d'ici.",
   "questions.form.choicePlaceholder": "Choix {count}",
   "createRoom.loginRequired": "Connectez-vous pour gérer vos salles",
   "profile.created.emptyScope": "Aucune salle sur cette période.",
@@ -316,6 +316,8 @@
   "profile.participations.empty": "Aucune participation enregistrée.",
   "profile.participations.total": "Questions répondues : {value}",
   "profile.participations.accuracy": "Précision : {value}",
+  "profile.participations.lastPlayed": "Dernière participation : {value}",
+  "profile.participations.cta": "Découvrir des quiz",
   "profile.scope.all": "Période complète",
   "profile.scope.30d": "30 derniers jours",
   "profile.stats.scopeLabel": "Plage des statistiques",

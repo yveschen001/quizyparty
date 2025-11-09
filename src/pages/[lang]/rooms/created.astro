@@ -7,10 +7,11 @@ import '../../../styles/base.css'
 const { lang, serverT } = await setupServerI18n(Astro.params.lang)
 const title = serverT('profile.sections.myRooms')
 const desc = serverT('profile.sections.myRooms')
+const featureV3 = (import.meta.env.PUBLIC_FEATURE_QP_V3 ?? 'true') !== 'false'
 
 export const prerender = false
 const siteOrigin =
-  (Astro.site && Astro.site.origin) || import.meta.env.SITE || 'https://quizyparty.com'
+  (Astro.site && Astro.site.origin) || (import.meta.env.SITE ?? 'https://quizyparty.com')
 const path = Astro.url.pathname
 ---
 
@@ -20,24 +21,37 @@ const path = Astro.url.pathname
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <SeoMeta lang={lang} title={title} description={desc} path={path} siteOrigin={siteOrigin} />
   </head>
-  <body>
+  <body data-feature-v3={featureV3 ? 'true' : 'false'}>
     <a href="#main" class="sr-only">{serverT('a11y.skipToContent')}</a>
     <AppHeader lang={lang} serverT={serverT} />
     <main
       id="main"
-      class="container"
-      style="display:grid;gap:16px;padding-top:24px;padding-bottom:48px"
+      class={featureV3 ? 'container stack-lg' : 'container'}
+      style={featureV3 ? undefined : 'display:grid;gap:16px;padding-top:24px;padding-bottom:48px'}
     >
-      <nav aria-label={serverT('common.breadcrumbs')} class="caption" style="display:flex;gap:8px">
-        <a href={`/${lang}/profile`} class="caption" aria-label={serverT('profile.title')}
+      <nav
+        aria-label={serverT('common.breadcrumbs')}
+        class={featureV3 ? 'caption breadcrumb' : 'caption'}
+        style={featureV3 ? undefined : 'display:flex;gap:8px'}
+      >
+        <a
+          href={`/${lang}/profile`}
+          class="caption"
+          aria-label={serverT('profile.title')}
           >{serverT('profile.title')}</a
         >
         <span aria-hidden="true">/</span>
         <span class="caption">{title}</span>
       </nav>
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
-        <h1 class="h1" style="margin:0">{title}</h1>
-        <a class="btn" href={`/${lang}/create-room`} style="font-size:0.9rem"
+      <div
+        class={featureV3 ? 'flex-between' : undefined}
+        style={featureV3 ? undefined : 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px'}
+      >
+        <h1 class="h1" style={featureV3 ? undefined : 'margin:0'}>{title}</h1>
+        <a
+          class={featureV3 ? 'btn-primary' : 'btn'}
+          href={`/${lang}/create-room`}
+          style={featureV3 ? undefined : 'font-size:0.9rem'}
           >{serverT('profile.sections.createRoom')}</a
         >
       </div>
@@ -45,19 +59,43 @@ const path = Astro.url.pathname
         id="created-tabs"
         role="tablist"
         aria-label={serverT('profile.sections.myRooms')}
-        style="display:flex;gap:8px;flex-wrap:wrap"
+        class={featureV3 ? 'tab-row' : undefined}
+        style={featureV3 ? undefined : 'display:flex;gap:8px;flex-wrap:wrap'}
       >
-        <button class="btn btn-primary" data-status="published" type="button" aria-pressed="true"
-          >{serverT('myRooms.published')}</button
+        <button
+          class={featureV3 ? 'tab active' : 'btn btn-primary'}
+          data-status="published"
+          type="button"
+          aria-pressed="true"
         >
-        <button class="btn" data-status="draft" type="button" aria-pressed="false"
-          >{serverT('myRooms.drafts')}</button
+          <span>{serverT('myRooms.published')}</span>
+          <span
+            class="badge"
+            data-count-badge="published"
+            style={featureV3 ? undefined : 'margin-left:8px'}
+            >0</span
+          >
+        </button>
+        <button
+          class={featureV3 ? 'tab' : 'btn'}
+          data-status="draft"
+          type="button"
+          aria-pressed="false"
         >
+          <span>{serverT('myRooms.drafts')}</span>
+          <span
+            class="badge"
+            data-count-badge="draft"
+            style={featureV3 ? undefined : 'margin-left:8px'}
+            >0</span
+          >
+        </button>
       </div>
-      <div id="created-message" style="min-height:1.1em;font-size:0.9rem"></div>
-      <div id="created-list" style="display:grid;gap:12px"></div>
+      <div id="created-message" class={featureV3 ? 'status-text' : undefined} style={featureV3 ? undefined : 'min-height:1.1em;font-size:0.9rem'}></div>
+      <div id="created-list" class={featureV3 ? 'stack' : undefined} style={featureV3 ? undefined : 'display:grid;gap:12px'}></div>
       <div
         id="created-pagination"
+        class={featureV3 ? 'flex-between' : undefined}
         style="display:none;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px"
       >
       </div>
@@ -73,6 +111,14 @@ const path = Astro.url.pathname
         const createdPagination = document.getElementById('created-pagination')
         const createdMessage = document.getElementById('created-message')
         const createdTabsContainer = document.getElementById('created-tabs')
+        const featureV3 =
+          document.body && document.body.dataset
+            ? document.body.dataset.featureV3 === 'true'
+            : false
+        const countBadges = {
+          published: document.querySelector('[data-count-badge="published"]'),
+          draft: document.querySelector('[data-count-badge="draft"]'),
+        }
         const createdTabs = createdTabsContainer
           ? Array.prototype.slice
               .call(createdTabsContainer.querySelectorAll('[data-status]'))
@@ -80,6 +126,66 @@ const path = Astro.url.pathname
                 return { status: button.getAttribute('data-status') || 'published', button: button }
               })
           : []
+        function showMessage(text, isError) {
+          if (!createdMessage) return
+          if (!text) {
+            createdMessage.innerHTML = ''
+            createdMessage.style.color = ''
+            return
+          }
+          if (featureV3) {
+            createdMessage.innerHTML =
+              '<div class="card ' +
+              (isError ? 'text-danger' : '') +
+              ' text-center">' +
+              text +
+              '</div>'
+            createdMessage.style.color = ''
+            return
+          }
+          createdMessage.textContent = text
+          createdMessage.style.color = isError ? '#d00' : '#059669'
+        }
+        function setCountBadge(status, value) {
+          const badge = status === 'draft' ? countBadges.draft : countBadges.published
+          if (!badge) return
+          const safe = typeof value === 'number' && value >= 0 ? value : 0
+          badge.textContent = String(safe)
+          const tab = createdTabs.find(function (entry) {
+            return entry.status === status
+          })
+          if (tab && tab.button) {
+            const labelKey = status === 'draft' ? 'myRooms.drafts' : 'myRooms.published'
+            tab.button.setAttribute('aria-label', window.t(labelKey) + ' ' + safe)
+          }
+        }
+        async function fetchStatusTotal(status) {
+          try {
+            const params = new URLSearchParams()
+            params.set('status', status)
+            params.set('limit', '1')
+            params.set('offset', '0')
+            const res = await fetch('/api/room-templates?' + params.toString(), {
+              credentials: 'include',
+            })
+            if (!res.ok) return null
+            const json = await res.json()
+            if (typeof json.total === 'number') return json.total
+            const templates = Array.isArray(json.templates) ? json.templates : []
+            return templates.length
+          } catch (e) {
+            console.warn('[rooms/created] fetchStatusTotal failed', status, e)
+            return null
+          }
+        }
+        async function updateCounts() {
+          const [published, draft] = await Promise.all([
+            fetchStatusTotal('published'),
+            fetchStatusTotal('draft'),
+          ])
+          setCountBadge('published', published)
+          setCountBadge('draft', draft)
+        }
         const mgr = setupRoomsManager({
           listEl: createdList,
           paginationEl: createdPagination,
@@ -90,13 +196,24 @@ const path = Astro.url.pathname
           },
           pageSize: 10,
           onNotify: function (text, isError) {
-            if (!createdMessage) return
-            createdMessage.textContent = text || ''
-            createdMessage.style.color = isError ? '#d00' : '#059669'
+            showMessage(text, isError)
+            updateCounts()
           },
           emptyText: window.t('profile.created.emptyScope'),
+          emptyAction: {
+            href: '/' + lang + '/create-room',
+            label: window.t('profile.sections.createRoom'),
+          },
         })
-        if (mgr && mgr.refresh) mgr.refresh()
+        updateCounts()
+        if (mgr && mgr.refresh) {
+          const originalRefresh = mgr.refresh
+          mgr.refresh = function () {
+            originalRefresh()
+            updateCounts()
+          }
+          mgr.refresh()
+        }
       })()
     </script>
   </body>

@@ -561,38 +561,128 @@ const path = Astro.url.pathname
 
         function formatNumber(value) {
           if (fmt && fmt.formatNumber) return fmt.formatNumber(value || 0, lang)
-          return (value || 0).toLocaleString()
+          try {
+            return new Intl.NumberFormat(lang).format(value || 0)
+          } catch (e) {
+            return String(value || 0)
+          }
         }
 
         function formatDate(timestamp) {
-          if (fmt && fmt.formatDate) return fmt.formatDate(timestamp, lang, { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-          if (!timestamp) return ''
-          const date = new Date(timestamp)
-          if (!date.getTime()) return ''
-          try {
-            return date.toLocaleString(lang, {
+          if (fmt && fmt.formatDate)
+            return fmt.formatDate(timestamp, lang, {
               year: 'numeric',
               month: 'short',
               day: 'numeric',
               hour: '2-digit',
               minute: '2-digit',
             })
+          if (!timestamp) return ''
+          const date = new Date(timestamp)
+          if (!date.getTime()) return ''
+          try {
+            return new Intl.DateTimeFormat(lang, {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+            }).format(date)
           } catch (e) {
-            return date.toLocaleString()
+            return date.toISOString()
           }
         }
 
-        function computeScore(correct, total, totalTimeMs) {
-          if (total <= 0) return 0
-          const accuracy = correct / total
-          const maxTime = 15000
-          const averageTime = totalTimeMs > 0 ? totalTimeMs / total : maxTime
-          const clamped = Math.min(Math.max(averageTime, 0), maxTime)
-          const quantityScore = correct * 100
-          const accuracyScore = accuracy * 600
-          const speedScore = ((maxTime - clamped) / maxTime) * 300
-          const totalScore = quantityScore + accuracyScore + Math.max(0, speedScore)
-          return Math.round(totalScore)
+        const computeScoreFallback =
+          metricsLib && typeof metricsLib.computeScore === 'function'
+            ? metricsLib.computeScore
+            : function (correct, total, totalTimeMs) {
+                if (total <= 0) return 0
+                const accuracy = correct / total
+                const maxTime = 15000
+                const averageTime = totalTimeMs > 0 ? totalTimeMs / total : maxTime
+                const clamped = Math.min(Math.max(averageTime, 0), maxTime)
+                const quantityScore = correct * 100
+                const accuracyScore = accuracy * 600
+                const speedScore = ((maxTime - clamped) / maxTime) * 300
+                const totalScore = quantityScore + accuracyScore + Math.max(0, speedScore)
+                return Math.round(totalScore)
+              }
+
+        function legacyComputeStats(scope) {
+          const now = Date.now()
+          const threshold = now - 30 * 24 * 60 * 60 * 1000
+          let totalAnswered = 0
+          let totalCorrect = 0
+          let totalTime = 0
+          let accuracy = 0
+          let points = 0
+          let rankLabel = '—'
+          let percentilePercent
+
+          let records = historyRecords
+          if (scope === '30d') {
+            records = historyRecords.filter(function (record) {
+              return record && record.answeredAt >= threshold
+            })
+          }
+          for (let i = 0; i < records.length; i += 1) {
+            const record = records[i]
+            if (!record) continue
+            totalAnswered += 1
+            if (record.isCorrect) totalCorrect += 1
+            if (typeof record.timeSpentMs === 'number') {
+              totalTime += record.timeSpentMs
+            }
+          }
+          if (totalAnswered > 0) {
+            accuracy = totalCorrect / totalAnswered
+          }
+          points = computeScoreFallback(totalCorrect, totalAnswered, totalTime)
+
+          if (scope === 'all' && statsAll) {
+            totalAnswered =
+              typeof statsAll.totalAnswered === 'number' ? statsAll.totalAnswered : totalAnswered
+            const totalCorrectAll =
+              typeof statsAll.totalCorrect === 'number' ? statsAll.totalCorrect : totalCorrect
+            accuracy = totalAnswered > 0 ? totalCorrectAll / totalAnswered : 0
+            const entryInfo = findLeaderboardEntry(currentUser.id)
+            if (entryInfo) {
+              const entry = entryInfo.entry
+              if (entry && typeof entry.score === 'number') {
+                points = entry.score
+              }
+              const position = entryInfo.index + 1
+              const totalPlayers = leaderboardEntries.length
+              rankLabel = '#' + position
+              if (totalPlayers > 0) {
+                percentilePercent = Math.round((position / totalPlayers) * 100)
+              }
+            }
+          } else if (
+            scope === 'all' &&
+            statsAll &&
+            typeof statsAll.totalCorrect === 'number' &&
+            typeof statsAll.totalAnswered === 'number'
+          ) {
+            const entry = findLeaderboardEntry(currentUser.id)
+            if (entry) {
+              rankLabel = '#' + (entry.index + 1)
+              const totalPlayers = leaderboardEntries.length
+              if (totalPlayers > 0) {
+                percentilePercent = Math.round(((entry.index + 1) / totalPlayers) * 100)
+              }
+            }
+          }
+
+          return {
+            totalAnswered,
+            totalCorrect,
+            accuracy,
+            points,
+            rankLabel,
+            percentilePercent,
+          }
         }
 
         async function checkAuth() {
@@ -698,82 +788,21 @@ const path = Astro.url.pathname
         }
 
         function computeStatsForScope(scope) {
-          const now = Date.now()
-          const threshold = now - 30 * 24 * 60 * 60 * 1000
-          let totalAnswered = 0
-          let totalCorrect = 0
-          let totalTime = 0
-          let points = 0
-          let accuracy = 0
-          let rankDisplay = '—'
-          let percentileDisplay = ''
-
-          let records = historyRecords
-          if (scope === '30d') {
-            records = historyRecords.filter(function (record) {
-              return record && record.answeredAt >= threshold
-            })
-          }
-          for (let i = 0; i < records.length; i += 1) {
-            const record = records[i]
-            if (!record) continue
-            totalAnswered += 1
-            if (record.isCorrect) totalCorrect += 1
-            if (typeof record.timeSpentMs === 'number') {
-              totalTime += record.timeSpentMs
+          if (metricsLib && typeof metricsLib.computeStats === 'function') {
+            try {
+              return metricsLib.computeStats({
+                scope,
+                now: Date.now(),
+                history: historyRecords,
+                aggregates: statsAll,
+                leaderboard: leaderboardEntries,
+                userId: currentUser.id,
+              })
+            } catch (e) {
+              console.error('[profile] computeStats failed', e)
             }
           }
-          if (totalAnswered > 0) {
-            accuracy = totalCorrect / totalAnswered
-          }
-          points = computeScore(totalCorrect, totalAnswered, totalTime)
-
-          if (scope === 'all' && statsAll) {
-            totalAnswered =
-              typeof statsAll.totalAnswered === 'number' ? statsAll.totalAnswered : totalAnswered
-            const totalCorrectAll =
-              typeof statsAll.totalCorrect === 'number' ? statsAll.totalCorrect : totalCorrect
-            accuracy = totalAnswered > 0 ? totalCorrectAll / totalAnswered : 0
-            const entryInfo = findLeaderboardEntry(currentUser.id)
-            if (entryInfo) {
-              const entry = entryInfo.entry
-              points = typeof entry.score === 'number' ? entry.score : points
-              const position = entryInfo.index + 1
-              const totalPlayers = leaderboardEntries.length
-              rankDisplay = '#' + position
-              if (totalPlayers > 0) {
-                const percentile = Math.round((position / totalPlayers) * 100)
-                percentileDisplay = window
-                  .t('profile.stats.percentile')
-                  .replace('{value}', String(percentile))
-              }
-            }
-          } else if (
-            scope === 'all' &&
-            statsAll &&
-            typeof statsAll.totalCorrect === 'number' &&
-            typeof statsAll.totalAnswered === 'number'
-          ) {
-            const entry = findLeaderboardEntry(currentUser.id)
-            if (entry) {
-              rankDisplay = '#' + (entry.index + 1)
-              const totalPlayers = leaderboardEntries.length
-              if (totalPlayers > 0) {
-                const percentile = Math.round(((entry.index + 1) / totalPlayers) * 100)
-                percentileDisplay = window
-                  .t('profile.stats.percentile')
-                  .replace('{value}', String(percentile))
-              }
-            }
-          }
-
-          return {
-            totalAnswered: totalAnswered,
-            accuracy: accuracy,
-            points: points,
-            rankLabel: rankDisplay,
-            percentileLabel: percentileDisplay,
-          }
+          return legacyComputeStats(scope)
         }
 
         function renderStats(scope) {
@@ -783,7 +812,14 @@ const path = Astro.url.pathname
           if (statsAccuracyEl) statsAccuracyEl.textContent = formatAccuracy(stats.accuracy || 0)
           if (statsPointsEl) statsPointsEl.textContent = formatNumber(stats.points || 0)
           if (statsRankEl) statsRankEl.textContent = stats.rankLabel || '—'
-          if (statsPercentileEl) statsPercentileEl.textContent = stats.percentileLabel || ''
+          if (statsPercentileEl) {
+            statsPercentileEl.textContent =
+              stats && typeof stats.percentilePercent === 'number'
+                ? window
+                    .t('profile.stats.percentile')
+                    .replace('{value}', String(stats.percentilePercent))
+                : ''
+          }
           if (featureV3) {
             const hasStats =
               (stats.totalAnswered || 0) > 0 || (stats.points || 0) > 0 || stats.rankLabel !== '—'

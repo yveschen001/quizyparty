@@ -204,6 +204,7 @@
   "profile.participations.empty": "No participation records.",
   "profile.participations.total": "Questions answered: {value}",
   "profile.participations.accuracy": "Accuracy: {value}",
+  "profile.participations.lastPlayed": "Last played: {value}",
   "profile.participations.cta": "Browse active quizzes",
   "profile.scope.all": "All time",
   "profile.scope.30d": "Last 30 days",
