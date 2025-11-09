@@ -24,37 +24,16 @@ const path = Astro.url.pathname
   <body data-feature-v3={featureV3 ? 'true' : 'false'}>
     <a href="#main" class="sr-only">{serverT('a11y.skipToContent')}</a>
     <AppHeader lang={lang} serverT={serverT} />
-    <main
-      id="main"
-      class={featureV3 ? 'container stack-lg' : 'container'}
-      style={
-        featureV3 ? undefined : 'display:grid;gap:32px;padding-top:32px;padding-bottom:64px'
-      }
-    >
-      <section class={featureV3 ? 'stack-lg' : undefined} style={featureV3 ? undefined : 'display:grid;gap:16px'}>
-        <div
-          class={featureV3 ? 'flex-between' : undefined}
-          style={
-            featureV3
-              ? undefined
-              : 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px'
-          }
-        >
-          <div class={featureV3 ? 'stack' : undefined}>
-            <h1 class="h1" style={featureV3 ? undefined : 'margin:0'}>{title}</h1>
-            <p
-              class={featureV3 ? 'p text-muted' : undefined}
-              style={featureV3 ? undefined : 'margin:4px 0 0;font-size:0.95rem;opacity:0.7'}
-            >
+    <main id="main" class:list={['container', featureV3 ? 'stack-lg' : 'legacy-profile-main']}>
+      <section class:list={[featureV3 ? 'stack-lg' : 'legacy-section']}>
+        <div class="flex-between">
+          <div class={featureV3 ? 'stack' : 'legacy-section'}>
+            <h1 class:list={['h1', 'no-margin']}>{title}</h1>
+            <p class:list={featureV3 ? ['p', 'text-muted'] : ['legacy-subheading']}>
               {serverT('profile.desc')}
             </p>
           </div>
-          <div
-            class={featureV3 ? 'tab-row' : undefined}
-            style={featureV3 ? undefined : 'display:flex;gap:8px;flex-wrap:wrap;align-items:center'}
-            role="tablist"
-            aria-label={serverT('profile.stats.scopeLabel')}
-          >
+          <div class="tab-row" role="tablist" aria-label={serverT('profile.stats.scopeLabel')}>
             <button
               id="scope-all"
               class={featureV3 ? 'tab active' : 'btn btn-primary'}
@@ -78,151 +57,69 @@ const path = Astro.url.pathname
             >
             <button
               id="open-settings"
-              class={featureV3 ? 'icon-btn' : 'btn'}
+              class="icon-btn"
               type="button"
               aria-label={serverT('profile.settings.open')}
               title={serverT('profile.settings.open')}
               aria-controls="settings-modal"
-              style={featureV3 ? undefined : 'display:inline-flex;align-items:center;gap:6px'}
             >
               <span aria-hidden="true">⚙️</span><span class="sr-only">{serverT('profile.settings.open')}</span>
             </button>
           </div>
         </div>
-        <div
-          id="stats-message"
-          class={featureV3 ? 'status-text' : undefined}
-          style={featureV3 ? undefined : 'min-height:1.2em;font-size:0.9rem'}
-        ></div>
-        <div
-          id="stats-panel"
-          class={featureV3 ? 'stats-grid stack' : 'stats-grid'}
-          style={
-            featureV3
-              ? undefined
-              : 'display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px'
-          }
-        >
-          <article
-            class={featureV3 ? 'card stack' : 'card'}
-            data-stat-card
-            style={
-              featureV3
-                ? undefined
-                : 'padding:20px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;display:grid;gap:8px'
-            }
-          >
-            <h2
-              class={featureV3 ? 'caption text-muted' : undefined}
-              style={featureV3 ? undefined : 'margin:0;font-size:0.95rem;opacity:0.65'}
-            >
+        <div id="stats-message" class={featureV3 ? 'status-text' : 'status-text'}></div>
+        <div id="stats-panel" class={featureV3 ? 'stats-grid stack' : 'legacy-stats-grid'}>
+          <article class={featureV3 ? 'card stack' : 'legacy-card stack'} data-stat-card>
+            <h2 class={featureV3 ? 'caption text-muted' : 'legacy-caption'}>
               {serverT('profile.stats.totalAnswers')}
             </h2>
-            <p
-              id="stats-total"
-              class={featureV3 ? 'stat-value' : undefined}
-              data-stat-value
-              style={featureV3 ? undefined : 'margin:0;font-size:1.8rem;font-weight:600'}
-            >
+            <p id="stats-total" class="stat-value" data-stat-value>
               0
             </p>
           </article>
-          <article
-            class={featureV3 ? 'card stack' : 'card'}
-            data-stat-card
-            style={
-              featureV3
-                ? undefined
-                : 'padding:20px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;display:grid;gap:8px'
-            }
-          >
-            <h2
-              class={featureV3 ? 'caption text-muted' : undefined}
-              style={featureV3 ? undefined : 'margin:0;font-size:0.95rem;opacity:0.65'}
-            >
+          <article class={featureV3 ? 'card stack' : 'legacy-card stack'} data-stat-card>
+            <h2 class={featureV3 ? 'caption text-muted' : 'legacy-caption'}>
               {serverT('profile.stats.accuracy')}
             </h2>
-            <p
-              id="stats-accuracy"
-              class={featureV3 ? 'stat-value' : undefined}
-              data-stat-value
-              style={featureV3 ? undefined : 'margin:0;font-size:1.8rem;font-weight:600'}
-            >
+            <p id="stats-accuracy" class="stat-value" data-stat-value>
               0%
             </p>
           </article>
-          <article
-            class={featureV3 ? 'card stack' : 'card'}
-            data-stat-card
-            style={
-              featureV3
-                ? undefined
-                : 'padding:20px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;display:grid;gap:8px'
-            }
-          >
-            <h2
-              class={featureV3 ? 'caption text-muted' : undefined}
-              style={featureV3 ? undefined : 'margin:0;font-size:0.95rem;opacity:0.65'}
-            >
+          <article class={featureV3 ? 'card stack' : 'legacy-card stack'} data-stat-card>
+            <h2 class={featureV3 ? 'caption text-muted' : 'legacy-caption'}>
               {serverT('profile.stats.points')}
             </h2>
-            <p
-              id="stats-points"
-              class={featureV3 ? 'stat-value' : undefined}
-              data-stat-value
-              style={featureV3 ? undefined : 'margin:0;font-size:1.8rem;font-weight:600'}
-            >
+            <p id="stats-points" class="stat-value" data-stat-value>
               0
             </p>
           </article>
-          <article
-            class={featureV3 ? 'card stack' : 'card'}
-            data-stat-card
-            style={
-              featureV3
-                ? undefined
-                : 'padding:20px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;display:grid;gap:8px'
-            }
-          >
-            <h2
-              class={featureV3 ? 'caption text-muted' : undefined}
-              style={featureV3 ? undefined : 'margin:0;font-size:0.95rem;opacity:0.65'}
-            >
+          <article class={featureV3 ? 'card stack' : 'legacy-card stack'} data-stat-card>
+            <h2 class={featureV3 ? 'caption text-muted' : 'legacy-caption'}>
               {serverT('profile.stats.rank')}
             </h2>
-            <p
-              id="stats-rank"
-              class={featureV3 ? 'stat-value' : undefined}
-              data-stat-value
-              style={featureV3 ? undefined : 'margin:0;font-size:1.8rem;font-weight:600'}
-            >
+            <p id="stats-rank" class="stat-value" data-stat-value>
               —
             </p>
-            <span
-              id="stats-percentile"
-              class={featureV3 ? 'caption text-muted' : undefined}
-              style={featureV3 ? undefined : 'font-size:0.85rem;opacity:0.7'}
-            ></span>
+            <span id="stats-percentile" class="caption text-muted"></span>
           </article>
         </div>
       </section>
 
-      <section id="v2-cards" class={featureV3 ? 'stack-lg' : undefined} style={featureV3 ? 'display:none' : 'display:none;gap:16px'}>
-        <div class={featureV3 ? 'stack-lg' : 'grid'} style={featureV3 ? undefined : 'display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:8px'}>
+      <section id="v2-cards" class="stack-lg is-hidden">
+        <div class="card-grid">
           <a
-            class={featureV3 ? 'card card-link stack' : 'card'}
-            style={featureV3 ? undefined : 'display:grid;gap:8px'}
+            class="card card-link stack"
             href={`/${lang}/rooms/created`}
             role="link"
             aria-label={serverT('profile.cards.created.title')}
           >
             <div class={featureV3 ? 'flex-between' : undefined}>
-              <h3 class="h3" style={featureV3 ? undefined : 'margin:0'}>
+              <h3 class="h3 no-margin">
                 {serverT('profile.cards.created.title')}
               </h3>
               {featureV3 && <span class="caption text-muted" aria-hidden="true">›</span>}
             </div>
-            <p class={featureV3 ? 'p text-muted' : 'p'} style={featureV3 ? undefined : 'margin:0;opacity:0.8'}>
+            <p class:list={['p', 'text-muted', 'text-opacity-80']}>
               {serverT('profile.cards.created.desc')}
             </p>
             <div>
@@ -230,19 +127,18 @@ const path = Astro.url.pathname
             </div>
           </a>
           <a
-            class={featureV3 ? 'card card-link stack' : 'card'}
-            style={featureV3 ? undefined : 'display:grid;gap:8px'}
+            class="card card-link stack"
             href={`/${lang}/rooms/joined`}
             role="link"
             aria-label={serverT('profile.cards.joined.title')}
           >
             <div class={featureV3 ? 'flex-between' : undefined}>
-              <h3 class="h3" style={featureV3 ? undefined : 'margin:0'}>
+              <h3 class="h3 no-margin">
                 {serverT('profile.cards.joined.title')}
               </h3>
               {featureV3 && <span class="caption text-muted" aria-hidden="true">›</span>}
             </div>
-            <p class={featureV3 ? 'p text-muted' : 'p'} style={featureV3 ? undefined : 'margin:0;opacity:0.8'}>
+            <p class:list={['p', 'text-muted', 'text-opacity-80']}>
               {serverT('profile.cards.joined.desc')}
             </p>
             <div>
@@ -252,22 +148,17 @@ const path = Astro.url.pathname
         </div>
       </section>
 
-      <section id="v1-created" class={featureV3 ? 'stack-lg' : undefined} style={featureV3 ? undefined : 'display:grid;gap:16px'}>
-        <div
-          class={featureV3 ? 'flex-between' : undefined}
-          style={
-            featureV3
-              ? undefined
-              : 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px'
-          }
-        >
-          <h2 class="h2" style={featureV3 ? undefined : 'margin:0'}>
+      <section
+        id="v1-created"
+        class={featureV3 ? 'stack-lg is-hidden' : 'legacy-section'}
+      >
+        <div class="flex-between">
+          <h2 class="h2 no-margin">
             {serverT('profile.sections.myRooms')}
           </h2>
           <a
-            class={featureV3 ? 'btn-primary' : 'btn'}
+            class={featureV3 ? 'btn-primary' : 'btn btn-compact'}
             href={`/${lang}/create-room`}
-            style={featureV3 ? undefined : 'font-size:0.9rem'}
             >{serverT('profile.sections.createRoom')}</a
           >
         </div>
@@ -293,33 +184,17 @@ const path = Astro.url.pathname
             >{serverT('myRooms.drafts')}</button
           >
         </div>
-        <div
-          id="created-message"
-          class={featureV3 ? 'status-text' : undefined}
-          style={featureV3 ? undefined : 'min-height:1.1em;font-size:0.9rem'}
-        ></div>
-        <div
-          id="created-list"
-          class={featureV3 ? 'stack' : undefined}
-          style={featureV3 ? undefined : 'display:grid;gap:12px'}
-        ></div>
-        <div
-          id="created-pagination"
-          style="display:none;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px"
-        >
-        </div>
+        <div id="created-message" class="status-text"></div>
+        <div id="created-list" class={featureV3 ? 'stack' : 'legacy-section'}></div>
+        <div id="created-pagination" class="flex-between is-hidden"></div>
       </section>
 
-      <section id="v1-joined" class={featureV3 ? 'stack-lg' : undefined} style={featureV3 ? undefined : 'display:grid;gap:16px'}>
-        <div
-          class={featureV3 ? 'flex-between' : undefined}
-          style={
-            featureV3
-              ? undefined
-              : 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px'
-          }
-        >
-          <h2 class="h2" style={featureV3 ? undefined : 'margin:0'}>
+      <section
+        id="v1-joined"
+        class={featureV3 ? 'stack-lg is-hidden' : 'legacy-section'}
+      >
+        <div class="flex-between">
+          <h2 class="h2 no-margin">
             {serverT('profile.sections.participations')}
           </h2>
         </div>
@@ -328,47 +203,37 @@ const path = Astro.url.pathname
           class={featureV3 ? 'status-text' : undefined}
           role="status"
           aria-live="polite"
-          style={featureV3 ? undefined : 'min-height:1.1em;font-size:0.9rem'}
         ></div>
         <div
           id="participations-list"
-          class={featureV3 ? 'stack' : undefined}
+          class={featureV3 ? 'stack' : 'legacy-section'}
           role="list"
-          style={featureV3 ? undefined : 'display:grid;gap:12px'}
         ></div>
       </section>
     </main>
-    <div
-      id="settings-modal"
-      style="display:none;position:fixed;inset:0;z-index:60;background:rgba(15,23,42,0.45);align-items:center;justify-content:center;padding:24px"
-    >
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="settings-title"
-        style="width:min(560px,100%);background:#fff;border-radius:16px;padding:20px;display:grid;gap:16px"
-      >
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-          <h3 id="settings-title" class="h3" style="margin:0">
+    <div id="settings-modal" class="modal-backdrop">
+      <div role="dialog" aria-modal="true" aria-labelledby="settings-title" class="modal-panel">
+        <div class="flex-between">
+          <h3 id="settings-title" class="h3 no-margin">
             {serverT('profile.settings.title')}
           </h3>
           <button
             id="close-settings"
-            class="btn"
+            class="icon-btn"
             type="button"
             aria-label={serverT('profile.settings.close')}>✕</button
           >
         </div>
-        <div style="display:grid;gap:12px">
-          <label for="settings-lang" style="font-weight:600">{serverT('languages.label')}</label>
-          <select id="settings-lang" class="tab" style="font-size:0.95rem">
+        <div class="stack">
+          <label for="settings-lang" class="label-strong">{serverT('languages.label')}</label>
+          <select id="settings-lang" class="tab select-md">
             <option value="en">{serverT('languages.en')}</option>
             <option value="zh-hant">{serverT('languages.zhHant')}</option>
             <option value="zh-hans">{serverT('languages.zhHans')}</option>
             <option value="ja">{serverT('languages.ja')}</option>
           </select>
         </div>
-        <div style="display:flex;gap:10px;justify-content:flex-end">
+        <div class="flex-end">
           <button id="settings-cancel" class="btn" type="button">{serverT('common.cancel')}</button>
           <button id="settings-save" class="btn btn-primary" type="button"
             >{serverT('common.save')}</button
@@ -427,11 +292,11 @@ const path = Astro.url.pathname
 
         // V2 卡片入口顯示控制
         if (featureV3) {
-          if (v2Cards) v2Cards.style.display = 'grid'
-          if (v1Created) v1Created.style.display = 'none'
-          if (v1Joined) v1Joined.style.display = 'none'
+          if (v2Cards) v2Cards.classList.remove('is-hidden')
+          if (v1Created) v1Created.classList.add('is-hidden')
+          if (v1Joined) v1Joined.classList.add('is-hidden')
         } else {
-          if (v2Cards) v2Cards.style.display = 'none'
+          if (v2Cards) v2Cards.classList.add('is-hidden')
         }
 
         function setStatSkeleton(active) {
@@ -513,12 +378,14 @@ const path = Astro.url.pathname
         // Settings modal 行為
         function toggleSettings(open) {
           if (!settingsModal) return
-          settingsModal.style.display = open ? 'flex' : 'none'
           if (open) {
+            settingsModal.classList.add('is-open')
             setTimeout(function () {
               if (settingsLang) settingsLang.focus()
             }, 0)
+            return
           }
+          settingsModal.classList.remove('is-open')
         }
         function computeRedirectPath(targetLang) {
           const url = new URL(window.location.href)

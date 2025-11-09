@@ -193,20 +193,20 @@ export function setupRoomsManager(config) {
   function updatePagination(total, limit, offset) {
     if (!paginationEl) return
     if (!window.RoomTemplates || typeof window.RoomTemplates.getPagination !== 'function') {
-      paginationEl.style.display = 'none'
+      paginationEl.classList.add('is-hidden')
       paginationEl.innerHTML = ''
       return
     }
     const info = window.RoomTemplates.getPagination(total, limit, offset)
     if (!info || info.totalPages <= 1) {
-      paginationEl.style.display = 'none'
+      paginationEl.classList.add('is-hidden')
       paginationEl.innerHTML = ''
       paginationEl.removeAttribute('data-total')
       paginationEl.removeAttribute('data-limit')
       paginationEl.removeAttribute('data-offset')
       return
     }
-    paginationEl.style.display = 'flex'
+    paginationEl.classList.remove('is-hidden')
     paginationEl.setAttribute('data-total', String(info.total))
     paginationEl.setAttribute('data-limit', String(info.limit))
     paginationEl.setAttribute('data-offset', String(info.offset))

@@ -26,14 +26,9 @@ const path = Astro.url.pathname
     <AppHeader lang={lang} serverT={serverT} />
     <main
       id="main"
-      class={featureV3 ? 'container stack-lg' : 'container'}
-      style={featureV3 ? undefined : 'display:grid;gap:16px;padding-top:24px;padding-bottom:48px'}
+      class:list={['container', featureV3 ? 'stack-lg' : 'legacy-profile-main']}
     >
-      <nav
-        aria-label={serverT('common.breadcrumbs')}
-        class={featureV3 ? 'caption breadcrumb' : 'caption'}
-        style={featureV3 ? undefined : 'display:flex;gap:8px'}
-      >
+      <nav aria-label={serverT('common.breadcrumbs')} class="caption breadcrumb">
         <a
           href={`/${lang}/profile`}
           class="caption"
@@ -43,9 +38,9 @@ const path = Astro.url.pathname
         <span aria-hidden="true">/</span>
         <span class="caption">{title}</span>
       </nav>
-      <h1 class="h1" style={featureV3 ? undefined : 'margin:0'}>{title}</h1>
-      <div id="message" class={featureV3 ? 'status-text' : undefined} role="status" aria-live="polite" style={featureV3 ? undefined : 'min-height:1.1em;font-size:0.9rem'}></div>
-      <div id="list" class={featureV3 ? 'stack' : undefined} role="list" style={featureV3 ? undefined : 'display:grid;gap:12px'}></div>
+      <h1 class="h1 no-margin">{title}</h1>
+      <div id="message" class="status-text" role="status" aria-live="polite"></div>
+      <div id="list" class={featureV3 ? 'stack' : 'legacy-section'} role="list"></div>
     </main>
     <script type="module" src="/js/i18n.js"></script>
     <script type="module">

@@ -26,14 +26,9 @@ const path = Astro.url.pathname
     <AppHeader lang={lang} serverT={serverT} />
     <main
       id="main"
-      class={featureV3 ? 'container stack-lg' : 'container'}
-      style={featureV3 ? undefined : 'display:grid;gap:16px;padding-top:24px;padding-bottom:48px'}
+      class:list={['container', featureV3 ? 'stack-lg' : 'legacy-profile-main']}
     >
-      <nav
-        aria-label={serverT('common.breadcrumbs')}
-        class={featureV3 ? 'caption breadcrumb' : 'caption'}
-        style={featureV3 ? undefined : 'display:flex;gap:8px'}
-      >
+      <nav aria-label={serverT('common.breadcrumbs')} class="caption breadcrumb">
         <a
           href={`/${lang}/profile`}
           class="caption"
@@ -43,15 +38,11 @@ const path = Astro.url.pathname
         <span aria-hidden="true">/</span>
         <span class="caption">{title}</span>
       </nav>
-      <div
-        class={featureV3 ? 'flex-between' : undefined}
-        style={featureV3 ? undefined : 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px'}
-      >
-        <h1 class="h1" style={featureV3 ? undefined : 'margin:0'}>{title}</h1>
+      <div class="flex-between">
+        <h1 class="h1 no-margin">{title}</h1>
         <a
-          class={featureV3 ? 'btn-primary' : 'btn'}
+          class={featureV3 ? 'btn-primary' : 'btn btn-compact'}
           href={`/${lang}/create-room`}
-          style={featureV3 ? undefined : 'font-size:0.9rem'}
           >{serverT('profile.sections.createRoom')}</a
         >
       </div>
@@ -59,8 +50,7 @@ const path = Astro.url.pathname
         id="created-tabs"
         role="tablist"
         aria-label={serverT('profile.sections.myRooms')}
-        class={featureV3 ? 'tab-row' : undefined}
-        style={featureV3 ? undefined : 'display:flex;gap:8px;flex-wrap:wrap'}
+        class="tab-row"
       >
         <button
           id="created-tab-published"
@@ -73,12 +63,7 @@ const path = Astro.url.pathname
           tabindex="0"
         >
           <span>{serverT('myRooms.published')}</span>
-          <span
-            class="badge"
-            data-count-badge="published"
-            style={featureV3 ? undefined : 'margin-left:8px'}
-            >0</span
-          >
+          <span class="badge" data-count-badge="published">0</span>
         </button>
         <button
           id="created-tab-draft"
@@ -91,28 +76,17 @@ const path = Astro.url.pathname
           tabindex="-1"
         >
           <span>{serverT('myRooms.drafts')}</span>
-          <span
-            class="badge"
-            data-count-badge="draft"
-            style={featureV3 ? undefined : 'margin-left:8px'}
-            >0</span
-          >
+          <span class="badge" data-count-badge="draft">0</span>
         </button>
       </div>
-      <div id="created-message" class={featureV3 ? 'status-text' : undefined} role="status" aria-live="polite" style={featureV3 ? undefined : 'min-height:1.1em;font-size:0.9rem'}></div>
+      <div id="created-message" class="status-text" role="status" aria-live="polite"></div>
       <div
         id="created-list"
         role="tabpanel"
         aria-labelledby="created-tab-published"
-        class={featureV3 ? 'stack' : undefined}
-        style={featureV3 ? undefined : 'display:grid;gap:12px'}
+        class={featureV3 ? 'stack' : 'legacy-section'}
       ></div>
-      <div
-        id="created-pagination"
-        class={featureV3 ? 'flex-between' : undefined}
-        style="display:none;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px"
-      >
-      </div>
+      <div id="created-pagination" class="flex-between is-hidden"></div>
     </main>
     <script type="module" src="/js/i18n.js"></script>
     <script src="/js/room-templates.js" is:inline></script>

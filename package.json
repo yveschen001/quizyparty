@@ -12,6 +12,7 @@
     "i18n:keygen": "ts-node scripts/gen-i18n-keys.ts",
     "i18n:check": "node scripts/check-i18n.mjs",
     "lint": "eslint .",
+    "lint:styles": "node scripts/check-inline-styles.mjs",
     "i18n:all": "npm run i18n:scan && npm run i18n:keygen && npm run i18n:check",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "format": "prettier --write .",
