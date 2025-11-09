@@ -1,5 +1,6 @@
 const paywall = {"title":"升級 VIP","desc":"解鎖專屬題庫、去廣告、更多權益。","cta":"立即升級","restore":"恢復購買","manage":"管理訂閱"};
-const common = {
+const common = {"pager":{"perPage":"每頁","pageSize":"每頁數量","prev":"上一頁","next":"下一頁","indicator":"第 {{page}} / {{pages}} 頁"}};
+const common$1 = {
   "a11y.skipToContent": "跳至主要內容",
   "auth.error": "認證錯誤",
   "auth.loggedIn": "登入成功",
@@ -499,6 +500,7 @@ const common = {
   "common.controls.sort.lastPlayed": "最近作答",
   "common.controls.sort.answered": "已答題",
   "common.controls.sort.accuracy": "正確率",
+  common,
 };
 
-export { common as default, paywall };
+export { common, common$1 as default, paywall };

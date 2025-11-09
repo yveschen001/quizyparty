@@ -1,5 +1,6 @@
 const paywall = {"title":"升級 VIP","desc":"解鎖専屬題庫、去廣告、更多權益。","cta":"立即升級","restore":"恢復購買","manage":"管理訂閱"};
-const common = {
+const common = {"pager":{"perPage":"1ページあたり","pageSize":"表示件数","prev":"前へ","next":"次へ","indicator":"{{page}} / {{pages}} ページ"}};
+const common$1 = {
   "seo.siteName": "QuizyParty",
   "nav.home": "ホーム",
   "nav.about": "概要",
@@ -331,6 +332,7 @@ const common = {
   "common.controls.sort.lastPlayed": "最終プレイ",
   "common.controls.sort.answered": "解答数",
   "common.controls.sort.accuracy": "正答率",
+  common,
 };
 
-export { common as default, paywall };
+export { common, common$1 as default, paywall };

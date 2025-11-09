@@ -54,7 +54,7 @@ async function loadServerI18n(lang, ns = ["common"]) {
       resourcesToBackend(async (lng, nspace) => {
         console.log(`[i18n Server] resourcesToBackend called: lng=${lng}, nspace=${nspace}`);
         try {
-          const mod = await __variableDynamicImportRuntimeHelper((/* #__PURE__ */ Object.assign({"./locales/de/common.json": () => import('./common_CmJepd6_.mjs'),"./locales/en/common.json": () => import('./common_C0NL6ZtL.mjs'),"./locales/fr/common.json": () => import('./common_9eoi48sM.mjs'),"./locales/ja/common.json": () => import('./common_BfCjBh13.mjs'),"./locales/ko/common.json": () => import('./common_Xy_V-6uo.mjs'),"./locales/zh-hans/common.json": () => import('./common_C0KCsdx-.mjs'),"./locales/zh-hant/common.json": () => import('./common_C4Rcobk1.mjs')})), `./locales/${lng}/${nspace}.json`, 4);
+          const mod = await __variableDynamicImportRuntimeHelper((/* #__PURE__ */ Object.assign({"./locales/de/common.json": () => import('./common_CmJepd6_.mjs'),"./locales/en/common.json": () => import('./common_BAxW_vfR.mjs'),"./locales/fr/common.json": () => import('./common_9eoi48sM.mjs'),"./locales/ja/common.json": () => import('./common_F_BTNtJS.mjs'),"./locales/ko/common.json": () => import('./common_Xy_V-6uo.mjs'),"./locales/zh-hans/common.json": () => import('./common_Dl9OXaCb.mjs'),"./locales/zh-hant/common.json": () => import('./common_CXiWFvgS.mjs')})), `./locales/${lng}/${nspace}.json`, 4);
           const data = mod.default || mod;
           if (typeof data === "object" && data !== null) {
             console.log(`[i18n Server] Loaded ${lng}/${nspace}.json, keys:`, Object.keys(data).length);
@@ -94,7 +94,7 @@ async function loadServerI18n(lang, ns = ["common"]) {
     console.warn(`[i18n Server] Resource bundle for ${lang}/common is missing!`);
     console.log(`[i18n Server] Attempting to manually load resource bundle...`);
     try {
-      const mod = await __variableDynamicImportRuntimeHelper((/* #__PURE__ */ Object.assign({"./locales/de/common.json": () => import('./common_CmJepd6_.mjs'),"./locales/en/common.json": () => import('./common_C0NL6ZtL.mjs'),"./locales/fr/common.json": () => import('./common_9eoi48sM.mjs'),"./locales/ja/common.json": () => import('./common_BfCjBh13.mjs'),"./locales/ko/common.json": () => import('./common_Xy_V-6uo.mjs'),"./locales/zh-hans/common.json": () => import('./common_C0KCsdx-.mjs'),"./locales/zh-hant/common.json": () => import('./common_C4Rcobk1.mjs')})), `./locales/${lang}/common.json`, 4);
+      const mod = await __variableDynamicImportRuntimeHelper((/* #__PURE__ */ Object.assign({"./locales/de/common.json": () => import('./common_CmJepd6_.mjs'),"./locales/en/common.json": () => import('./common_BAxW_vfR.mjs'),"./locales/fr/common.json": () => import('./common_9eoi48sM.mjs'),"./locales/ja/common.json": () => import('./common_F_BTNtJS.mjs'),"./locales/ko/common.json": () => import('./common_Xy_V-6uo.mjs'),"./locales/zh-hans/common.json": () => import('./common_Dl9OXaCb.mjs'),"./locales/zh-hant/common.json": () => import('./common_CXiWFvgS.mjs')})), `./locales/${lang}/common.json`, 4);
       const data = mod.default || mod;
       if (typeof data === "object" && data !== null) {
         serverInstance.addResourceBundle(lang, "common", data, true, true);

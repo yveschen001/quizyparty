@@ -500,5 +500,14 @@
   "common.controls.sort.members": "Participants",
   "common.controls.sort.lastPlayed": "Last played",
   "common.controls.sort.answered": "Answered",
-  "common.controls.sort.accuracy": "Accuracy"
+  "common.controls.sort.accuracy": "Accuracy",
+  "common": {
+    "pager": {
+      "perPage": "Per page",
+      "pageSize": "Items per page",
+      "prev": "Prev",
+      "next": "Next",
+      "indicator": "Page {{page}} / {{pages}}"
+    }
+  }
 }

@@ -371,5 +371,14 @@
   "common.controls.sort.members": "参与人数",
   "common.controls.sort.lastPlayed": "最近作答",
   "common.controls.sort.answered": "已答题",
-  "common.controls.sort.accuracy": "正确率"
+  "common.controls.sort.accuracy": "正确率",
+  "common": {
+    "pager": {
+      "perPage": "每页",
+      "pageSize": "每页数量",
+      "prev": "上一页",
+      "next": "下一页",
+      "indicator": "第 {{page}} / {{pages}} 页"
+    }
+  }
 }

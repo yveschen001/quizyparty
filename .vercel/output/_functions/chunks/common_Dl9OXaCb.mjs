@@ -1,5 +1,6 @@
 const paywall = {"title":"升級 VIP","desc":"解鎖專屬題庫、去廣告、更多權益。","cta":"立即升級","restore":"恢復購買","manage":"管理訂閱"};
-const common = {
+const common = {"pager":{"perPage":"每页","pageSize":"每页数量","prev":"上一页","next":"下一页","indicator":"第 {{page}} / {{pages}} 页"}};
+const common$1 = {
   "seo.siteName": "QuizyParty",
   "nav.home": "首页",
   "nav.about": "关于",
@@ -362,6 +363,7 @@ const common = {
   "common.controls.sort.lastPlayed": "最近作答",
   "common.controls.sort.answered": "已答题",
   "common.controls.sort.accuracy": "正确率",
+  common,
 };
 
-export { common as default, paywall };
+export { common, common$1 as default, paywall };

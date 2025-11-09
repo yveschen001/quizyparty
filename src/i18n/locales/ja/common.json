@@ -340,5 +340,14 @@
   "common.controls.sort.members": "参加者数",
   "common.controls.sort.lastPlayed": "最終プレイ",
   "common.controls.sort.answered": "解答数",
-  "common.controls.sort.accuracy": "正答率"
+  "common.controls.sort.accuracy": "正答率",
+  "common": {
+    "pager": {
+      "perPage": "1ページあたり",
+      "pageSize": "表示件数",
+      "prev": "前へ",
+      "next": "次へ",
+      "indicator": "{{page}} / {{pages}} ページ"
+    }
+  }
 }
