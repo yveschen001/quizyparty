@@ -302,4 +302,39 @@
   "profile.stats.rank": "ランキング",
   "profile.stats.percentile": "上位 {value}%",
   "profile.stats.fallback": "統計情報を表示できません。"
+  ,
+  "common": {
+    "card": {
+      "status": {
+        "draft": "下書き",
+        "public": "公開中"
+      },
+      "updatedAt": "更新日時",
+      "answered": "回答数",
+      "accuracy": "正解率",
+      "lastPlayedAt": "最終プレイ",
+      "cta": {
+        "playAgain": "もう一度遊ぶ",
+        "viewResult": "結果を見る"
+      }
+    },
+    "controls": {
+      "status": "ステータス",
+      "statusOptions": {
+        "all": "すべて"
+      },
+      "sort": {
+        "label": "並び替え",
+        "title": "タイトル",
+        "lastPlayed": "最終プレイ",
+        "answered": "回答数",
+        "accuracy": "正解率",
+        "updated": "更新日時",
+        "members": "メンバー"
+      }
+    },
+    "stats": {
+      "rankPct": "上位 {value}%"
+    }
+  }
 }

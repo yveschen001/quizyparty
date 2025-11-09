@@ -333,4 +333,39 @@
   "profile.stats.rank": "排名",
   "profile.stats.percentile": "前 {value}%",
   "profile.stats.fallback": "当前无法显示统计数据。"
+  ,
+  "common": {
+    "card": {
+      "status": {
+        "draft": "草稿",
+        "public": "已发布"
+      },
+      "updatedAt": "更新于",
+      "answered": "作答数",
+      "accuracy": "正确率",
+      "lastPlayedAt": "最近作答",
+      "cta": {
+        "playAgain": "再玩一次",
+        "viewResult": "查看结果"
+      }
+    },
+    "controls": {
+      "status": "状态",
+      "statusOptions": {
+        "all": "全部"
+      },
+      "sort": {
+        "label": "排序",
+        "title": "标题",
+        "lastPlayed": "最近作答",
+        "answered": "作答数",
+        "accuracy": "正确率",
+        "updated": "更新时间",
+        "members": "人数"
+      }
+    },
+    "stats": {
+      "rankPct": "前 {value}%"
+    }
+  }
 }

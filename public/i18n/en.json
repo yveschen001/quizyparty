@@ -359,5 +359,39 @@
   "questionSets.creating": "Creating...",
   "questionSets.noQuestions": "No questions yet.",
   "questionSets.createOne": "Create one",
-  "createRoom.loginRequired": "Please log in to manage rooms"
+  "createRoom.loginRequired": "Please log in to manage rooms",
+  "common": {
+    "card": {
+      "status": {
+        "draft": "Draft",
+        "public": "Published"
+      },
+      "updatedAt": "Updated",
+      "answered": "Answered",
+      "accuracy": "Accuracy",
+      "lastPlayedAt": "Last played",
+      "cta": {
+        "playAgain": "Play again",
+        "viewResult": "View result"
+      }
+    },
+    "controls": {
+      "status": "Status",
+      "statusOptions": {
+        "all": "All"
+      },
+      "sort": {
+        "label": "Sort by",
+        "title": "Title",
+        "lastPlayed": "Last played",
+        "answered": "Answered",
+        "accuracy": "Accuracy",
+        "updated": "Updated",
+        "members": "Members"
+      }
+    },
+    "stats": {
+      "rankPct": "Top {value}%"
+    }
+  }
 }

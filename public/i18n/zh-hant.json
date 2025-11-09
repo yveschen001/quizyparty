@@ -388,4 +388,39 @@
   "profile.stats.rank": "排名",
   "profile.stats.percentile": "前 {value}%",
   "profile.stats.fallback": "目前無法顯示統計資料。"
+  ,
+  "common": {
+    "card": {
+      "status": {
+        "draft": "草稿",
+        "public": "已發布"
+      },
+      "updatedAt": "更新於",
+      "answered": "作答數",
+      "accuracy": "正確率",
+      "lastPlayedAt": "最近作答",
+      "cta": {
+        "playAgain": "再玩一次",
+        "viewResult": "查看結果"
+      }
+    },
+    "controls": {
+      "status": "狀態",
+      "statusOptions": {
+        "all": "全部"
+      },
+      "sort": {
+        "label": "排序",
+        "title": "標題",
+        "lastPlayed": "最近作答",
+        "answered": "作答數",
+        "accuracy": "正確率",
+        "updated": "更新時間",
+        "members": "人數"
+      }
+    },
+    "stats": {
+      "rankPct": "前 {value}%"
+    }
+  }
 }
