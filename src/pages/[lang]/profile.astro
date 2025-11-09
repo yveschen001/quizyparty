@@ -73,7 +73,7 @@ const path = Astro.url.pathname
         <div id="stats-panel" class={featureV3 ? 'stats-grid stack' : 'legacy-stats-grid'}>
           <article class={featureV3 ? 'card stack' : 'legacy-card stack'} data-stat-card>
             <h2 class={featureV3 ? 'caption text-muted' : 'legacy-caption'}>
-              {serverT('profile.stats.totalAnswers')}
+              {serverT('profile.totalAnswered')}
             </h2>
             <p id="stats-total" class="stat-value" data-stat-value>
               0
@@ -81,7 +81,7 @@ const path = Astro.url.pathname
           </article>
           <article class={featureV3 ? 'card stack' : 'legacy-card stack'} data-stat-card>
             <h2 class={featureV3 ? 'caption text-muted' : 'legacy-caption'}>
-              {serverT('profile.stats.accuracy')}
+              {serverT('profile.accuracy')}
             </h2>
             <p id="stats-accuracy" class="stat-value" data-stat-value>
               0%
@@ -272,6 +272,20 @@ const path = Astro.url.pathname
         const statCards = Array.prototype.slice.call(
           document.querySelectorAll('[data-stat-card]'),
         )
+        // 客端覆寫：確保標題/小標/統計卡標籤為當前語言（避免 SSR 偶發英文化）
+        try {
+          const h1 = document.querySelector('h1.h1')
+          const sub = h1 ? h1.parentElement?.querySelector('p') : null
+          if (h1) h1.textContent = window.t('profile.title')
+          if (sub) sub.textContent = window.t('profile.desc')
+          const labels = Array.prototype.slice.call(document.querySelectorAll('#stats-panel h2'))
+          if (labels && labels.length >= 4) {
+            labels[0].textContent = window.t('profile.totalAnswered')
+            labels[1].textContent = window.t('profile.accuracy')
+            labels[2].textContent = window.t('profile.stats.points')
+            labels[3].textContent = window.t('profile.stats.rank')
+          }
+        } catch (e) {}
 
         const openSettingsBtn = document.getElementById('open-settings')
         const settingsModal = document.getElementById('settings-modal')

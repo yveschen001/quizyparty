@@ -342,6 +342,7 @@
   "profile.settings.saved": "已更新偏好設定。",
   "profile.settings.subtitle": "調整介面語言與房間顯示的題目語言。",
   "profile.settings.title": "設定",
+  "profile.settings.open": "開啟設定",
   "profile.stats": "統計數據",
   "profile.stats.fallback": "目前無法顯示統計資料。",
   "profile.stats.percentile": "前 {value}%",

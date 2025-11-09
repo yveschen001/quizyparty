@@ -171,6 +171,7 @@
   "profile.roomIdLabel": "Room",
   "profile.lastPlayedAt": "Last played",
   "profile.settings.title": "Settings",
+  "profile.settings.open": "Open settings",
   "profile.settings.subtitle": "Update your interface language and preferred room languages.",
   "profile.settings.interface": "Interface language",
   "profile.settings.interfaceHint": "This changes the app interface language.",
