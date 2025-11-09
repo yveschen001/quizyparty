@@ -70,6 +70,7 @@ const path = Astro.url.pathname
           </div>
         </div>
         <div id="stats-message" class={featureV3 ? 'status-text' : 'status-text'}></div>
+        <h2 class="h2 no-margin caption text-muted">{serverT('profile.scope.all')}</h2>
         <div id="stats-panel" class={featureV3 ? 'stats-grid stack' : 'legacy-stats-grid'}>
           <article class={featureV3 ? 'card stack' : 'legacy-card stack'} data-stat-card>
             <h2 class={featureV3 ? 'caption text-muted' : 'legacy-caption'}>
@@ -105,13 +106,41 @@ const path = Astro.url.pathname
             <span id="stats-percentile" class="caption text-muted"></span>
           </article>
         </div>
+        <h2 class="h2 no-margin caption text-muted">{serverT('profile.scope.30d')}</h2>
+        <div id="stats-panel-30d" class={featureV3 ? 'stats-grid stack' : 'legacy-stats-grid'}>
+          <article class={featureV3 ? 'card stack' : 'legacy-card stack'}>
+            <h2 class={featureV3 ? 'caption text-muted' : 'legacy-caption'}>
+              {serverT('profile.totalAnswered')}
+            </h2>
+            <p id="stats-total-30d" class="stat-value">0</p>
+          </article>
+          <article class={featureV3 ? 'card stack' : 'legacy-card stack'}>
+            <h2 class={featureV3 ? 'caption text-muted' : 'legacy-caption'}>
+              {serverT('profile.accuracy')}
+            </h2>
+            <p id="stats-accuracy-30d" class="stat-value">0%</p>
+          </article>
+          <article class={featureV3 ? 'card stack' : 'legacy-card stack'}>
+            <h2 class={featureV3 ? 'caption text-muted' : 'legacy-caption'}>
+              {serverT('profile.stats.points')}
+            </h2>
+            <p id="stats-points-30d" class="stat-value">0</p>
+          </article>
+          <article class={featureV3 ? 'card stack' : 'legacy-card stack'}>
+            <h2 class={featureV3 ? 'caption text-muted' : 'legacy-caption'}>
+              {serverT('profile.stats.rank')}
+            </h2>
+            <p id="stats-rank-30d" class="stat-value">—</p>
+            <span id="stats-percentile-30d" class="caption text-muted"></span>
+          </article>
+        </div>
       </section>
 
       {/** 入口卡片已移除（改由上方選單進入） */}
 
       <section
         id="v1-created"
-        class={featureV3 ? 'stack-lg' : 'legacy-section'}
+        class="is-hidden"
       >
         <div class="flex-between">
           <h2 class="h2 no-margin">
@@ -152,7 +181,7 @@ const path = Astro.url.pathname
 
       <section
         id="v1-joined"
-        class={featureV3 ? 'stack-lg' : 'legacy-section'}
+        class="is-hidden"
       >
         <div class="flex-between">
           <h2 class="h2 no-margin">
@@ -257,14 +286,19 @@ const path = Astro.url.pathname
         const statsPointsEl = document.getElementById('stats-points')
         const statsRankEl = document.getElementById('stats-rank')
         const statsPercentileEl = document.getElementById('stats-percentile')
+        const statsTotalEl30d = document.getElementById('stats-total-30d')
+        const statsAccuracyEl30d = document.getElementById('stats-accuracy-30d')
+        const statsPointsEl30d = document.getElementById('stats-points-30d')
+        const statsRankEl30d = document.getElementById('stats-rank-30d')
+        const statsPercentileEl30d = document.getElementById('stats-percentile-30d')
         const statsMessageEl = document.getElementById('stats-message')
         const scopeAllBtn = document.getElementById('scope-all')
         const scope30dBtn = document.getElementById('scope-30d')
         const scopeToggleEnabled = (lang !== 'zh-hant')
         if (!scopeToggleEnabled) {
           try {
-            const tabRow = scopeAllBtn ? scopeAllBtn.closest('.tab-row') : null
-            if (tabRow) tabRow.style.display = 'none'
+            if (scopeAllBtn) scopeAllBtn.style.display = 'none'
+            if (scope30dBtn) scope30dBtn.style.display = 'none'
           } catch (e) {}
         }
         const createdList = document.getElementById('created-list')
@@ -695,6 +729,20 @@ const path = Astro.url.pathname
           }
         }
 
+        function renderStats30d() {
+          const stats = computeStatsForScope('30d')
+          if (statsTotalEl30d) statsTotalEl30d.textContent = formatNumber(stats.totalAnswered || 0)
+          if (statsAccuracyEl30d) statsAccuracyEl30d.textContent = formatAccuracy(stats.accuracy || 0)
+          if (statsPointsEl30d) statsPointsEl30d.textContent = formatNumber(stats.points || 0)
+          if (statsRankEl30d) statsRankEl30d.textContent = stats.rankLabel || '—'
+          if (statsPercentileEl30d) {
+            statsPercentileEl30d.textContent =
+              stats && typeof stats.percentilePercent === 'number'
+                ? window.t('common.stats.rankPct').replace('{value}', String(stats.percentilePercent))
+                : ''
+          }
+        }
+
         function buildSkeletonCard() {
           const wrapper = document.createElement('div')
           wrapper.className = 'card card-skeleton'
@@ -974,11 +1022,10 @@ const path = Astro.url.pathname
           })
         }
 
-        renderStats(currentScope)
-        if (!featureV3) {
-          renderParticipations(currentScope)
-        }
-        applyScope(currentScope)
+        renderStats('all')
+        renderStats30d()
+        // 參與清單與房間列表已隱藏；仍保留 scope 流程兼容舊版
+        applyScope('all')
       })()
     </script>
   </body>
