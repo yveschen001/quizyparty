@@ -70,8 +70,8 @@ const path = Astro.url.pathname
           </div>
         </div>
         <div id="stats-message" class={featureV3 ? 'status-text' : 'status-text'}></div>
-        <h2 class="h2 no-margin caption text-muted">{serverT('profile.scope.all')}</h2>
-        <div id="stats-panel" class={featureV3 ? 'stats-grid stack' : 'legacy-stats-grid'}>
+        <h2 id="stats-label-all" class="h2 no-margin caption text-muted">{serverT('profile.scope.all')}</h2>
+        <div id="stats-panel" class={featureV3 ? 'stats-grid stack' : 'legacy-stats-grid'} style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px">
           <article class={featureV3 ? 'card stack' : 'legacy-card stack'} data-stat-card>
             <h2 class={featureV3 ? 'caption text-muted' : 'legacy-caption'}>
               {serverT('profile.totalAnswered')}
@@ -106,8 +106,8 @@ const path = Astro.url.pathname
             <span id="stats-percentile" class="caption text-muted"></span>
           </article>
         </div>
-        <h2 class="h2 no-margin caption text-muted">{serverT('profile.scope.30d')}</h2>
-        <div id="stats-panel-30d" class={featureV3 ? 'stats-grid stack' : 'legacy-stats-grid'}>
+        <h2 id="stats-label-30d" class="h2 no-margin caption text-muted">{serverT('profile.scope.30d')}</h2>
+        <div id="stats-panel-30d" class={featureV3 ? 'stats-grid stack' : 'legacy-stats-grid'} style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px">
           <article class={featureV3 ? 'card stack' : 'legacy-card stack'}>
             <h2 class={featureV3 ? 'caption text-muted' : 'legacy-caption'}>
               {serverT('profile.totalAnswered')}
@@ -273,6 +273,10 @@ const path = Astro.url.pathname
             labels[2].textContent = window.t('profile.stats.points')
             labels[3].textContent = window.t('profile.stats.rank')
           }
+          const allH = document.getElementById('stats-label-all')
+          const d30H = document.getElementById('stats-label-30d')
+          if (allH) allH.textContent = window.t('profile.scope.all')
+          if (d30H) d30H.textContent = window.t('profile.scope.30d')
         } catch (e) {}
 
         const openSettingsBtn = document.getElementById('open-settings')
@@ -710,8 +714,8 @@ const path = Astro.url.pathname
           try {
             const cards = document.querySelectorAll('[data-stat-card]')
             const labels = [
-              window.t('profile.stats.totalAnswers') + ': ' + (stats.totalAnswered || 0),
-              window.t('profile.stats.accuracy') + ': ' + (stats.accuracy ? formatAccuracy(stats.accuracy) : '0%'),
+              window.t('profile.totalAnswered') + ': ' + (stats.totalAnswered || 0),
+              window.t('profile.accuracy') + ': ' + (stats.accuracy ? formatAccuracy(stats.accuracy) : '0%'),
               window.t('profile.stats.points') + ': ' + (stats.points || 0),
               window.t('profile.stats.rank') +
                 ': ' +
