@@ -1,0 +1,74 @@
+---
+import type { APIContext } from 'astro'
+const {
+  id,
+  title,
+  updatedAt,
+  participants,
+  capacity,
+  status,
+  kind,
+  lang,
+  t,
+} = Astro.props as {
+  id: string
+  title: string
+  updatedAt?: string | number | Date
+  participants?: number
+  capacity?: number
+  status: 'draft' | 'public'
+  kind: 'created' | 'joined'
+  lang: string
+  t: (k: string) => string
+}
+
+const safeTitle = title || t('questionSets.untitled')
+let updatedText = ''
+try {
+  const { formatDate } = await import('../../utils/format')
+  updatedText = updatedAt ? formatDate(updatedAt as any, lang) : ''
+} catch {
+  updatedText = ''
+}
+const statusKey = status === 'draft' ? 'common.card.status.draft' : 'common.card.status.public'
+const statusLabel = t(statusKey)
+const parts = typeof participants === 'number' ? participants : undefined
+const cap = typeof capacity === 'number' ? capacity : undefined
+const peopleText =
+  parts !== undefined && cap !== undefined
+    ? `${t('common.card.participants')}: ${parts}/${cap}`
+    : parts !== undefined
+    ? `${t('common.card.participants')}: ${parts}`
+    : ''
+const href =
+  kind === 'created'
+    ? `/${lang}/create-room?templateId=${encodeURIComponent(id)}`
+    : `/${lang}/rooms/joined`
+---
+
+<a class="card stack gap-lg card-link" href={href} aria-label={safeTitle} data-testid="room-card">
+  <div class="flex-between">
+    <h3 class="h3 no-margin">{safeTitle}</h3>
+    <span class="badge">{statusLabel}</span>
+  </div>
+  <div class="meta-row">
+    {updatedText && <span>{t('common.card.updatedAt')}: {updatedText}</span>}
+    {peopleText && <span>{peopleText}</span>}
+  </div>
+  <div class="actions-row">
+    {kind === 'created' ? (
+      <>
+        <a class="btn-primary" href={`/${lang}/create-room?templateId=${encodeURIComponent(id)}`} aria-label={`${t('common.card.cta.edit')} · ${safeTitle}`}>{t('common.card.cta.edit')}</a>
+        <a class="btn" href={`/${lang}/create-room?templateId=${encodeURIComponent(id)}`} aria-label={`${t('common.card.cta.manage')} · ${safeTitle}`}>{t('common.card.cta.manage')}</a>
+        <a class="btn" href="#" aria-label={`${t('common.card.cta.share')} · ${safeTitle}`}>{t('common.card.cta.share')}</a>
+      </>
+    ) : (
+      <>
+        <a class="btn-primary" href="#" data-action="replay" data-room-id={id} aria-label={`${t('common.card.cta.playAgain')} · ${safeTitle}`}>{t('common.card.cta.playAgain')}</a>
+        <a class="btn" href="#" aria-label={`${t('common.card.cta.viewResult')} · ${safeTitle}`}>{t('common.card.cta.viewResult')}</a>
+      </>
+    )}
+  </div>
+</a>
+
+

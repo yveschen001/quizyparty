@@ -300,6 +300,7 @@
       card.style.border = '1px solid #e5e7eb'
       card.style.borderRadius = '12px'
     }
+    card.setAttribute('data-testid', 'room-card')
     if (template && template.id) card.setAttribute('data-template-id', template.id)
     if (template && template.questionSetId) {
       card.setAttribute('data-set-id', template.questionSetId)

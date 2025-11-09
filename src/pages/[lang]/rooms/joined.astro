@@ -212,6 +212,10 @@ const path = Astro.url.pathname
               const card = document.createElement('div')
               card.className = featureV3 ? 'card stack' : 'card'
               card.setAttribute('role', 'listitem')
+              card.setAttribute('data-testid', 'room-card')
+              if (item && item.roomTitle) {
+                card.setAttribute('aria-label', String(item.roomTitle))
+              }
               if (!featureV3) {
                 card.style.padding = '16px'
                 card.style.display = 'grid'
