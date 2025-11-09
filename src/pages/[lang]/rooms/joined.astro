@@ -3,6 +3,8 @@ import { setupServerI18n } from '../../../lib/server-i18n'
 import SeoMeta from '../../../components/SeoMeta.astro'
 import AppHeader from '../../../components/layout/AppHeader.astro'
 import '../../../styles/base.css'
+import EmptyState from '../../../components/ui/EmptyState.astro'
+import LoadingState from '../../../components/ui/LoadingState.astro'
 
 const { lang, serverT } = await setupServerI18n(Astro.params.lang)
 const title = serverT('profile.sections.participations')
@@ -40,6 +42,16 @@ const path = Astro.url.pathname
       </nav>
       <h1 class="h1 no-margin">{title}</h1>
       <div id="message" class="status-text" role="status" aria-live="polite"></div>
+      <LoadingState id="joined-loading" lang={lang} serverT={serverT} titleKey="common.loading" />
+      <EmptyState
+        id="joined-empty"
+        lang={lang}
+        serverT={serverT}
+        titleKey="common.empty.joined.title"
+        descKey="common.empty.joined.desc"
+        actionHref={`/${lang}/`}
+        actionKey="common.empty.joined.action"
+      />
       <div id="list" class={featureV3 ? 'stack' : 'legacy-section'} role="list"></div>
     </main>
     <script type="module" src="/js/i18n.js"></script>
@@ -107,9 +119,17 @@ const path = Astro.url.pathname
             return d.toISOString()
           }
         }
+        const joinedLoading = document.getElementById('joined-loading')
+        const joinedEmpty = document.getElementById('joined-empty')
+        function toggle(el, show) {
+          if (!el) return
+          el.style.display = show ? '' : 'none'
+        }
         function renderSkeleton() {
           if (!list) return
           list.innerHTML = ''
+          toggle(joinedEmpty, false)
+          toggle(joinedLoading, true)
           if (featureV3) {
             for (let i = 0; i < 3; i += 1) {
               const skeleton = document.createElement('div')
@@ -130,6 +150,8 @@ const path = Astro.url.pathname
           const ctaLabel = window.t('profile.participations.cta')
           const ctaHref = '/' + lang + '/'
           list.innerHTML = ''
+          toggle(joinedLoading, false)
+          toggle(joinedEmpty, true)
           if (featureV3) {
             const wrapper = document.createElement('div')
             wrapper.className = 'card stack text-center'

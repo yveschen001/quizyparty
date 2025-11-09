@@ -3,6 +3,8 @@ import { setupServerI18n } from '../../../lib/server-i18n'
 import SeoMeta from '../../../components/SeoMeta.astro'
 import AppHeader from '../../../components/layout/AppHeader.astro'
 import '../../../styles/base.css'
+import EmptyState from '../../../components/ui/EmptyState.astro'
+import LoadingState from '../../../components/ui/LoadingState.astro'
 
 const { lang, serverT } = await setupServerI18n(Astro.params.lang)
 const title = serverT('profile.sections.myRooms')
@@ -80,6 +82,21 @@ const path = Astro.url.pathname
         </button>
       </div>
       <div id="created-message" class="status-text" role="status" aria-live="polite"></div>
+      <LoadingState
+        id="created-loading"
+        lang={lang}
+        serverT={serverT}
+        titleKey="common.loading"
+      />
+      <EmptyState
+        id="created-empty"
+        lang={lang}
+        serverT={serverT}
+        titleKey="common.empty.created.title"
+        descKey="common.empty.created.desc"
+        actionHref={`/${lang}/create-room`}
+        actionKey="common.empty.created.action"
+      />
       <div
         id="created-list"
         role="tabpanel"
@@ -114,11 +131,29 @@ const path = Astro.url.pathname
                 return { status: button.getAttribute('data-status') || 'published', button: button }
               })
           : []
+        const createdLoading = document.getElementById('created-loading')
+        const createdEmpty = document.getElementById('created-empty')
+        function toggle(el, show) {
+          if (!el) return
+          el.style.display = show ? '' : 'none'
+        }
         function showMessage(text, isError) {
           if (!createdMessage) return
+          // 最小整合：若為空範圍提示，顯示統一 EmptyState；其他訊息維持舊行為
+          const emptyScope = window.t('profile.created.emptyScope')
+          if (text && text === emptyScope) {
+            toggle(createdLoading, false)
+            toggle(createdEmpty, true)
+            createdMessage.innerHTML = ''
+            createdMessage.style.color = ''
+            return
+          } else {
+            toggle(createdEmpty, false)
+          }
           if (!text) {
             createdMessage.innerHTML = ''
             createdMessage.style.color = ''
+            toggle(createdLoading, false)
             return
           }
           if (featureV3) {
@@ -129,6 +164,7 @@ const path = Astro.url.pathname
               text +
               '</div>'
             createdMessage.style.color = ''
+            toggle(createdLoading, false)
             return
           }
           createdMessage.textContent = text

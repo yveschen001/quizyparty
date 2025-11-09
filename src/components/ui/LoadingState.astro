@@ -1,0 +1,29 @@
+---
+const {
+  lang,
+  serverT,
+  titleKey,
+  descKey,
+  actionHref,
+  actionKey,
+  id,
+} = Astro.props as {
+  lang: string
+  serverT: (k: string) => string
+  titleKey: string
+  descKey?: string
+  actionHref?: string
+  actionKey?: string
+  id?: string
+}
+---
+
+<section id={id} role="status" aria-live="polite" data-testid="loading-state" class="card stack">
+  <h3 class="h3 no-margin">{serverT(titleKey)}</h3>
+  {descKey && <p class="p no-margin">{serverT(descKey)}</p>}
+  {actionHref && actionKey && (
+    <a href={actionHref} class="btn btn-primary">{serverT(actionKey)}</a>
+  )}
+</section>
+
+
