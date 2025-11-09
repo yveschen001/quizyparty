@@ -1,18 +1,29 @@
+/* eslint-env browser */
+/* global document, console */
+
 const INTERFACE_LANGS = ['en', 'zh-hant', 'zh-hans', 'ja']
+const root = typeof globalThis !== 'undefined' ? globalThis : {}
 
 function readInterfacePreference(defaultLang) {
-  const stored = window.localStorage.getItem('qp_interface_lang')
+  const storage = root.localStorage
+  if (!storage || typeof storage.getItem !== 'function') return defaultLang
+  const stored = storage.getItem('qp_interface_lang')
   if (stored && INTERFACE_LANGS.indexOf(stored) >= 0) return stored
   return defaultLang
 }
 
 function writeInterfacePreference(value) {
-  window.localStorage.setItem('qp_interface_lang', value)
+  const storage = root.localStorage
+  if (storage && typeof storage.setItem === 'function') {
+    storage.setItem('qp_interface_lang', value)
+  }
 }
 
 function readRoomLangPreference(defaultLang) {
   try {
-    const stored = window.localStorage.getItem('qp_room_langs')
+    const storage = root.localStorage
+    if (!storage || typeof storage.getItem !== 'function') return [defaultLang]
+    const stored = storage.getItem('qp_room_langs')
     if (stored) {
       const parsed = JSON.parse(stored)
       const normalized = Array.isArray(parsed)
@@ -40,19 +51,11 @@ function writeRoomLangPreference(values) {
       }),
     ),
   )
-  window.localStorage.setItem('qp_room_langs', JSON.stringify(unique))
-  return unique
-}
-
-function computeRedirectPath(targetLang) {
-  const url = new URL(window.location.href)
-  const segments = url.pathname.split('/').filter(Boolean)
-  if (segments.length === 0) {
-    segments.push(targetLang)
-  } else {
-    segments[0] = targetLang
+  const storage = root.localStorage
+  if (storage && typeof storage.setItem === 'function') {
+    storage.setItem('qp_room_langs', JSON.stringify(unique))
   }
-  return '/' + segments.join('/') + url.search + url.hash
+  return unique
 }
 
 function buildLanguageOptions(t) {
@@ -171,10 +174,10 @@ export function setupUserMenu(config) {
       typeof joinedUrl === 'function' ? joinedUrl(current) : '/' + current + '/rooms/joined'
 
     var html = ''
-    html += '<div style="display:grid;gap:12px">'
+    html += '<div class="stack" data-role="menu-content">'
     html +=
-      '<div style="display:grid;gap:8px;font-size:0.8rem;opacity:0.75" data-role="quota-container"></div>'
-    html += '<div style="display:grid;gap:6px">'
+      '<div class="stack caption text-muted" data-role="quota-container" style="gap:8px"></div>'
+    html += '<nav class="stack" aria-label="User menu">'
     html +=
       '<a data-role="profile-link" href="' +
       profileHref +
@@ -202,20 +205,20 @@ export function setupUserMenu(config) {
     html +=
       '<a data-role="privacy-link" href="' +
       privacyHref +
-      '" target="_blank" rel="noopener" class="btn" style="justify-content:flex-start">' +
+      '" class="btn" style="justify-content:flex-start">' +
       t('nav.menu.privacy') +
       '</a>'
     html +=
       '<a data-role="terms-link" href="' +
       termsHref +
-      '" target="_blank" rel="noopener" class="btn" style="justify-content:flex-start">' +
+      '" class="btn" style="justify-content:flex-start">' +
       t('nav.menu.terms') +
       '</a>'
     html +=
       '<button data-action="logout" class="btn" style="justify-content:flex-start">' +
       t('nav.menu.logout') +
       '</button>'
-    html += '</div>'
+    html += '</nav>'
     html += '</div>'
     panel.innerHTML = html
 

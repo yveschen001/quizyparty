@@ -6,7 +6,48 @@ import '../../../styles/base.css'
 
 const { lang, serverT } = await setupServerI18n(Astro.params.lang)
 const title = serverT('terms.title')
-const desc = serverT('terms.title')
+const desc = serverT('terms.metaDescription', { defaultValue: serverT('terms.title') })
+const placeholderNotice = serverT('terms.placeholderNotice', { defaultValue: '' })
+const lastUpdated = serverT('terms.lastUpdated')
+const intro = serverT('terms.intro')
+const sections = [
+  {
+    title: serverT('terms.sections.service.title'),
+    paragraphs: [serverT('terms.sections.service.body1')]
+  },
+  {
+    title: serverT('terms.sections.obligations.title'),
+    paragraphs: [serverT('terms.sections.obligations.body1')]
+  },
+  {
+    title: serverT('terms.sections.security.title'),
+    paragraphs: [serverT('terms.sections.security.body1')]
+  },
+  {
+    title: serverT('terms.sections.ip.title'),
+    paragraphs: [serverT('terms.sections.ip.body1')]
+  },
+  {
+    title: serverT('terms.sections.payment.title'),
+    paragraphs: [serverT('terms.sections.payment.body1')]
+  },
+  {
+    title: serverT('terms.sections.termination.title'),
+    paragraphs: [serverT('terms.sections.termination.body1')]
+  },
+  {
+    title: serverT('terms.sections.liability.title'),
+    paragraphs: [serverT('terms.sections.liability.body1')]
+  },
+  {
+    title: serverT('terms.sections.changes.title'),
+    paragraphs: [serverT('terms.sections.changes.body1')]
+  },
+  {
+    title: serverT('terms.sections.contact.title'),
+    paragraphs: [serverT('terms.sections.contact.body1')]
+  }
+].filter((section) => section.title)
 
 export const prerender = false
 const siteOrigin =
@@ -23,29 +64,24 @@ const path = Astro.url.pathname
   <body>
     <a href="#main" class="sr-only">{serverT('a11y.skipToContent')}</a>
     <AppHeader lang={lang} serverT={serverT} />
-    <main id="main" class="container" style="display:grid;gap:16px;padding-top:24px;padding-bottom:48px">
-      <h1 class="h1" style="margin:0">{title}（暫代）</h1>
-      <p class="caption" style="margin:0">最後更新日期：2025-11-08</p>
-      <article class="card" style="display:grid;gap:12px">
-        <p class="p">歡迎使用本服務。為保障您的權益，請於使用前詳細閱讀本條款。您開始使用即表示您同意以下內容。</p>
-        <h2 class="h2">1. 服務內容</h2>
-        <p class="p">本服務提供建立房間、出題、作答、成績與排行榜等功能，實際功能以平台公告為準。</p>
-        <h2 class="h2">2. 使用者義務</h2>
-        <p class="p">您應保證提供之資料真實、不得侵害他人權利；不得從事違法、詐欺、攻擊或干擾服務之行為。</p>
-        <h2 class="h2">3. 帳號與安全</h2>
-        <p class="p">帳號僅供本人使用；請妥善保管登入憑證。若發現異常活動，請立即通知我們。</p>
-        <h2 class="h2">4. 內容與智慧財產</h2>
-        <p class="p">由您上傳或建立之題目、文字、圖片等，您保留權利，但您授權平台於提供服務之必要範圍內使用、展示與處理。請勿上傳侵權內容。</p>
-        <h2 class="h2">5. 付費與退款（如適用）</h2>
-        <p class="p">若涉及付費方案，費率、計費與退款條件將以方案頁面或另行公告為準。</p>
-        <h2 class="h2">6. 終止與停權</h2>
-        <p class="p">若您違反本條款或法律規範，平台得不經通知限制或終止您之使用權限。</p>
-        <h2 class="h2">7. 責任限制</h2>
-        <p class="p">本服務按「現況」提供，對可用性、正確性或特定目的適用性不作保證。平台對於因使用本服務所生之間接或附隨損害不負賠償責任。</p>
-        <h2 class="h2">8. 條款變更</h2>
-        <p class="p">平台得視需要隨時修改條款並公告。變更後您仍繼續使用，即視為同意新條款。</p>
-        <h2 class="h2">9. 聯絡我們</h2>
-        <p class="p">若有問題或申訴，請聯繫：support@example.com</p>
+    <main id="main" class="container stack-lg" style="padding-top:32px;padding-bottom:64px">
+      <header class="stack">
+        <h1 class="h1">
+          {title}
+          {placeholderNotice && <span>{placeholderNotice}</span>}
+        </h1>
+        <p class="caption text-muted">{lastUpdated}</p>
+      </header>
+      <article class="card stack gap-lg">
+        <p class="p">{intro}</p>
+        {sections.map((section) => (
+          <section class="stack">
+            <h2 class="h2">{section.title}</h2>
+            {section.paragraphs.map((paragraph) => (
+              <p class="p">{paragraph}</p>
+            ))}
+          </section>
+        ))}
       </article>
     </main>
   </body>
