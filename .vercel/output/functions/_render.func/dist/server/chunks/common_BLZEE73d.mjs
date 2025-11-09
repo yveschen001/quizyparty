@@ -318,6 +318,15 @@ const common = {
   "profile.stats.rank": "ランキング",
   "profile.stats.percentile": "上位 {value}%",
   "profile.stats.fallback": "統計情報を表示できません。",
+  "common.controls.status": "ステータス",
+  "common.controls.status.all": "すべて",
+  "common.controls.sort": "並び替え",
+  "common.controls.sort.updated": "更新日時",
+  "common.controls.sort.title": "タイトル",
+  "common.controls.sort.members": "参加者数",
+  "common.controls.sort.lastPlayed": "最終プレイ",
+  "common.controls.sort.answered": "解答数",
+  "common.controls.sort.accuracy": "正答率",
 };
 
 export { common as default, paywall };

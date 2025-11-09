@@ -483,6 +483,15 @@ const common = {
   "questionSets.noQuestions": "No questions yet.",
   "questionSets.createOne": "Create one",
   "createRoom.loginRequired": "Please log in to manage rooms",
+  "common.controls.status": "Status",
+  "common.controls.status.all": "All",
+  "common.controls.sort": "Sort by",
+  "common.controls.sort.updated": "Updated",
+  "common.controls.sort.title": "Title",
+  "common.controls.sort.members": "Participants",
+  "common.controls.sort.lastPlayed": "Last played",
+  "common.controls.sort.answered": "Answered",
+  "common.controls.sort.accuracy": "Accuracy",
 };
 
 export { common as default, paywall };

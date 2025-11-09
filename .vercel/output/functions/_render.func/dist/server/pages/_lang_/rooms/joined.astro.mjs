@@ -1,5 +1,5 @@
 import { e as createAstro, f as createComponent, r as renderTemplate, h as addAttribute, p as renderComponent, ah as renderHead } from '../../../chunks/astro/server_BigfXiJV.mjs';
-import { s as setupServerI18n } from '../../../chunks/server-i18n_B6Cgzsxy.mjs';
+import { s as setupServerI18n } from '../../../chunks/server-i18n_BKH6atwt.mjs';
 import { $ as $$SeoMeta } from '../../../chunks/SeoMeta_mSwdbQaA.mjs';
 import { $ as $$AppHeader } from '../../../chunks/AppHeader_Ceo4wj6R.mjs';
 /* empty css                                       */
@@ -20,7 +20,7 @@ const $$Joined = createComponent(async ($$result, $$props, $$slots) => {
   const desc = serverT("profile.sections.participations");
   const siteOrigin = Astro2.site && Astro2.site.origin || "https://quizyparty.com";
   const path = Astro2.url.pathname;
-  return renderTemplate(_a || (_a = __template(["<html", '> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">', "", "</head> <body", '> <a href="#main" class="sr-only">', "</a> ", ' <main id="main"', "> <nav", ' class="caption breadcrumb"> <a', ' class="caption"', ">", '</a> <span aria-hidden="true">/</span> <span class="caption">', '</span> </nav> <h1 class="h1 no-margin">', '</h1> <div id="message" class="status-text" role="status" aria-live="polite"></div> ', " ", ' <div id="list"', ` role="list"></div> </main> <script type="module" src="/js/i18n.js"></script> <script src="/js/room-card-template.js"></script> <script type="module">
+  return renderTemplate(_a || (_a = __template(["<html", '> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">', "", "</head> <body", '> <a href="#main" class="sr-only">', "</a> ", ' <main id="main"', '> <div id="joined-controls" class="mb-3"></div> <nav', ' class="caption breadcrumb"> <a', ' class="caption"', ">", '</a> <span aria-hidden="true">/</span> <span class="caption">', '</span> </nav> <h1 class="h1 no-margin">', '</h1> <div id="message" class="status-text" role="status" aria-live="polite"></div> ', " ", ' <div id="list"', ` role="list"></div> </main> <script type="module" src="/js/i18n.js"></script> <script src="/js/rooms-filters.js"></script> <script src="/js/room-card-template.js"></script> <script type="module">
       ;(async function () {
         await import('/js/i18n.js')
         const lang = document.documentElement.getAttribute('lang') || 'en'
@@ -159,12 +159,38 @@ const $$Joined = createComponent(async ($$result, $$props, $$slots) => {
               return
             }
             const json = await res.json()
-            const items = Array.isArray(json.rooms) ? json.rooms : []
-            items.sort(function (a, b) {
-              const aTime = new Date(a && a.lastAnsweredAt ? a.lastAnsweredAt : 0).getTime()
-              const bTime = new Date(b && b.lastAnsweredAt ? b.lastAnsweredAt : 0).getTime()
-              return bTime - aTime
-            })
+            let items = Array.isArray(json.rooms) ? json.rooms : []
+            // 依 URL sort 控制排序（存在 RoomsFilters 時套用）
+            try {
+              const q = new URLSearchParams(location.search)
+              const sort = q.get('sort') || 'lastPlayed'
+              if (window.RoomsFilters) {
+                const mapped = items.map(function (it) {
+                  return {
+                    _orig: it,
+                    title: it && it.roomTitle,
+                    lastPlayedAt: it && it.lastAnsweredAt,
+                    answered: it && it.totalAnswered,
+                    accuracy:
+                      typeof it.accuracy === 'number'
+                        ? it.accuracy
+                        : typeof it.correctRate === 'number'
+                        ? it.correctRate
+                        : 0,
+                  }
+                })
+                const sorted = window.RoomsFilters.sortJoined(mapped, sort)
+                items = sorted.map(function (x) {
+                  return x._orig
+                })
+              } else {
+                items.sort(function (a, b) {
+                  const aTime = new Date(a && a.lastAnsweredAt ? a.lastAnsweredAt : 0).getTime()
+                  const bTime = new Date(b && b.lastAnsweredAt ? b.lastAnsweredAt : 0).getTime()
+                  return bTime - aTime
+                })
+              }
+            } catch (e) {}
             if (!items.length) {
               renderEmpty()
               return
@@ -208,6 +234,13 @@ const $$Joined = createComponent(async ($$result, $$props, $$slots) => {
           }
         }
         await loadParticipations()
+        ;(function initJoinedControls(){
+          try {
+            if (window.RoomsFilters) {
+              window.RoomsFilters.renderJoinedControls(document.getElementById('joined-controls'))
+            }
+          } catch (e) {}
+        })()
         if (list) {
           list.addEventListener('click', function (event) {
             const link = event.target && event.target.closest('[data-action="replay"]')

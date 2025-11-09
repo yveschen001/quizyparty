@@ -349,6 +349,15 @@ const common = {
   "profile.stats.rank": "排名",
   "profile.stats.percentile": "前 {value}%",
   "profile.stats.fallback": "当前无法显示统计数据。",
+  "common.controls.status": "状态",
+  "common.controls.status.all": "全部",
+  "common.controls.sort": "排序",
+  "common.controls.sort.updated": "更新时间",
+  "common.controls.sort.title": "标题",
+  "common.controls.sort.members": "参与人数",
+  "common.controls.sort.lastPlayed": "最近作答",
+  "common.controls.sort.answered": "已答题",
+  "common.controls.sort.accuracy": "正确率",
 };
 
 export { common as default, paywall };

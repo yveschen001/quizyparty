@@ -490,5 +490,14 @@
   "roomTemplates.pagination.previous": "上一頁",
   "roomTemplates.status.draft": "草稿",
   "roomTemplates.status.published": "已發布",
-  "seo.siteName": "QuizyParty"
+  "seo.siteName": "QuizyParty",
+  "common.controls.status": "狀態",
+  "common.controls.status.all": "全部",
+  "common.controls.sort": "排序",
+  "common.controls.sort.updated": "更新時間",
+  "common.controls.sort.title": "標題",
+  "common.controls.sort.members": "參與人數",
+  "common.controls.sort.lastPlayed": "最近作答",
+  "common.controls.sort.answered": "已答題",
+  "common.controls.sort.accuracy": "正確率"
 }

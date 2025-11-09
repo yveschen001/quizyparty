@@ -1,5 +1,5 @@
 import { e as createAstro, f as createComponent, r as renderTemplate, h as addAttribute, ah as renderHead, p as renderComponent } from '../../../chunks/astro/server_BigfXiJV.mjs';
-import { s as setupServerI18n } from '../../../chunks/server-i18n_B6Cgzsxy.mjs';
+import { s as setupServerI18n } from '../../../chunks/server-i18n_BKH6atwt.mjs';
 import { $ as $$SeoMeta } from '../../../chunks/SeoMeta_mSwdbQaA.mjs';
 /* empty css                                       */
 export { renderers } from '../../../renderers.mjs';

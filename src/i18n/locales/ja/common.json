@@ -74,7 +74,6 @@
   "auth.loggedIn": "ログインしました",
   "auth.loggedOut": "ログアウトしました",
   "auth.error": "認証エラー",
-  "nav.profile": "プロフィール",
   "profile.title": "プロフィール",
   "profile.desc": "クイズ統計と履歴を表示",
   "profile.loading": "読み込み中...",
@@ -307,7 +306,6 @@
   "common.card.cta.viewResult": "@todo-ja-verify 結果を見る",
   "common.save": "保存",
   "common.cancel": "キャンセル",
-  "profile.settings.title": "設定",
   "profile.settings.close": "閉じる",
   "profile.cards.created.title": "作成した部屋",
   "profile.cards.created.desc": "作成したクイズを管理。公開/下書きの切替、編集へ。",
@@ -329,5 +327,14 @@
   "profile.stats.points": "スコア",
   "profile.stats.rank": "ランキング",
   "profile.stats.percentile": "上位 {value}%",
-  "profile.stats.fallback": "統計情報を表示できません。"
+  "profile.stats.fallback": "統計情報を表示できません。",
+  "common.controls.status": "ステータス",
+  "common.controls.status.all": "すべて",
+  "common.controls.sort": "並び替え",
+  "common.controls.sort.updated": "更新日時",
+  "common.controls.sort.title": "タイトル",
+  "common.controls.sort.members": "参加者数",
+  "common.controls.sort.lastPlayed": "最終プレイ",
+  "common.controls.sort.answered": "解答数",
+  "common.controls.sort.accuracy": "正答率"
 }

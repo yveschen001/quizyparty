@@ -30,6 +30,7 @@ const path = Astro.url.pathname
       id="main"
       class:list={['container', featureV3 ? 'stack-lg' : 'legacy-profile-main']}
     >
+      <div id="joined-controls" class="mb-3"></div>
       <nav aria-label={serverT('common.breadcrumbs')} class="caption breadcrumb">
         <a
           href={`/${lang}/profile`}
@@ -55,6 +56,7 @@ const path = Astro.url.pathname
       <div id="list" class={featureV3 ? 'stack' : 'legacy-section'} role="list"></div>
     </main>
     <script type="module" src="/js/i18n.js"></script>
+    <script src="/js/rooms-filters.js" is:inline></script>
     <script src="/js/room-card-template.js" is:inline></script>
     <script type="module">
       ;(async function () {
@@ -195,12 +197,38 @@ const path = Astro.url.pathname
               return
             }
             const json = await res.json()
-            const items = Array.isArray(json.rooms) ? json.rooms : []
-            items.sort(function (a, b) {
-              const aTime = new Date(a && a.lastAnsweredAt ? a.lastAnsweredAt : 0).getTime()
-              const bTime = new Date(b && b.lastAnsweredAt ? b.lastAnsweredAt : 0).getTime()
-              return bTime - aTime
-            })
+            let items = Array.isArray(json.rooms) ? json.rooms : []
+            // 依 URL sort 控制排序（存在 RoomsFilters 時套用）
+            try {
+              const q = new URLSearchParams(location.search)
+              const sort = q.get('sort') || 'lastPlayed'
+              if (window.RoomsFilters) {
+                const mapped = items.map(function (it) {
+                  return {
+                    _orig: it,
+                    title: it && it.roomTitle,
+                    lastPlayedAt: it && it.lastAnsweredAt,
+                    answered: it && it.totalAnswered,
+                    accuracy:
+                      typeof it.accuracy === 'number'
+                        ? it.accuracy
+                        : typeof it.correctRate === 'number'
+                        ? it.correctRate
+                        : 0,
+                  }
+                })
+                const sorted = window.RoomsFilters.sortJoined(mapped, sort)
+                items = sorted.map(function (x) {
+                  return x._orig
+                })
+              } else {
+                items.sort(function (a, b) {
+                  const aTime = new Date(a && a.lastAnsweredAt ? a.lastAnsweredAt : 0).getTime()
+                  const bTime = new Date(b && b.lastAnsweredAt ? b.lastAnsweredAt : 0).getTime()
+                  return bTime - aTime
+                })
+              }
+            } catch (e) {}
             if (!items.length) {
               renderEmpty()
               return
@@ -244,6 +272,13 @@ const path = Astro.url.pathname
           }
         }
         await loadParticipations()
+        ;(function initJoinedControls(){
+          try {
+            if (window.RoomsFilters) {
+              window.RoomsFilters.renderJoinedControls(document.getElementById('joined-controls'))
+            }
+          } catch (e) {}
+        })()
         if (list) {
           list.addEventListener('click', function (event) {
             const link = event.target && event.target.closest('[data-action="replay"]')

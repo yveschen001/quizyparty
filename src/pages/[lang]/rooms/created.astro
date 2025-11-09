@@ -30,6 +30,7 @@ const path = Astro.url.pathname
       id="main"
       class:list={['container', featureV3 ? 'stack-lg' : 'legacy-profile-main']}
     >
+      <div id="created-controls" class="mb-3"></div>
       <nav aria-label={serverT('common.breadcrumbs')} class="caption breadcrumb">
         <a
           href={`/${lang}/profile`}
@@ -107,6 +108,7 @@ const path = Astro.url.pathname
     </main>
     <script type="module" src="/js/i18n.js"></script>
     <script src="/js/room-card-template.js" is:inline></script>
+    <script src="/js/rooms-filters.js" is:inline></script>
     <script src="/js/room-templates.js" is:inline></script>
     <script type="module">
       ;(async function () {
@@ -239,6 +241,13 @@ const path = Astro.url.pathname
           }
           mgr.refresh()
         }
+        ;(function initControls(){
+          try {
+            if (window.RoomsFilters) {
+              window.RoomsFilters.renderCreatedControls(document.getElementById('created-controls'))
+            }
+          } catch (e) {}
+        })()
       })()
     </script>
   </body>

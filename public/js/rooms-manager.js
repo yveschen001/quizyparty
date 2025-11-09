@@ -259,6 +259,30 @@ export function setupRoomsManager(config) {
       const offsetFromApi =
         typeof json.offset === 'number' && json.offset >= 0 ? json.offset : currentOffset
       let filtered = templates
+      // 客端排序/過濾（由 URL ?sort=?status= 控制），最小入侵：存在 RoomsFilters 時才套用
+      try {
+        if (window.RoomsFilters) {
+          const q = new URLSearchParams(location.search)
+          const statusFromUrl = q.get('status') || 'all'
+          const sortFromUrl = q.get('sort') || 'updated'
+          // 轉為通用結構以便排序（僅取必要欄位）
+          const mapped = templates.map(function (tpl) {
+            return {
+              _orig: tpl,
+              id: tpl && tpl.id,
+              title: tpl && tpl.title,
+              updatedAt: tpl && tpl.updatedAt,
+              participants: tpl && tpl.participants,
+              status: tpl && tpl.status === 'draft' ? 'draft' : 'public',
+            }
+          })
+          let arr = window.RoomsFilters.filterCreated(mapped, statusFromUrl)
+          arr = window.RoomsFilters.sortCreated(arr, sortFromUrl)
+          filtered = arr.map(function (x) {
+            return x._orig
+          })
+        }
+      } catch (e) {}
       if (filterFn) {
         filtered = templates.filter(function (item) {
           return filterFn(item)
