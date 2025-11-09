@@ -1,5 +1,6 @@
 ;(function (global) {
   const t = (k) => (global.t ? global.t(k) : k)
+  const tt = (a, b) => (global.t ? global.t(a, b) : a)
   function qs() {
     return new URLSearchParams(location.search)
   }
@@ -32,9 +33,9 @@
       'aria-controls': 'created-list',
     })
     ;[
-      ['all', t('common.controls.status.all')],
-      ['public', t('common.card.status.public')],
-      ['draft', t('common.card.status.draft')],
+      ['all', tt('common.controls.statusOptions.all', 'controls.statusOptions.all')],
+      ['public', tt('common.card.status.public', 'card.status.public')],
+      ['draft', tt('common.card.status.draft', 'card.status.draft')],
     ].forEach(function (pair) {
       const v = pair[0]
       const lab = pair[1]
@@ -43,13 +44,13 @@
       s1.appendChild(o)
     })
     const s2 = el('select', {
-      'aria-label': t('common.controls.sort.label'),
+      'aria-label': tt('common.controls.sort.label', 'controls.sort.label'),
       'aria-controls': 'created-list',
     })
     ;[
-      ['updated', t('common.controls.sort.updated')],
-      ['title', t('common.controls.sort.title')],
-      ['participants', t('common.controls.sort.members')],
+      ['updated', tt('common.controls.sort.updated', 'controls.sort.updated')],
+      ['title', tt('common.controls.sort.title', 'controls.sort.title')],
+      ['participants', tt('common.controls.sort.members', 'controls.sort.members')],
     ].forEach(function (pair) {
       const v = pair[0]
       const lab = pair[1]
@@ -100,14 +101,14 @@
     const sort = q.get('sort') || 'lastPlayed'
     const wrap = el('div', { class: 'stack gap-2', 'data-testid': 'joined-controls' })
     const s2 = el('select', {
-      'aria-label': t('common.controls.sort.label'),
+      'aria-label': tt('common.controls.sort.label', 'controls.sort.label'),
       'aria-controls': 'list',
     })
     ;[
-      ['lastPlayed', t('common.controls.sort.lastPlayed')],
-      ['answered', t('common.controls.sort.answered')],
-      ['accuracy', t('common.controls.sort.accuracy')],
-      ['title', t('common.controls.sort.title')],
+      ['lastPlayed', tt('common.controls.sort.lastPlayed', 'controls.sort.lastPlayed')],
+      ['answered', tt('common.controls.sort.answered', 'controls.sort.answered')],
+      ['accuracy', tt('common.controls.sort.accuracy', 'controls.sort.accuracy')],
+      ['title', tt('common.controls.sort.title', 'controls.sort.title')],
     ].forEach(function (pair) {
       const v = pair[0]
       const lab = pair[1]
