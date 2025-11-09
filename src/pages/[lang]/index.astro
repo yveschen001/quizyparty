@@ -22,7 +22,7 @@ const path = Astro.url.pathname
     <a href="#main" class="sr-only">{serverT('a11y.skipToContent')}</a>
     <header class="navbar">
       <div class="container inner">
-        <a href={`/${lang}/`} aria-current="page">{serverT('nav.home')}</a>
+        <a id="nav-home" href={`/${lang}/`} aria-current="page">{serverT('nav.home')}</a>
         <nav style="display:flex;gap:12px;align-items:center">
           <button id="auth-btn" class="btn" style="font-size:0.875rem;display:none">{serverT('auth.login')}</button>
           <div id="user-info" style="display:none;position:relative;align-items:center">
@@ -87,15 +87,23 @@ const path = Astro.url.pathname
           const heroTitle = document.getElementById('hero-title')
           const heroSubtitle = document.getElementById('hero-subtitle')
           const roomsTitle = document.getElementById('rooms-title')
+          const navHome = document.getElementById('nav-home')
           const popularBtn = document.getElementById('sort-popular')
           const latestBtn = document.getElementById('sort-latest')
           const refreshBtn = document.getElementById('refresh-rooms')
+          const createBtnEl = document.getElementById('create')
+          const joinBtnEl = document.getElementById('join')
+          const roomInputEl = document.getElementById('roomId')
           if (heroTitle) heroTitle.textContent = window.t('home.hero.title')
           if (heroSubtitle) heroSubtitle.textContent = window.t('home.hero.subtitle')
           if (roomsTitle) roomsTitle.textContent = window.t('home.rooms.title')
+          if (navHome) navHome.textContent = window.t('nav.home')
           if (popularBtn) popularBtn.textContent = window.t('home.rooms.popular')
           if (latestBtn) latestBtn.textContent = window.t('home.rooms.latest')
           if (refreshBtn) refreshBtn.textContent = window.t('home.rooms.refresh')
+          if (createBtnEl) createBtnEl.textContent = window.t('home.actions.createRoom')
+          if (joinBtnEl) joinBtnEl.textContent = window.t('home.actions.joinRoom')
+          if (roomInputEl) roomInputEl.setAttribute('placeholder', window.t('home.actions.roomIdPlaceholder'))
         } catch (e) {}
 
         const userInfo = document.getElementById('user-info')

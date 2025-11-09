@@ -37,16 +37,16 @@ export const prerender = false;
   <body>
     <AppHeader lang={lang} serverT={serverT} />
     <main class="container hero">
-      <h1 class="h1">{serverT('home.actions.createRoom')}</h1>
+      <h1 id="create-title" class="h1">{serverT('home.actions.createRoom')}</h1>
 
       <section style="display:grid;gap:16px;max-width:820px;margin-bottom:24px;background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:24px">
         <div style="display:grid;gap:12px">
-          <label style="font-weight:600">{serverT('createRoom.form.roomName')}</label>
+          <label id="label-room-name" style="font-weight:600">{serverT('createRoom.form.roomName')}</label>
           <input id="room-title" type="text" placeholder={serverT('createRoom.form.roomNamePlaceholder')} style="padding:12px;border:1px solid #d1d5db;border-radius:10px" />
           <p style="margin:0;font-size:0.8rem;opacity:0.6" id="room-name-hint"></p>
         </div>
         <div style="display:grid;gap:12px">
-          <label style="font-weight:600">{serverT('createRoom.builder.countLabel')}</label>
+          <label id="label-count" style="font-weight:600">{serverT('createRoom.builder.countLabel')}</label>
           <div id="count-options" style="display:flex;gap:8px;flex-wrap:wrap">
             <button type="button" class="count-btn active" data-role="count-btn" data-count="10" style="padding:8px 14px;border:1px solid #d1d5db;border-radius:999px;background:#6366f1;color:#fff;font-size:0.85rem;cursor:pointer">10</button>
             <button type="button" class="count-btn" data-role="count-btn" data-count="20" style="padding:8px 14px;border:1px solid #d1d5db;border-radius:999px;background:#f3f4f6;color:#111827;font-size:0.85rem;cursor:pointer">20</button>
@@ -65,16 +65,16 @@ export const prerender = false;
 
       <section style="display:grid;gap:16px;max-width:820px;margin-bottom:24px;background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:24px">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
-          <h2 style="margin:0;font-size:1.1rem">{serverT('createRoom.ai.sectionTitle')}</h2>
-          <span style="font-size:0.8rem;opacity:0.65">{serverT('createRoom.ai.description')}</span>
+          <h2 id="ai-title" style="margin:0;font-size:1.1rem">{serverT('createRoom.ai.sectionTitle')}</h2>
+          <span id="ai-desc" style="font-size:0.8rem;opacity:0.65">{serverT('createRoom.ai.description')}</span>
         </div>
         <div style="display:grid;gap:12px">
-          <label for="ai-prompt" style="font-weight:600">{serverT('createRoom.ai.promptLabel')}</label>
+          <label id="ai-prompt-label" for="ai-prompt" style="font-weight:600">{serverT('createRoom.ai.promptLabel')}</label>
           <textarea id="ai-prompt" placeholder={serverT('createRoom.ai.promptPlaceholder')} style="width:100%;min-height:120px;padding:12px;border:1px solid #d1d5db;border-radius:10px"></textarea>
           <p style="margin:0;font-size:0.8rem;opacity:0.65">{serverT('createRoom.ai.promptHint')}</p>
         </div>
         <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
-          <label for="ai-lang" style="font-size:0.85rem;font-weight:600">{serverT('createRoom.ai.langLabel')}</label>
+          <label id="ai-lang-label" for="ai-lang" style="font-size:0.85rem;font-weight:600">{serverT('createRoom.ai.langLabel')}</label>
           <select id="ai-lang" style="padding:10px 12px;border:1px solid #d1d5db;border-radius:10px">
             <option value="en">{serverT('createRoom.ai.lang.en')}</option>
             <option value="zh-hant">{serverT('createRoom.ai.lang.zhHant')}</option>
@@ -86,7 +86,7 @@ export const prerender = false;
           </select>
         </div>
         <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
-          <label for="ai-count" style="font-size:0.85rem;font-weight:600">{serverT('createRoom.ai.countLabel')}</label>
+          <label id="ai-count-label" for="ai-count" style="font-size:0.85rem;font-weight:600">{serverT('createRoom.ai.countLabel')}</label>
           <select id="ai-count" style="padding:10px 12px;border:1px solid #d1d5db;border-radius:10px">
             <option value="10">10</option>
             <option value="20">20</option>
@@ -111,8 +111,8 @@ export const prerender = false;
 
       <section style="display:grid;gap:16px;max-width:820px;margin-bottom:24px;background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:24px">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
-          <h2 style="margin:0;font-size:1.1rem">{serverT('createRoom.builder.sectionTitle')}</h2>
-          <span style="font-size:0.8rem;opacity:0.65">{serverT('createRoom.builder.autoHint')}</span>
+          <h2 id="builder-title" style="margin:0;font-size:1.1rem">{serverT('createRoom.builder.sectionTitle')}</h2>
+          <span id="builder-hint" style="font-size:0.8rem;opacity:0.65">{serverT('createRoom.builder.autoHint')}</span>
         </div>
         <div id="question-grid" style="display:grid;gap:16px"></div>
         <div style="display:flex;justify-content:flex-end">
@@ -173,6 +173,24 @@ export const prerender = false;
       (async function() {
         await import('/js/i18n.js')
         const lang = document.documentElement.getAttribute('lang') || 'en'
+        // Force client-side i18n for visible labels (avoid SSR fallback English)
+        try {
+          const tx = (id, key) => { const el = document.getElementById(id); if (el) el.textContent = window.t(key) }
+          tx('create-title', 'home.actions.createRoom')
+          tx('label-room-name', 'createRoom.form.roomName')
+          const rt = document.getElementById('room-title'); if (rt) rt.setAttribute('placeholder', window.t('createRoom.form.roomNamePlaceholder'))
+          tx('label-count', 'createRoom.builder.countLabel')
+          tx('ai-title', 'createRoom.ai.sectionTitle')
+          tx('ai-desc', 'createRoom.ai.description')
+          tx('ai-prompt-label', 'createRoom.ai.promptLabel')
+          const ap = document.getElementById('ai-prompt'); if (ap) ap.setAttribute('placeholder', window.t('createRoom.ai.promptPlaceholder'))
+          tx('ai-lang-label', 'createRoom.ai.langLabel')
+          tx('ai-count-label', 'createRoom.ai.countLabel')
+          const genBtn = document.getElementById('ai-generate-btn'); if (genBtn) genBtn.textContent = window.t('createRoom.ai.generate')
+          const optBtn = document.getElementById('ai-improve-btn'); if (optBtn) optBtn.textContent = window.t('createRoom.ai.optimize')
+          tx('builder-title', 'createRoom.builder.sectionTitle')
+          tx('builder-hint', 'createRoom.builder.autoHint')
+        } catch (e) {}
 
         const langSwitch = document.getElementById('lang-switch')
         function computeRedirectPath(targetLang) {
