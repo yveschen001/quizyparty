@@ -1,5 +1,12 @@
 ;(function (w) {
   if (w.QPCache) return
+  try {
+    var DISABLED =
+      (typeof localStorage !== 'undefined' && localStorage.getItem('qp:cache:disable') === '1') ||
+      (typeof w.location !== 'undefined' && /[?&]nocache=1\b/.test(w.location.search)) ||
+      (w && w.__QPCACHE_DISABLE === true)
+    if (DISABLED) return
+  } catch (_) {}
   const NS = 'qp:cache:v1'
   const matchList = [/\/api\/room-templates/, /\/api\/scores\/rooms/, /\/api\/profile\/stats/]
   function now() {

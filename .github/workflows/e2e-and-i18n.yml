@@ -1,0 +1,43 @@
+name: e2e-and-i18n-guards
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+  push:
+    branches: [ feature/ux-i18n-polish-v3 ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node 20 + pnpm
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - run: corepack enable
+      - run: pnpm -v
+      - run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright (browsers)
+        run: pnpm exec playwright install --with-deps
+
+      - name: Start dev server
+        run: |
+          (pnpm run dev -- --port 4321 &)
+          npx wait-on http://localhost:4321
+        env:
+          NODE_ENV: development
+
+      - name: Run i18n guards
+        run: pnpm run test:guards
+
+      - name: Run rooms suite
+        run: pnpm run test:rooms
+
+      - name: i18n strict check (optional)
+        run: pnpm run i18n:check:strict
+
